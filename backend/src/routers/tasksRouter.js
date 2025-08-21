@@ -4,8 +4,8 @@ const {
   createTaskController,
   editTaskController,
   removeTaskController,
-} = require('./controllers/tasksController');
-const { validarTasks } = require('./middlewares/validarTask');
+} = require('../controllers/tasksController');
+const { validarTasks } = require('../middlewares/validarTask');
 
 const router = express.Router();
 
