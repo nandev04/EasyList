@@ -1,22 +1,22 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import { defineConfig } from 'eslint/config';
+// eslint.config.mjs
+import { FlatCompat } from '@eslint/eslintrc';
 
-export default defineConfig([
+const compat = new FlatCompat({ baseDirectory: process.cwd(), recommended: true });
+
+export default [
+  ...compat.extends('eslint:recommended'),
+  ...compat.extends('plugin:@typescript-eslint/recommended'),
   {
-    files: ['**/*.{js,mjs,cjs}'],
-    plugins: { js },
-    extends: ['js/recommended'],
-    languageOptions: { globals: globals.browser },
-    env: {
-      node: true,
-      es2021: true,
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module', // importante
+      },
     },
-  },
-  { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
-  {
     rules: {
       'no-unused-vars': 'off',
     },
   },
-]);
+];

@@ -1,3 +1,3 @@
 const getUsers = () => {};
 
-module.exports = getUsers;
+export { getUsers };
