@@ -1,22 +1,36 @@
-const connection = require('./connection');
-import { Request, Response } from 'express';
+import prisma from '../lib/prisma';
 import { createTaskType, editTaskType } from '../types/tasksInterface';
 
-const getAll = async () => {
-  const [tasks] = await connection.execute('SELECT * FROM tasks');
+const getTasks = async (id: string) => {
+  const tasks = await prisma.task.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
   return tasks;
 };
 
-const createTask = async (body: createTaskType) => {
+const createTask = async (id: string, body: createTaskType) => {
   const { title, description } = body;
 
   const dateUTC = new Date(Date.now()).toUTCString();
 
-  const query = 'INSERT INTO tasks(title, description, status, created_at) VALUES (?, ?, ?, ?)';
+  const createdTask = await prisma.task.create({
+    data: {
+      title,
+      description,
+      status: 'pendente',
+      created_at: dateUTC,
+      user: {
+        connect: { id: parseInt(id) },
+      },
+    },
+    include: {
+      user: true,
+    },
+  });
 
-  const [createdTask] = await connection.execute(query, [title, description, 'pendente', dateUTC]);
-
-  return { insertId: createdTask.insertId };
+  return { insertId: createdTask.user, username: createdTask.user.name };
 };
 
 const editTask = async (tasks: editTaskType, id: string) => {
@@ -32,4 +46,4 @@ const removeTask = async (id: string) => {
   return removedTask;
 };
 
-export { getAll, editTask, createTask, removeTask };
+export { getTasks, editTask, createTask, removeTask };

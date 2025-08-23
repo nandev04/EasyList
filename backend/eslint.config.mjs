@@ -1,22 +1,35 @@
-// eslint.config.mjs
-import { FlatCompat } from '@eslint/eslintrc';
-
-const compat = new FlatCompat({ baseDirectory: process.cwd(), recommended: true });
+// eslint.config.js
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import prettierPlugin from 'eslint-plugin-prettier';
 
 export default [
-  ...compat.extends('eslint:recommended'),
-  ...compat.extends('plugin:@typescript-eslint/recommended'),
   {
-    files: ['**/*.ts'],
+    ignores: ['node_modules/**', 'dist/**'], // arquivos a ignorar
+  },
+  {
+    files: ['*.js', '*.ts'],
     languageOptions: {
-      parser: '@typescript-eslint/parser',
-      parserOptions: {
-        ecmaVersion: 2020,
-        sourceType: 'module', // importante
-      },
+      ecmaVersion: 2021,
+      sourceType: 'module',
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
     },
     rules: {
-      'no-unused-vars': 'off',
+      'no-unused-vars': 'warn',
+      'prettier/prettier': 'error',
+    },
+    plugins: {
+      prettier: prettierPlugin,
+    },
+  },
+  {
+    files: ['*.ts'],
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      ...tsPlugin.configs.recommended.rules,
     },
   },
 ];
