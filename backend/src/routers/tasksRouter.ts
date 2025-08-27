@@ -1,17 +1,18 @@
 import express from 'express';
-const {
-  getAllController,
+import validateTaskStatus from '../middlewares/validarTaskStatus';
+import validarTasks from '../middlewares/validarTask';
+import {
+  getTasksController,
   createTaskController,
   editTaskController,
   removeTaskController,
-} = require('../controllers/tasksController');
-const { validarTasks } = require('../middlewares/validarTask');
+} from '../controllers/tasksController';
 
 const router = express.Router();
 
-router.get('/tasks', getAllController);
+router.get('/tasks', getTasksController);
 router.post('/tasks', validarTasks, createTaskController);
-router.put('/tasks/:id', editTaskController);
+router.put('/tasks/:id', validateTaskStatus, editTaskController);
 router.delete('/tasks/:id', removeTaskController);
 
 export default router;

@@ -1,10 +1,14 @@
-interface createTaskType {
+interface TaskType {
   title: string;
   description: string;
+  id: string;
+  status: taskStatus;
 }
 
-interface editTaskType extends createTaskType {
-  status: string;
+enum taskStatus {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE',
 }
 
-export { createTaskType, editTaskType };
+export { TaskType, taskStatus };

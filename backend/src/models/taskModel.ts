@@ -1,5 +1,5 @@
 import prisma from '../lib/prisma';
-import { createTaskType, editTaskType } from '../types/tasksInterface';
+import { TaskType, taskStatus } from '../types/tasksInterface';
 
 const getTasks = async (id: string) => {
   const tasks = await prisma.task.findUnique({
@@ -10,8 +10,8 @@ const getTasks = async (id: string) => {
   return tasks;
 };
 
-const createTask = async (id: string, body: createTaskType) => {
-  const { title, description } = body;
+const createTask = async (body: TaskType) => {
+  const { id, title, description } = body;
 
   const dateUTC = new Date(Date.now()).toUTCString();
 
@@ -19,7 +19,7 @@ const createTask = async (id: string, body: createTaskType) => {
     data: {
       title,
       description,
-      status: 'pendente',
+      status: taskStatus.PENDING,
       created_at: dateUTC,
       user: {
         connect: { id: +id },
@@ -33,7 +33,7 @@ const createTask = async (id: string, body: createTaskType) => {
   return { insertId: createdTask.user, username: createdTask.user.name };
 };
 
-const editTask = async (tasks: editTaskType, id: string) => {
+const editTask = async (tasks: TaskType, id: string) => {
   const { title, description, status } = tasks;
 
   const editedtask = await prisma.task.update({

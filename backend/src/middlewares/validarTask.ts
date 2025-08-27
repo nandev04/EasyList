@@ -14,4 +14,4 @@ const validarTasks = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export { validarTasks };
+export default validarTasks;

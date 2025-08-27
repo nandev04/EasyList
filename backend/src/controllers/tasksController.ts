@@ -1,8 +1,8 @@
-import { getAll, createTask, editTask, removeTask } from '../models/taskModel';
+import { getTasks, createTask, editTask, removeTask } from '../models/taskModel';
 import { Request, Response } from 'express';
 
-const getAllController = async (_req: Request, res: Response) => {
-  const tasks = await getAll();
+const getTasksController = async (req: Request, res: Response) => {
+  const tasks = await getTasks(req.body);
   res.status(200).json(tasks);
 };
 
@@ -25,4 +25,4 @@ const removeTaskController = async (req: Request, res: Response) => {
   return res.status(204).json();
 };
 
-export { getAllController, createTaskController, editTaskController, removeTaskController };
+export { getTasksController, createTaskController, editTaskController, removeTaskController };
