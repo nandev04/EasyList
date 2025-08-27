@@ -4,7 +4,7 @@ import { createTaskType, editTaskType } from '../types/tasksInterface';
 const getTasks = async (id: string) => {
   const tasks = await prisma.task.findUnique({
     where: {
-      id: parseInt(id),
+      id: +id,
     },
   });
   return tasks;
@@ -22,7 +22,7 @@ const createTask = async (id: string, body: createTaskType) => {
       status: 'pendente',
       created_at: dateUTC,
       user: {
-        connect: { id: parseInt(id) },
+        connect: { id: +id },
       },
     },
     include: {
@@ -35,14 +35,22 @@ const createTask = async (id: string, body: createTaskType) => {
 
 const editTask = async (tasks: editTaskType, id: string) => {
   const { title, description, status } = tasks;
-  const query = 'UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ?';
 
-  const [editedTask] = await connection.execute(query, [title, description, status, id]);
-  return editedTask;
+  const editedtask = await prisma.task.update({
+    where: { id: +id },
+    data: {
+      title,
+      description,
+      status,
+    },
+  });
+  return editedtask;
 };
 
 const removeTask = async (id: string) => {
-  const removedTask = await connection.execute('DELETE from tasks WHERE id = ?', [0]);
+  const removedTask = await prisma.task.delete({
+    where: { id: +id },
+  });
   return removedTask;
 };
 
