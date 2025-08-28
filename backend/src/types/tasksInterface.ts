@@ -2,7 +2,16 @@ interface TaskType {
   title: string;
   description: string;
   id: string;
-  status: taskStatus;
+  date?: string;
+  status?: taskStatus;
+}
+
+interface TaskModelInput {
+  id: number;
+  title: string;
+  description: string;
+  dateUTC: string;
+  status?: taskStatus;
 }
 
 enum taskStatus {
@@ -11,4 +20,4 @@ enum taskStatus {
   DONE = 'DONE',
 }
 
-export { TaskType, taskStatus };
+export { TaskType, taskStatus, TaskModelInput };

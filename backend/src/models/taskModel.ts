@@ -1,5 +1,5 @@
 import prisma from '../lib/prisma';
-import { TaskType, taskStatus } from '../types/tasksInterface';
+import { TaskModelInput, TaskType, taskStatus } from '../types/tasksInterface';
 
 const getTasks = async (id: string) => {
   const tasks = await prisma.task.findUnique({
@@ -10,11 +10,7 @@ const getTasks = async (id: string) => {
   return tasks;
 };
 
-const createTask = async (body: TaskType) => {
-  const { id, title, description } = body;
-
-  const dateUTC = new Date(Date.now()).toUTCString();
-
+const createTask = async ({ id, title, description, dateUTC }: TaskModelInput) => {
   const createdTask = await prisma.task.create({
     data: {
       title,
@@ -33,11 +29,10 @@ const createTask = async (body: TaskType) => {
   return { insertId: createdTask.user, username: createdTask.user.name };
 };
 
-const editTask = async (tasks: TaskType, id: string) => {
-  const { title, description, status } = tasks;
-
+type TaskModelEdit = Omit<TaskType, 'id'> & { id: number };
+const editTask = async ({ title, description, status, id }: TaskModelEdit) => {
   const editedtask = await prisma.task.update({
-    where: { id: +id },
+    where: { id: id },
     data: {
       title,
       description,
@@ -47,9 +42,9 @@ const editTask = async (tasks: TaskType, id: string) => {
   return editedtask;
 };
 
-const removeTask = async (id: string) => {
+const removeTask = async (id: number) => {
   const removedTask = await prisma.task.delete({
-    where: { id: +id },
+    where: { id: id },
   });
   return removedTask;
 };

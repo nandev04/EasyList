@@ -1,6 +1,6 @@
 import express from 'express';
-import tasksRouter from './routers/tasksRouter';
-import usersRouter from './routers/usersRouter';
+import tasksRouter from './routes/tasksRouter';
+import usersRouter from './routes/usersRouter';
 
 const app = express();
 
