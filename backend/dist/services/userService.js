@@ -9,4 +9,8 @@ const createUser = async ({ username, password, email }) => {
     const createdUser = await Model.createUser({ username, hashPassword, email });
     return createdUser;
 };
-export { getUser, createUser };
+const editUser = async ({ id, data }) => {
+    const editedUser = await Model.editUser({ id: Number(id), data });
+    return editedUser;
+};
+export { getUser, createUser, editUser };

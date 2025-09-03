@@ -15,4 +15,12 @@ const createUser = async (req: Request, res: Response) => {
   return res.status(200).json(createdUser);
 };
 
-export { getUser, createUser };
+const editUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const data = req.body;
+  const editedUser = await Service.editUser({ id, data });
+
+  return res.status(200).json(editedUser);
+};
+
+export { getUser, createUser, editUser };
