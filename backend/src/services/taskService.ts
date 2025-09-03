@@ -1,5 +1,5 @@
-import * as tasksModel from '../models/taskModel';
-import { TaskType } from '../types/tasksInterface';
+import * as tasksModel from '../models/taskModel.js';
+import { TaskType } from '../types/tasks.js';
 
 const getTasks = async ({ id }: TaskType) => {
   return await tasksModel.getTasks(id);

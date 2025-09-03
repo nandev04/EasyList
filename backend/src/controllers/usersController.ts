@@ -1,10 +1,18 @@
 import { Request, Response } from 'express';
-import { getUserModel } from '../models/userModel';
+import * as Service from '../services/userService.js';
 
-const getUsersController = async (req: Request, res: Response) => {
+const getUser = async (req: Request, res: Response) => {
   const { id } = req.body;
-  const users = await getUserModel(id);
-  res.status(200).json(users);
+  const user = await Service.getUser(id);
+  return res.status(200).json(user);
 };
 
-export { getUsersController };
+const createUser = async (req: Request, res: Response) => {
+  const { username, password, email } = req.body;
+
+  const createdUser = await Service.createUser({ username, password, email });
+
+  return res.status(200).json(createdUser);
+};
+
+export { getUser, createUser };

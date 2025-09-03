@@ -1,8 +1,7 @@
-import prisma from '../lib/prisma';
-import { usersType } from '../types/usersInterface';
+import prisma from '../lib/prisma.js';
+import { CreateUserType } from '../types/users.js';
 
-// PAREI AQUI
-const getUserModel = async (id: string) => {
+const getUser = async (id: number) => {
   const user = await prisma.user.findUnique({
     where: {
       id: +id,
@@ -11,15 +10,15 @@ const getUserModel = async (id: string) => {
   return user;
 };
 
-const createUserModel = async ({ username, password, email }: usersType) => {
+const createUser = async ({ username, hashPassword, email }: CreateUserType) => {
   const createdUser = await prisma.user.create({
     data: {
       name: username,
-      password: password,
+      password: hashPassword,
       email: email,
     },
   });
   return { id: createdUser.id, username: createdUser.name };
 };
 
-export { getUserModel, createUserModel };
+export { getUser, createUser };

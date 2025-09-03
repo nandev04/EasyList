@@ -1,5 +1,5 @@
-import prisma from '../lib/prisma';
-import { TaskModelInput, TaskType, taskStatus } from '../types/tasksInterface';
+import prisma from '../lib/prisma.js';
+import { TaskModelInput, TaskType, taskStatus } from '../types/tasks.js';
 
 const getTasks = async (id: string) => {
   const tasks = await prisma.task.findUnique({
