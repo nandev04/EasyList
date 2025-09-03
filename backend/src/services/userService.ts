@@ -21,4 +21,9 @@ const editUser = async ({ id, data }: { id: string; data: {} }) => {
   return editedUser;
 };
 
-export { getUser, createUser, editUser };
+const deleteUser = async (id: string) => {
+  const deletedUser = await Model.deleteUser(+id);
+  return deletedUser;
+};
+
+export { getUser, createUser, editUser, deleteUser };

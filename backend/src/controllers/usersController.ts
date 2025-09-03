@@ -23,4 +23,12 @@ const editUser = async (req: Request, res: Response) => {
   return res.status(200).json(editedUser);
 };
 
-export { getUser, createUser, editUser };
+const deleteUser = async (req: Request, res: Response) => {
+  const { id } = req.body;
+
+  const deletedUser = await Service.deleteUser(id);
+
+  return res.status(200).json(deletedUser);
+};
+
+export { getUser, createUser, editUser, deleteUser };

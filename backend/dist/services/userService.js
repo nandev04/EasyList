@@ -13,4 +13,8 @@ const editUser = async ({ id, data }) => {
     const editedUser = await Model.editUser({ id: Number(id), data });
     return editedUser;
 };
-export { getUser, createUser, editUser };
+const deleteUser = async (id) => {
+    const deletedUser = await Model.deleteUser(+id);
+    return deletedUser;
+};
+export { getUser, createUser, editUser, deleteUser };

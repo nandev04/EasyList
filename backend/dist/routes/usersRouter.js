@@ -4,4 +4,5 @@ const router = express.Router();
 router.get('/users', Controller.getUser);
 router.post('/users', Controller.createUser);
 router.patch('/users/:id', Controller.editUser);
+router.delete('/users', Controller.deleteUser);
 export default router;
