@@ -1,6 +1,7 @@
-import { CreateUserType, usersType } from '../types/users.js';
+import { usersType } from '../types/users.js';
 import * as Model from '../models/userModel.js';
 import bcrypt from 'bcrypt';
+import { AuthService } from './authService.js';
 
 const getUser = async (id: string) => {
   const user = await Model.getUser(+id);
@@ -11,6 +12,10 @@ const createUser = async ({ username, password, email }: usersType) => {
   const hashPassword = await bcrypt.hash(password, 10);
 
   const createdUser = await Model.createUser({ username, hashPassword, email });
+
+  const tt = await AuthService.register(createdUser.id);
+
+  console.log(`TOKEN: ${tt}`);
 
   return createdUser;
 };

@@ -40,4 +40,14 @@ const deleteUser = async (id: number) => {
   return deletedUser;
 };
 
-export { getUser, createUser, editUser, deleteUser };
+const verifyUser = async (id: number) => {
+  const verifiedUser = await prisma.user.update({
+    where: { id },
+    data: { verified: true },
+    select: { updatedAt: true, verified: true },
+  });
+
+  return { ...verifiedUser };
+};
+
+export { getUser, createUser, editUser, deleteUser, verifyUser };

@@ -1,11 +1,13 @@
 import express from 'express';
 import * as Controller from '../controllers/usersController.js';
+import * as ControllerAuth from '../controllers/authController.js';
 
 const router = express.Router();
 
-router.get('/users', Controller.getUser);
-router.post('/users', Controller.createUser);
-router.patch('/users/:id', Controller.editUser);
-router.delete('/users', Controller.deleteUser);
+router.get('/user', Controller.getUser);
+router.post('/user', Controller.createUser);
+router.get('/user/verify', ControllerAuth.verifyEmail);
+router.patch('/user/:id', Controller.editUser);
+router.delete('/user', Controller.deleteUser);
 
 export default router;
