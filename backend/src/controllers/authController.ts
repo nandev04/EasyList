@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services/authService.js';
 
-const verifyEmail = (req: Request, res: Response) => {
+const verifyEmail = async (req: Request, res: Response) => {
   const token = req.query.token as string;
 
   if (!token) {
     res.status(400).json({ message: 'Token não fornecido!' });
   }
 
-  AuthService.verifyEmail(token);
+  const verifiedUser = await AuthService.verifyEmail(token);
+
+  return res.status(200).json(verifiedUser);
 };
 
 export { verifyEmail };

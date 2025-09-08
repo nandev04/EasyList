@@ -6,10 +6,10 @@ const getUser = async (id) => {
     return user;
 };
 const createUser = async ({ username, password, email }) => {
+    // Preciso tratar os erros
     const hashPassword = await bcrypt.hash(password, 10);
     const createdUser = await Model.createUser({ username, hashPassword, email });
-    const tt = await AuthService.register(createdUser.id);
-    console.log(`TOKEN: ${tt}`);
+    const token = await AuthService.register(createdUser.id, createdUser.email);
     return createdUser;
 };
 const editUser = async ({ id, data }) => {

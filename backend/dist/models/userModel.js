@@ -16,7 +16,7 @@ const createUser = async ({ username, hashPassword, email }) => {
             email: email,
         },
     });
-    return { id: createdUser.id, username: createdUser.name };
+    return { id: createdUser.id, username: createdUser.name, email: createdUser.email };
 };
 const editUser = async ({ id, data }) => {
     const editedUser = await prisma.user.update({
@@ -39,6 +39,6 @@ const verifyUser = async (id) => {
         data: { verified: true },
         select: { updatedAt: true, verified: true },
     });
-    return { ...verifiedUser };
+    return verifiedUser;
 };
 export { getUser, createUser, editUser, deleteUser, verifyUser };

@@ -19,7 +19,7 @@ const createUser = async ({ username, hashPassword, email }: CreateUserType) => 
       email: email,
     },
   });
-  return { id: createdUser.id, username: createdUser.name };
+  return { id: createdUser.id, username: createdUser.name, email: createdUser.email };
 };
 
 const editUser = async ({ id, data }: { id: number; data: {} }) => {
@@ -47,7 +47,7 @@ const verifyUser = async (id: number) => {
     select: { updatedAt: true, verified: true },
   });
 
-  return { ...verifiedUser };
+  return verifiedUser;
 };
 
 export { getUser, createUser, editUser, deleteUser, verifyUser };
