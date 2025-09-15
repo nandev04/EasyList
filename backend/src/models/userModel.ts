@@ -18,7 +18,7 @@ const getUser = async (id: number) => {
     });
     if (!user) throw new AppError('Usuário não encontrado', 404);
     return user;
-  } catch (error: unknown) {
+  } catch (error) {
     throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
   }
 };
@@ -33,7 +33,7 @@ const createUser = async ({ username, hashPassword, email }: CreateUserType) => 
       },
     });
     return { id: createdUser.id, username: createdUser.name, email: createdUser.email };
-  } catch (error: unknown) {
+  } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) throw new AppError(error.message, 400);
     if (
       error instanceof PrismaClientUnknownRequestError ||
