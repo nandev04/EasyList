@@ -1,4 +1,6 @@
-const validarTasks = (req, res, next) => {
+import { Request, Response, NextFunction } from 'express';
+
+const validarTasks = (req: Request, res: Response, next: NextFunction) => {
   const { body } = req;
 
   if (!body.title) {
@@ -12,4 +14,4 @@ const validarTasks = (req, res, next) => {
   next();
 };
 
-module.exports = { validarTasks };
+export default validarTasks;
