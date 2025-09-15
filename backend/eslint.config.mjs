@@ -1,22 +1,35 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import { defineConfig } from 'eslint/config';
+// eslint.config.js
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import prettierPlugin from 'eslint-plugin-prettier';
 
-export default defineConfig([
+export default [
   {
-    files: ['**/*.{js,mjs,cjs}'],
-    plugins: { js },
-    extends: ['js/recommended'],
-    languageOptions: { globals: globals.browser },
-    env: {
-      node: true,
-      es2021: true,
-    },
+    ignores: ['node_modules/**', 'dist/**'], // arquivos a ignorar
   },
-  { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
   {
+    files: ['*.js', '*.ts'],
+    languageOptions: {
+      ecmaVersion: 2021,
+      sourceType: 'module',
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
+    },
     rules: {
-      'no-unused-vars': 'off',
+      'no-unused-vars': 'warn',
+      'prettier/prettier': 'error',
+    },
+    plugins: {
+      prettier: prettierPlugin,
     },
   },
-]);
+  {
+    files: ['*.ts'],
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      ...tsPlugin.configs.recommended.rules,
+    },
+  },
+];
