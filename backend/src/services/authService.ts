@@ -1,4 +1,4 @@
-import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import * as Model from '../models/userModel.js';
 import { EmailService } from './emailService.js';

@@ -5,12 +5,8 @@ import { AuthService } from './authService.js';
 import { AppError } from '../utils/error.js';
 
 const getUser = async (id: string) => {
-  try {
-    const user = await Model.getUser(+id);
-    return user;
-  } catch (err) {
-    throw err;
-  }
+  const user = await Model.getUser(+id);
+  return user;
 };
 
 const createUser = async ({ username, password, email }: usersType) => {
@@ -30,23 +26,15 @@ const createUser = async ({ username, password, email }: usersType) => {
   }
 };
 
-const editUser = async ({ id, data }: { id: string; data: {} }) => {
-  try {
-    const editedUser = await Model.editUser({ id: Number(id), data });
+const editUser = async ({ id, data }: { id: string; data: object }) => {
+  const editedUser = await Model.editUser({ id: Number(id), data });
 
-    return editedUser;
-  } catch (err) {
-    throw err;
-  }
+  return editedUser;
 };
 
 const deleteUser = async (id: string) => {
-  try {
-    const deletedUser = await Model.deleteUser(+id);
-    return deletedUser;
-  } catch (err) {
-    throw err;
-  }
+  const deletedUser = await Model.deleteUser(+id);
+  return deletedUser;
 };
 
 export { getUser, createUser, editUser, deleteUser };

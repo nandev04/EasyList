@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "concurrently \"npx tsc --watch --project tsconfig.json\" \"nodemon dist/server.js\"",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "lint": "eslint src/**/*.ts"
   },
   "type": "module",
   "keywords": [],
@@ -20,25 +21,9 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.3"
   },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "ecmaVersion": 2020,
-      "sourceType": "module"
-    },
-    "env": {
-      "node": true,
-      "es2021": true
-    },
-    "rules": {}
-  },
   "devDependencies": {
-    "@eslint/js": "^9.34.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.35.0",
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",

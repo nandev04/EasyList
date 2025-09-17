@@ -5,16 +5,16 @@ import {
   PrismaClientInitializationError,
   PrismaClientKnownRequestError,
   PrismaClientRustPanicError,
-  PrismaClientUnknownRequestError,
+  PrismaClientUnknownRequestError
 } from '@prisma/client/runtime/library.js';
 
 const getUser = async (id: number) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id: +id,
+        id: +id
       },
-      select: { id: true, name: true, email: true, createdAt: true, updatedAt: true },
+      select: { id: true, name: true, email: true, createdAt: true, updatedAt: true }
     });
     if (!user) throw new AppError('Usuário não encontrado', 404);
     return user;
@@ -29,8 +29,8 @@ const createUser = async ({ username, hashPassword, email }: CreateUserType) => 
       data: {
         name: username,
         password: hashPassword,
-        email: email,
-      },
+        email: email
+      }
     });
     return { id: createdUser.id, username: createdUser.name, email: createdUser.email };
   } catch (error) {
@@ -46,12 +46,12 @@ const createUser = async ({ username, hashPassword, email }: CreateUserType) => 
   }
 };
 
-const editUser = async ({ id, data }: { id: number; data: {} }) => {
+const editUser = async ({ id, data }: { id: number; data: object }) => {
   try {
     const editedUser = await prisma.user.update({
       where: { id },
       data: { ...data },
-      select: { id: true, name: true, updatedAt: true },
+      select: { id: true, name: true, updatedAt: true }
     });
     return editedUser;
   } catch (error) {
@@ -71,7 +71,7 @@ const deleteUser = async (id: number) => {
   try {
     const deletedUser = await prisma.user.delete({
       where: { id },
-      select: { id: true },
+      select: { id: true }
     });
 
     return deletedUser;
@@ -93,7 +93,7 @@ const verifyUser = async (id: number) => {
     const verifiedUser = await prisma.user.update({
       where: { id },
       data: { verified: true },
-      select: { updatedAt: true, verified: true },
+      select: { updatedAt: true, verified: true }
     });
 
     return verifiedUser;

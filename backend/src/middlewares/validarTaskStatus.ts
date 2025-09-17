@@ -6,9 +6,14 @@ const validateTaskStatus = (req: Request, _res: Response, next: NextFunction) =>
 
   if (status && !Object.values(taskStatus).includes(status)) {
     const error = new Error(
-      `Status inválido. Valores permitidos: ${Object.values(taskStatus).join(', ')}`,
+      `Status inválido. Valores permitidos: ${Object.values(taskStatus).join(', ')}`
     );
-    (error as any).status = 400;
+
+    type customError = {
+      status?: number;
+    };
+
+    (error as customError).status = 400;
     return next(error);
   }
 

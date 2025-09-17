@@ -7,8 +7,8 @@ export class EmailService {
       // Prod - SendGrid
       return nodemailer.createTransport(
         sendgridTransport({
-          apiKey: process.env.SENDGRID_API_KEY!,
-        }),
+          apiKey: process.env.SENDGRID_API_KEY!
+        })
       );
     }
     // Dev - SendGrid
@@ -19,8 +19,8 @@ export class EmailService {
       secure: false,
       auth: {
         user: testAccount.user,
-        pass: testAccount.pass,
-      },
+        pass: testAccount.pass
+      }
     });
   }
 
@@ -33,7 +33,7 @@ export class EmailService {
       to,
       subject: 'Confirme sua conta',
       html: `<p>Bem-vindo! Clique no link abaixo para verificar sua conta:</p>
-             <a href="${verificationLink}">Verificar Conta</a>`,
+             <a href="${verificationLink}">Verificar Conta</a>`
     });
 
     if (process.env.NODE_ENV === 'development') {

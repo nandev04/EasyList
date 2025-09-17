@@ -5,15 +5,15 @@ import {
   PrismaClientInitializationError,
   PrismaClientKnownRequestError,
   PrismaClientRustPanicError,
-  PrismaClientUnknownRequestError,
+  PrismaClientUnknownRequestError
 } from '@prisma/client/runtime/library.js';
 
 const getTasks = async (id: string) => {
   try {
     const tasks = await prisma.task.findUnique({
       where: {
-        id: +id,
-      },
+        id: +id
+      }
     });
     if (!tasks) throw new AppError('Tasks não encontrada', 404);
     return tasks;
@@ -31,12 +31,12 @@ const createTask = async ({ id, title, description, dateUTC }: TaskModelInput) =
         status: taskStatus.PENDING,
         created_at: dateUTC,
         user: {
-          connect: { id: +id },
-        },
+          connect: { id: +id }
+        }
       },
       include: {
-        user: true,
-      },
+        user: true
+      }
     });
 
     return { insertId: createdTask.user, username: createdTask.user.name };
@@ -61,8 +61,8 @@ const editTask = async ({ title, description, status, id }: TaskModelEdit) => {
       data: {
         title,
         description,
-        status,
-      },
+        status
+      }
     });
     return editedtask;
   } catch (error) {
@@ -81,7 +81,7 @@ const editTask = async ({ title, description, status, id }: TaskModelEdit) => {
 const removeTask = async (id: number) => {
   try {
     const removedTask = await prisma.task.delete({
-      where: { id: id },
+      where: { id: id }
     });
     return removedTask;
   } catch (error) {
