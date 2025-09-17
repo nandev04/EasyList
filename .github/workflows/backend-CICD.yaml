@@ -6,8 +6,6 @@ on:
       - "feature/**"
       - "fix/**"
       - "hotfix/**"
-    branches-ignore:
-      - "*backup*"
     paths:
       - "backend/**"
   pull_request:
