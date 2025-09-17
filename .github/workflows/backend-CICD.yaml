@@ -26,17 +26,12 @@ jobs:
           node-version: 18
       - run: cd backend && npm install
 
-  # futuros jobs podem ser adicionados assim:
-  # build-backend:
-  #   runs-on: ubuntu-latest
-  #   needs: install-backend-deps
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - run: cd backend && npm run build
-  #
-  # test-backend:
-  #   runs-on: ubuntu-latest
-  #   needs: install-backend-deps
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - run: cd backend && npm test
+  lint-backend:
+  runs-on: ubuntu-latest
+  needs: install-backend-deps
+  steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: cd backend && npm run lint
