@@ -17,12 +17,25 @@ on:
 jobs:
   install-backend-deps:
     runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache-node.outputs.cache-hit }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: cd backend && npm install
+
+      - name: Cache node modules
+        id: cache-node
+        uses: actions/cache@v3
+        with:
+          path: backend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: cd backend && npm install
 
   lint-backend:
     runs-on: ubuntu-latest
@@ -32,4 +45,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: cd backend && npx run lint
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: backend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Run ESLint
+      - run: cd backend && npx eslint "src/**/*.ts"
