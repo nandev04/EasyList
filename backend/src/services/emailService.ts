@@ -10,18 +10,18 @@ export class EmailService {
           apiKey: process.env.SENDGRID_API_KEY!,
         }),
       );
-    } else {
-      const testAccount = await nodemailer.createTestAccount();
-      return nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        secure: false,
-        auth: {
-          user: testAccount.user,
-          pass: testAccount.pass,
-        },
-      });
     }
+    // Dev - SendGrid
+    const testAccount = await nodemailer.createTestAccount();
+    return nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
   }
 
   static async sendVerificationEmail(to: string, token: string) {
