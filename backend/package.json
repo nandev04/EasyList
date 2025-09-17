@@ -6,7 +6,7 @@
     "build": "tsc",
     "dev": "concurrently \"npx tsc --watch --project tsconfig.json\" \"nodemon dist/server.js\"",
     "start": "node dist/server.js",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint 'src/**/*.ts'"
   },
   "type": "module",
   "keywords": [],
