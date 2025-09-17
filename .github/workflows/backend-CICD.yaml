@@ -27,11 +27,11 @@ jobs:
       - run: cd backend && npm install
 
   lint-backend:
-  runs-on: ubuntu-latest
-  needs: install-backend-deps
-  steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 18
-    - run: cd backend && npm run lint
+    runs-on: ubuntu-latest
+    needs: install-backend-deps
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: cd backend && npm run lint
