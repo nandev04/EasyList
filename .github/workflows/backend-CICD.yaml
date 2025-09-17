@@ -55,4 +55,4 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Run ESLint
-      - run: cd backend && npx eslint "src/**/*.ts"
+      - run: cd backend && npm run lint
