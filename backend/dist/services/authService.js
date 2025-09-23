@@ -2,21 +2,25 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import * as Model from '../models/userModel.js';
 import { EmailService } from './emailService.js';
-import { getErrorMessage } from '../utils/error.js';
+import { AppError } from '../utils/error.js';
 dotenv.config();
 export class AuthService {
     static async register(userID, email) {
-        if (!process.env.JWT_LOGIN_SECRET) {
-            throw new Error('JWT_LOGIN_SECRET não definido!');
+        if (!process.env.JWT_EMAIL_SECRET) {
+            throw new AppError('JWT_EMAIL_SECRET não definido!', 500);
         }
-        const token = jwt.sign({ userID }, process.env.JWT_EMAIL_SECRET, { expiresIn: '1h' });
         try {
+            const token = jwt.sign({ userID }, process.env.JWT_EMAIL_SECRET, { expiresIn: '1h' });
             EmailService.sendVerificationEmail(email, token);
+            return token;
         }
-        catch {
-            throw new Error('Erro ao enviar e-mail de verificação');
+        catch (err) {
+            if (err instanceof AppError)
+                throw err;
+            if (err instanceof jwt.JsonWebTokenError)
+                throw new AppError(err.message, 401);
+            throw new AppError(err instanceof Error ? err.message : 'Erro desconhecido', 500);
         }
-        return token;
     }
     static async verifyEmail(token) {
         if (!process.env.JWT_EMAIL_SECRET)
@@ -27,8 +31,9 @@ export class AuthService {
             return verifiedUser;
         }
         catch (err) {
-            console.log(getErrorMessage(err));
-            return;
+            if (err instanceof AppError)
+                throw err;
+            throw new AppError(err instanceof Error ? err.message : 'Token Inválido', 401);
         }
     }
 }

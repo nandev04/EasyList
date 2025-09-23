@@ -19,6 +19,7 @@ const getUser = async (id: number) => {
     if (!user) throw new AppError('Usuário não encontrado', 404);
     return user;
   } catch (error) {
+    if (error instanceof AppError) throw error;
     throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
   }
 };
@@ -110,4 +111,18 @@ const verifyUser = async (id: number) => {
   }
 };
 
-export { getUser, createUser, editUser, deleteUser, verifyUser };
+const findByEmail = async (email: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email: email, verified: true },
+      select: { password: true, id: true }
+    });
+    if (!user) throw new AppError('Usuário não encontrado', 404);
+    return user;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido model', 500);
+  }
+};
+
+export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail };

@@ -3,6 +3,8 @@ import * as Service from '../services/userService.js';
 import { AppError } from '../utils/error.js';
 
 const getUser = async (req: Request, res: Response) => {
+  // Create User
+
   try {
     const { id } = req.body;
     const user = await Service.getUser(id);
@@ -56,4 +58,22 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export { getUser, createUser, editUser, deleteUser };
+// Login User
+
+const loginUser = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const loggedUser = await Service.loginUser(email, password);
+
+    return res.status(200).json({ token: loggedUser });
+  } catch (error) {
+    if (error instanceof AppError) {
+      console.log(error);
+      return res.status(error.statusCode).json({ message: error.message });
+    }
+
+    return res.status(500).json({ message: 'Erro desconhecido' });
+  }
+};
+
+export { getUser, createUser, editUser, deleteUser, loginUser };
