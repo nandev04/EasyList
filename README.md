@@ -16,7 +16,6 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 - 🗂️ ContextAPI (gerenciamento de estado)  
 - ⚡ [Vite](https://vitejs.dev/) (build e desenvolvimento)  
 - ✨ ESLint + Prettier (padronização de código)  
-- *(Opcional: [React Icons](https://react-icons.github.io/react-icons/) para ícones)*  
 
 ### Back-end
 - 🚀 [Express](https://expressjs.com/) + [TypeScript](https://www.typescriptlang.org/)  
