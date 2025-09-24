@@ -125,4 +125,28 @@ const findByEmail = async (email: string) => {
   }
 };
 
-export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail };
+const createRefreshToken = async (refreshToken: string, userId: number, expiresAt: Date) => {
+  try {
+    const createdRefreshToken = await prisma.refreshToken.create({
+      data: {
+        token: 'dwadsa',
+        userId,
+        expiresAt
+      },
+      select: { token: true }
+    });
+    return createdRefreshToken;
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) throw new AppError(error.message, 400);
+    if (
+      error instanceof PrismaClientUnknownRequestError ||
+      error instanceof PrismaClientRustPanicError ||
+      error instanceof PrismaClientInitializationError ||
+      error instanceof Error
+    )
+      throw new AppError(error.message, 500);
+    throw new AppError('Erro desconhecido', 500);
+  }
+};
+
+export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail, createRefreshToken };
