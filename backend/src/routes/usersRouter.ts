@@ -10,10 +10,12 @@ router.get('/user', Controller.getUser);
 router.post('/user', Controller.createUser);
 router.patch('/user/:id', Controller.editUser);
 router.delete('/user', Controller.deleteUser);
-router.get('/auth/verify', ControllerAuth.verifyEmail);
+router.patch('/auth/verify', ControllerAuth.verifyEmail);
 
 // Login User
 
 router.post('/login', validateLogin, Controller.loginUser);
+
+// Refresh Token
 
 export default router;
