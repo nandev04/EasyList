@@ -8,15 +8,15 @@ datasource db {
 }
 
 model Task {
-  id          Int    @id @default(autoincrement())
-  title       String 
-  description String 
-  status      String @default("pending")
-  created_at  String 
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  status      String   @default("pending")
+  created_at  String
   updatedAt   DateTime @updatedAt
 
-  userId    Int
-  user      User   @relation(fields: [userId], references: [id])
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model User {
@@ -28,6 +28,15 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tasks     Task[]
+  tasks         Task[]
+  refreshTokens RefreshToken[]
 }
 
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}

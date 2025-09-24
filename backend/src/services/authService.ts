@@ -41,9 +41,15 @@ export class AuthService {
     if (!process.env.JWT_ACCESS_SECRET) throw new AppError('JWT_ACCESS_SECRET não definido!', 500);
     if (!process.env.JWT_REFRESH_SECRET)
       throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
-    const accessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, { expiresIn: '1h' });
-    const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET!, { expiresIn: '7d' });
-
-    return { accessToken, refreshToken };
+    try {
+      const accessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, { expiresIn: '1h' });
+      const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET!, {
+        expiresIn: '7d'
+      });
+      return { accessToken, refreshToken };
+    } catch (err) {
+      if (err instanceof AppError) throw err;
+      throw new AppError(err instanceof Error ? err.message : 'Token Inválido', 401);
+    }
   }
 }
