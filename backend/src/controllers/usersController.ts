@@ -63,9 +63,19 @@ const deleteUser = async (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const loggedUser = await Service.loginUser(email, password);
+    const { refreshToken, accessToken } = await Service.loginUser(email, password);
 
-    return res.status(200).json({ token: loggedUser });
+    // Refresh Token
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      // no servidor (authService), o token expira em 7 dias, por isso transformei 7 dias em milisegundos
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    // Access Token
+    return res.status(200).json({ token: accessToken });
   } catch (error) {
     if (error instanceof AppError) {
       console.log(error);
