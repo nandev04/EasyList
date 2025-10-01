@@ -2,6 +2,7 @@ import express from 'express';
 import * as Controller from '../controllers/usersController.js';
 import * as ControllerAuth from '../controllers/authController.js';
 import validateLogin from '../middlewares/validateLogin.js';
+import * as ControllerToken from '../controllers/refreshTokenController.js';
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.patch('/auth/verify', ControllerAuth.verifyEmail);
 router.post('/login', validateLogin, Controller.loginUser);
 
 // Refresh Token
+router.post('/refresh-token', ControllerToken.refreshToken);
 
 export default router;
