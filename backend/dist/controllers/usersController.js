@@ -1,5 +1,8 @@
 import * as Service from '../services/userService.js';
 import { AppError } from '../utils/error.js';
+import ms from 'ms';
+import dotenv from 'dotenv';
+dotenv.config();
 const getUser = async (req, res) => {
     // Create User
     try {
@@ -54,8 +57,29 @@ const deleteUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const loggedUser = await Service.loginUser(email, password);
-        return res.status(200).json({ token: loggedUser });
+        const { refreshToken, accessToken } = await Service.loginUser(email, password);
+        const refreshTokenMaxAge = ms(process.env.JWT_REFRESH_EXPIRES_IN);
+        const accessTokenMaxAge = ms(process.env.JWT_ACCESS_EXPIRES_IN);
+        console.log('aqui deu');
+        // Refresh Token
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            signed: true,
+            // no servidor (authService), o token expira em 7 dias, por isso transformei 7 dias em milisegundos
+            maxAge: refreshTokenMaxAge
+        });
+        // Access Token
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            signed: true,
+            // no servidor (authService), o token expira em 7 dias, por isso transformei 7 dias em milisegundos
+            maxAge: accessTokenMaxAge
+        });
+        return res.status(200).json({ token: accessToken });
     }
     catch (error) {
         if (error instanceof AppError) {

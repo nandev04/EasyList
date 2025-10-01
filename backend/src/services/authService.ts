@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import * as Model from '../models/userModel.js';
 import { EmailService } from './emailService.js';
 import { AppError } from '../utils/error.js';
+import ms from 'ms';
 
 dotenv.config();
 
@@ -46,6 +47,12 @@ export class AuthService {
       const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET!, {
         expiresIn: '7d'
       });
+
+      // RefreshToken expira em 7 dias (transformando para ms e criando em formato Date)
+      const expirationDate = new Date(
+        Date.now() + ms(process.env.JWT_REFRESH_EXPIRES_IN as ms.StringValue)
+      );
+      await Model.upsertRefreshToken(refreshToken, userId, expirationDate);
       return { accessToken, refreshToken };
     } catch (err) {
       if (err instanceof AppError) throw err;
