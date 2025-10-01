@@ -10,7 +10,7 @@ const createUser = async ({ username, password, email }) => {
     try {
         const hashPassword = await bcrypt.hash(password, 10);
         const createdUser = await Model.createUser({ username, hashPassword, email });
-        const token = await AuthService.register(createdUser.id, createdUser.email);
+        await AuthService.register(createdUser.id, createdUser.email);
         return createdUser;
     }
     catch (err) {
@@ -30,7 +30,9 @@ const deleteUser = async (id) => {
 const loginUser = async (email, password) => {
     const user = await Model.findByEmail(email);
     const verifyHash = await bcrypt.compare(password, user.password);
-    return verifyHash;
-    // Criar token JWT de login
+    if (!verifyHash)
+        throw new AppError('Credenciais inválidas', 401);
+    const { accessToken, refreshToken } = await AuthService.createTokens(user.id);
+    return { accessToken, refreshToken };
 };
 export { getUser, createUser, editUser, deleteUser, loginUser };

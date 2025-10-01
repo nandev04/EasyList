@@ -35,7 +35,7 @@ model User {
 model RefreshToken {
   id        Int      @id @default(autoincrement())
   token     String   @unique
-  userId    Int
+  userId    Int      @unique
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   expiresAt DateTime

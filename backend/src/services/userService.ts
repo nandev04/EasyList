@@ -44,10 +44,6 @@ const loginUser = async (email: string, password: string) => {
 
   const { accessToken, refreshToken } = await AuthService.createTokens(user.id);
 
-  // RefreshToken expira em 7 dias (transformando para ms e criando em formato Date)
-  const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  await Model.createRefreshToken(refreshToken, user.id, expirationDate);
-
   return { accessToken, refreshToken };
 };
 

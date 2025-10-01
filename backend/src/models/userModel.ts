@@ -125,17 +125,14 @@ const findByEmail = async (email: string) => {
   }
 };
 
-const createRefreshToken = async (refreshToken: string, userId: number, expiresAt: Date) => {
+const upsertRefreshToken = async (refreshToken: string, userId: number, expiresAt: Date) => {
   try {
-    const createdRefreshToken = await prisma.refreshToken.create({
-      data: {
-        token: 'dwadsa',
-        userId,
-        expiresAt
-      },
-      select: { token: true }
+    const upsertRefreshToken = await prisma.refreshToken.upsert({
+      where: { userId },
+      update: { token: refreshToken, expiresAt },
+      create: { token: refreshToken, userId, expiresAt }
     });
-    return createdRefreshToken;
+    return upsertRefreshToken;
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) throw new AppError(error.message, 400);
     if (
@@ -149,4 +146,29 @@ const createRefreshToken = async (refreshToken: string, userId: number, expiresA
   }
 };
 
-export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail, createRefreshToken };
+const verifyRefreshToken = async (refreshToken: string) => {
+  try {
+    const token = await prisma.refreshToken.findUnique({
+      where: {
+        token: refreshToken
+      },
+      select: { token: true, expiresAt: true }
+    });
+    if (!token) throw new AppError('Token não encontrado', 404);
+    return token;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
+  }
+};
+
+export {
+  getUser,
+  createUser,
+  editUser,
+  deleteUser,
+  verifyUser,
+  findByEmail,
+  upsertRefreshToken,
+  verifyRefreshToken
+};

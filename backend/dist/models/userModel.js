@@ -104,7 +104,7 @@ const findByEmail = async (email) => {
     try {
         const user = await prisma.user.findUnique({
             where: { email: email, verified: true },
-            select: { password: true }
+            select: { password: true, id: true }
         });
         if (!user)
             throw new AppError('Usuário não encontrado', 404);
@@ -116,4 +116,42 @@ const findByEmail = async (email) => {
         throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido model', 500);
     }
 };
-export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail };
+const upsertRefreshToken = async (refreshToken, userId, expiresAt) => {
+    try {
+        const upsertRefreshToken = await prisma.refreshToken.upsert({
+            where: { userId },
+            update: { token: refreshToken, expiresAt },
+            create: { token: refreshToken, userId, expiresAt }
+        });
+        return upsertRefreshToken;
+    }
+    catch (error) {
+        if (error instanceof PrismaClientKnownRequestError)
+            throw new AppError(error.message, 400);
+        if (error instanceof PrismaClientUnknownRequestError ||
+            error instanceof PrismaClientRustPanicError ||
+            error instanceof PrismaClientInitializationError ||
+            error instanceof Error)
+            throw new AppError(error.message, 500);
+        throw new AppError('Erro desconhecido', 500);
+    }
+};
+const verifyRefreshToken = async (refreshToken) => {
+    try {
+        const token = await prisma.refreshToken.findUnique({
+            where: {
+                token: refreshToken
+            },
+            select: { token: true, expiresAt: true }
+        });
+        if (!token)
+            throw new AppError('Token não encontrado', 404);
+        return token;
+    }
+    catch (error) {
+        if (error instanceof AppError)
+            throw error;
+        throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
+    }
+};
+export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail, upsertRefreshToken, verifyRefreshToken };
