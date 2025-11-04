@@ -23,7 +23,6 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 - 🗄️ [Prisma](https://www.prisma.io/) (ORM para MySQL)  
 - 🔑 [bcrypt](https://www.npmjs.com/package/bcrypt) (hash de senhas)  
 - 🛢️ [MySQL](https://www.mysql.com/) (banco de dados principal)  
-- ⚡ [Redis](https://redis.io/) (cache)  
 - 📧 [SendGrid](https://sendgrid.com/) (envio de emails de confirmação de login)  
 - 🧪 [Jest](https://jestjs.io/) (testes unitários)  
 - ✨ ESLint + Prettier  
