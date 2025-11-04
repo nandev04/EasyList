@@ -6,7 +6,7 @@ import { AppError } from '../utils/error.js';
 import ms from 'ms';
 import { createAccessToken, createRefreshToken } from '../utils/createToken.js';
 import { v4 as uuidv4 } from 'uuid';
-import { transformForHash } from '../utils/crypto.js';
+import { generateTokenRaw, transformForHash } from '../utils/crypto.js';
 dotenv.config();
 export class AuthService {
     static async register(userId, email) {
@@ -90,10 +90,22 @@ export class AuthService {
         if (!refreshToken)
             throw new AppError('Token de atualização ausente', 401);
         const hashRefreshToken = transformForHash(refreshToken);
-        const { userId } = await Model.verifyRefreshToken(hashRefreshToken);
+        const { userId, expiresAt } = await Model.verifyRefreshToken(hashRefreshToken);
+        const expiresAtDate = new Date(expiresAt);
+        const dateNow = new Date();
+        if (dateNow > expiresAtDate)
+            throw new AppError('Token Expirado', 401);
         if (!userId)
-            throw new AppError('Token Inválido', 400);
+            throw new AppError('Token Inválido', 401);
         const newAccessToken = createAccessToken(userId);
         return { newAccessToken, userId };
     }
 }
+// Forgot Password
+const forgotPasswordService = async (email) => {
+    const tokenForgot = generateTokenRaw();
+    const hashTokenForgot = transformForHash(tokenForgot);
+    console.log(tokenForgot);
+    // Disparar email com token e email
+};
+export { forgotPasswordService };

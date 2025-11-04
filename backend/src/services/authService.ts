@@ -6,7 +6,7 @@ import { AppError } from '../utils/error.js';
 import ms from 'ms';
 import { createAccessToken, createRefreshToken } from '../utils/createToken.js';
 import { v4 as uuidv4 } from 'uuid';
-import { transformForHash } from '../utils/crypto.js';
+import { generateTokenRaw, transformForHash } from '../utils/crypto.js';
 
 dotenv.config();
 
@@ -116,6 +116,17 @@ export class AuthService {
   }
 }
 
+// Forgot Password
+
+const forgotPasswordService = async (email: string) => {
+  const tokenForgot = generateTokenRaw();
+  const hashTokenForgot = transformForHash(tokenForgot);
+
+  console.log(tokenForgot);
+
+  // Disparar email com token e email
+};
+
 interface verifyTokens {
   refreshToken?: string;
   accessToken?: string;
@@ -127,3 +138,5 @@ interface VerifyTokensResult {
   userId: number;
   newAccessToken?: string;
 }
+
+export { forgotPasswordService };
