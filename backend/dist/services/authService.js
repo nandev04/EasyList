@@ -4,13 +4,16 @@ import * as Model from '../models/userModel.js';
 import { EmailService } from './emailService.js';
 import { AppError } from '../utils/error.js';
 import ms from 'ms';
+import { createAccessToken, createRefreshToken } from '../utils/createToken.js';
+import { v4 as uuidv4 } from 'uuid';
+import { transformForHash } from '../utils/crypto.js';
 dotenv.config();
 export class AuthService {
-    static async register(userID, email) {
+    static async register(userId, email) {
         if (!process.env.JWT_EMAIL_SECRET)
             throw new AppError('JWT_EMAIL_SECRET não definido!', 500);
         try {
-            const token = jwt.sign({ userID }, process.env.JWT_EMAIL_SECRET, { expiresIn: '1h' });
+            const token = createAccessToken(userId);
             EmailService.sendVerificationEmail(email, token);
             return token;
         }
@@ -27,7 +30,7 @@ export class AuthService {
             throw new Error('JWT_EMAIL_SECRET não definido!');
         try {
             const payload = jwt.verify(token, process.env.JWT_EMAIL_SECRET);
-            const verifiedUser = await Model.verifyUser(payload.userID);
+            const verifiedUser = await Model.verifyUser(payload.userId);
             return verifiedUser;
         }
         catch (err) {
@@ -41,20 +44,56 @@ export class AuthService {
             throw new AppError('JWT_ACCESS_SECRET não definido!', 500);
         if (!process.env.JWT_REFRESH_SECRET)
             throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
+        const deviceId = uuidv4();
         try {
-            const accessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET, { expiresIn: '1h' });
-            const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, {
-                expiresIn: '7d'
-            });
-            // RefreshToken expira em 7 dias (transformando para ms e criando em formato Date)
-            const expirationDate = new Date(Date.now() + ms(process.env.JWT_REFRESH_EXPIRES_IN));
-            await Model.upsertRefreshToken(refreshToken, userId, expirationDate);
-            return { accessToken, refreshToken };
+            const accessToken = createAccessToken(userId);
+            const { refreshTokenRaw, hashRefreshToken } = createRefreshToken();
+            const expiresMs = ms(process.env.TOKEN_REFRESH_EXPIRES_IN);
+            // Transform to date for database
+            const expirationDate = new Date(Date.now() + expiresMs);
+            await Model.createRefreshToken(hashRefreshToken, userId, deviceId, expirationDate);
+            return { accessToken, refreshTokenRaw, expiresMs, deviceId };
         }
         catch (err) {
             if (err instanceof AppError)
                 throw err;
             throw new AppError(err instanceof Error ? err.message : 'Token Inválido', 401);
         }
+    }
+    static async getRefreshTokenFromDevice(deviceId) {
+        const tokenDevice = await Model.verifyDeviceId(deviceId);
+        return tokenDevice ?? null;
+    }
+    static async verifyTokens({ refreshToken, accessToken, deviceId }) {
+        if (accessToken) {
+            try {
+                const { userId } = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
+                return { userId };
+            }
+            catch (err) {
+                if (!(err instanceof jwt.TokenExpiredError))
+                    throw new AppError('Token de acesso inválido', 401);
+                console.log('Erro na autenticação', {
+                    message: err instanceof Error ? err.message : 'Erro desconhecido'
+                });
+            }
+        }
+        if (!refreshToken && deviceId) {
+            const { userId, token } = await this.getRefreshTokenFromDevice(deviceId);
+            const newAccessToken = createAccessToken(userId);
+            return {
+                userId,
+                newAccessToken,
+                tokenDevice: token
+            };
+        }
+        if (!refreshToken)
+            throw new AppError('Token de atualização ausente', 401);
+        const hashRefreshToken = transformForHash(refreshToken);
+        const { userId } = await Model.verifyRefreshToken(hashRefreshToken);
+        if (!userId)
+            throw new AppError('Token Inválido', 400);
+        const newAccessToken = createAccessToken(userId);
+        return { newAccessToken, userId };
     }
 }

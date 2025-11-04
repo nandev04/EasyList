@@ -2,6 +2,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import tasksRouter from './routes/tasksRouter.js';
 import usersRouter from './routes/usersRouter.js';
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 // Middlewares
 app.use(express.json());

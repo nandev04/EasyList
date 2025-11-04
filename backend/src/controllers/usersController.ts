@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import * as Service from '../services/userService.js';
 import { AppError } from '../utils/error.js';
 
@@ -68,19 +68,30 @@ const deleteUser = async (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const { refreshToken, accessToken } = await Service.loginUser(email, password);
 
-    const refreshTokenMaxAge = ms(process.env.JWT_REFRESH_EXPIRES_IN as ms.StringValue);
+    const { refreshTokenRaw, accessToken, deviceId, expiresMs } = await Service.loginUser(
+      email,
+      password
+    );
+
+    const refreshTokenMaxAge = ms(process.env.TOKEN_REFRESH_EXPIRES_IN as ms.StringValue);
     const accessTokenMaxAge = ms(process.env.JWT_ACCESS_EXPIRES_IN as ms.StringValue);
-    console.log('aqui deu');
 
-    // Refresh Token
-    res.cookie('refreshToken', refreshToken, {
+    // DeviceID
+    res.cookie('deviceId', deviceId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       signed: true,
-      // no servidor (authService), o token expira em 7 dias, por isso transformei 7 dias em milisegundos
+      maxAge: expiresMs
+    });
+
+    // Refresh Token
+    res.cookie('refreshToken', refreshTokenRaw, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      signed: true,
       maxAge: refreshTokenMaxAge
     });
 
@@ -90,7 +101,6 @@ const loginUser = async (req: Request, res: Response) => {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       signed: true,
-      // no servidor (authService), o token expira em 7 dias, por isso transformei 7 dias em milisegundos
       maxAge: accessTokenMaxAge
     });
     return res.status(200).json({ token: accessToken });
@@ -100,7 +110,7 @@ const loginUser = async (req: Request, res: Response) => {
       return res.status(error.statusCode).json({ message: error.message });
     }
 
-    return res.status(500).json({ message: 'Erro desconhecido' });
+    return res.status(500).json({ message: 'Erro desconhecido CONTROLLERRRR' });
   }
 };
 

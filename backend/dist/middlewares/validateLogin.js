@@ -4,4 +4,4 @@ const validateLogin = (req, res, next) => {
         return res.status(400).json({ message: 'Email e senha são obrigatórios.' });
     next();
 };
-export default validateLogin;
+export { validateLogin };

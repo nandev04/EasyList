@@ -6,3 +6,6 @@
 */
 -- CreateIndex
 CREATE UNIQUE INDEX `RefreshToken_userId_key` ON `RefreshToken`(`userId`);
+ALTER TABLE RefreshToken
+ADD COLUMN deviceId VARCHAR(255) NOT NULL UNIQUE;
+

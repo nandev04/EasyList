@@ -57,17 +57,23 @@ const deleteUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const { refreshToken, accessToken } = await Service.loginUser(email, password);
-        const refreshTokenMaxAge = ms(process.env.JWT_REFRESH_EXPIRES_IN);
+        const { refreshTokenRaw, accessToken, deviceId, expiresMs } = await Service.loginUser(email, password);
+        const refreshTokenMaxAge = ms(process.env.TOKEN_REFRESH_EXPIRES_IN);
         const accessTokenMaxAge = ms(process.env.JWT_ACCESS_EXPIRES_IN);
-        console.log('aqui deu');
-        // Refresh Token
-        res.cookie('refreshToken', refreshToken, {
+        // DeviceID
+        res.cookie('deviceId', deviceId, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             signed: true,
-            // no servidor (authService), o token expira em 7 dias, por isso transformei 7 dias em milisegundos
+            maxAge: expiresMs
+        });
+        // Refresh Token
+        res.cookie('refreshToken', refreshTokenRaw, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            signed: true,
             maxAge: refreshTokenMaxAge
         });
         // Access Token
@@ -76,7 +82,6 @@ const loginUser = async (req, res) => {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             signed: true,
-            // no servidor (authService), o token expira em 7 dias, por isso transformei 7 dias em milisegundos
             maxAge: accessTokenMaxAge
         });
         return res.status(200).json({ token: accessToken });
@@ -86,7 +91,7 @@ const loginUser = async (req, res) => {
             console.log(error);
             return res.status(error.statusCode).json({ message: error.message });
         }
-        return res.status(500).json({ message: 'Erro desconhecido' });
+        return res.status(500).json({ message: 'Erro desconhecido CONTROLLERRRR' });
     }
 };
 export { getUser, createUser, editUser, deleteUser, loginUser };
