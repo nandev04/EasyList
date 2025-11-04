@@ -116,14 +116,17 @@ const findByEmail = async (email) => {
         throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido model', 500);
     }
 };
-const upsertRefreshToken = async (refreshToken, userId, expiresAt) => {
+const createRefreshToken = async (refreshToken, userId, deviceId, expiresAt) => {
     try {
-        const upsertRefreshToken = await prisma.refreshToken.upsert({
-            where: { userId },
-            update: { token: refreshToken, expiresAt },
-            create: { token: refreshToken, userId, expiresAt }
+        const createRefreshToken = await prisma.refreshToken.create({
+            data: {
+                token: refreshToken,
+                userId,
+                deviceId,
+                expiresAt
+            }
         });
-        return upsertRefreshToken;
+        return createRefreshToken;
     }
     catch (error) {
         if (error instanceof PrismaClientKnownRequestError)
@@ -142,7 +145,7 @@ const verifyRefreshToken = async (refreshToken) => {
             where: {
                 token: refreshToken
             },
-            select: { token: true, expiresAt: true }
+            select: { token: true, expiresAt: true, userId: true }
         });
         if (!token)
             throw new AppError('Token não encontrado', 404);
@@ -154,4 +157,22 @@ const verifyRefreshToken = async (refreshToken) => {
         throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
     }
 };
-export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail, upsertRefreshToken, verifyRefreshToken };
+const verifyDeviceId = async (deviceId) => {
+    try {
+        const tokenDevice = await prisma.refreshToken.findUnique({
+            where: {
+                deviceId: deviceId
+            },
+            select: { token: true, userId: true }
+        });
+        if (!tokenDevice)
+            throw new AppError('Token não encontrado', 404);
+        return tokenDevice;
+    }
+    catch (error) {
+        if (error instanceof AppError)
+            throw error;
+        throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
+    }
+};
+export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail, createRefreshToken, verifyRefreshToken, verifyDeviceId };

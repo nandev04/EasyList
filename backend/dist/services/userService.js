@@ -32,7 +32,7 @@ const loginUser = async (email, password) => {
     const verifyHash = await bcrypt.compare(password, user.password);
     if (!verifyHash)
         throw new AppError('Credenciais inválidas', 401);
-    const { accessToken, refreshToken } = await AuthService.createTokens(user.id);
-    return { accessToken, refreshToken };
+    const { accessToken, refreshTokenRaw, expiresMs, deviceId } = await AuthService.createTokens(user.id);
+    return { accessToken, refreshTokenRaw, deviceId, expiresMs };
 };
 export { getUser, createUser, editUser, deleteUser, loginUser };

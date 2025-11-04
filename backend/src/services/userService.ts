@@ -42,9 +42,11 @@ const loginUser = async (email: string, password: string) => {
 
   if (!verifyHash) throw new AppError('Credenciais inválidas', 401);
 
-  const { accessToken, refreshToken } = await AuthService.createTokens(user.id);
+  const { accessToken, refreshTokenRaw, expiresMs, deviceId } = await AuthService.createTokens(
+    user.id
+  );
 
-  return { accessToken, refreshToken };
+  return { accessToken, refreshTokenRaw, deviceId, expiresMs };
 };
 
 export { getUser, createUser, editUser, deleteUser, loginUser };

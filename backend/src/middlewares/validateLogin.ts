@@ -9,4 +9,4 @@ const validateLogin = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export default validateLogin;
+export { validateLogin };

@@ -125,14 +125,22 @@ const findByEmail = async (email: string) => {
   }
 };
 
-const upsertRefreshToken = async (refreshToken: string, userId: number, expiresAt: Date) => {
+const createRefreshToken = async (
+  refreshToken: string,
+  userId: number,
+  deviceId: string,
+  expiresAt: Date
+) => {
   try {
-    const upsertRefreshToken = await prisma.refreshToken.upsert({
-      where: { userId },
-      update: { token: refreshToken, expiresAt },
-      create: { token: refreshToken, userId, expiresAt }
+    const createRefreshToken = await prisma.refreshToken.create({
+      data: {
+        token: refreshToken,
+        userId,
+        deviceId,
+        expiresAt
+      }
     });
-    return upsertRefreshToken;
+    return createRefreshToken;
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) throw new AppError(error.message, 400);
     if (
@@ -152,10 +160,26 @@ const verifyRefreshToken = async (refreshToken: string) => {
       where: {
         token: refreshToken
       },
-      select: { token: true, expiresAt: true }
+      select: { token: true, expiresAt: true, userId: true }
     });
     if (!token) throw new AppError('Token não encontrado', 404);
     return token;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
+  }
+};
+
+const verifyDeviceId = async (deviceId: string) => {
+  try {
+    const tokenDevice = await prisma.refreshToken.findUnique({
+      where: {
+        deviceId: deviceId
+      },
+      select: { token: true, userId: true }
+    });
+    if (!tokenDevice) throw new AppError('Token não encontrado', 404);
+    return tokenDevice;
   } catch (error) {
     if (error instanceof AppError) throw error;
     throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
@@ -169,6 +193,7 @@ export {
   deleteUser,
   verifyUser,
   findByEmail,
-  upsertRefreshToken,
-  verifyRefreshToken
+  createRefreshToken,
+  verifyRefreshToken,
+  verifyDeviceId
 };
