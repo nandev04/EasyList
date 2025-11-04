@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthService } from '../services/authService.js';
+import { AuthService, forgotPasswordService } from '../services/authService.js';
 import { AppError } from '../utils/error.js';
 
 const verifyEmail = async (req: Request, res: Response) => {
@@ -22,4 +22,19 @@ const verifyEmail = async (req: Request, res: Response) => {
   }
 };
 
-export { verifyEmail };
+const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Email não fornecido' });
+    }
+
+    const r = await forgotPasswordService(email);
+    return res.status(200).json(r);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
+
+export { verifyEmail, forgotPassword };
