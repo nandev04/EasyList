@@ -30,4 +30,9 @@ const forgotPassword = async (req, res) => {
         return res.status(400).json(err);
     }
 };
-export { verifyEmail, forgotPassword };
+const resetPassword = async (req, res) => {
+    const token = req.query.token;
+    console.log('reset password route, token: ' + token);
+    return res.status(200).json(token);
+};
+export { verifyEmail, forgotPassword, resetPassword };

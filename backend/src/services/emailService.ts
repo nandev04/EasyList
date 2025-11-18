@@ -41,4 +41,22 @@ export class EmailService {
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
     }
   }
+
+  static async sendForgotPasswordEmail(to: string, token: string) {
+    const resetLink = `http://localhost:3333/auth/reset-password?token=${token}`;
+    const transporter = await this.getTransporter();
+
+    const info = await transporter.sendMail({
+      from: 'no-reply@minhaempresa.com', // remetente validado no SendGrid
+      to,
+      subject: 'Confirme sua conta',
+      html: `<p>Bem-vindo! Clique no link abaixo para trocar sua senha:</p>
+             <a href="${resetLink}">Resetar Senha</a>`
+    });
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Mensagem enviada: %s', info.messageId);
+      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    }
+  }
 }
