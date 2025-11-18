@@ -4,7 +4,7 @@ import * as Model from '../models/userModel.js';
 import { EmailService } from './emailService.js';
 import { AppError } from '../utils/error.js';
 import ms from 'ms';
-import { createAccessToken, createRefreshToken } from '../utils/createToken.js';
+import { createAccessToken, createRefreshToken, createVerifyToken } from '../utils/createToken.js';
 import { v4 as uuidv4 } from 'uuid';
 import { generateTokenRaw, transformForHash } from '../utils/crypto.js';
 dotenv.config();
@@ -13,7 +13,7 @@ export class AuthService {
         if (!process.env.JWT_EMAIL_SECRET)
             throw new AppError('JWT_EMAIL_SECRET não definido!', 500);
         try {
-            const token = createAccessToken(userId);
+            const token = createVerifyToken(userId);
             EmailService.sendVerificationEmail(email, token);
             return token;
         }
@@ -103,9 +103,13 @@ export class AuthService {
 }
 // Forgot Password
 const forgotPasswordService = async (email) => {
+    const userId = await Model.findByEmail(email);
+    if (!userId)
+        throw new AppError('Usuário não encontrado', 404);
     const tokenForgot = generateTokenRaw();
     const hashTokenForgot = transformForHash(tokenForgot);
-    console.log(tokenForgot);
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    await Model.createTokenForgot(hashTokenForgot, expiresAt, userId.id);
     // Disparar email com token e email
     EmailService.sendForgotPasswordEmail(email, tokenForgot);
 };

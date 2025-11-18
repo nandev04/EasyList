@@ -175,4 +175,26 @@ const verifyDeviceId = async (deviceId) => {
         throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
     }
 };
-export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail, createRefreshToken, verifyRefreshToken, verifyDeviceId };
+const createTokenForgot = async (tokenHash, expiresAt, userId) => {
+    try {
+        const createTokenForgot = await prisma.passwordResetToken.create({
+            data: {
+                tokenHash,
+                expiresAt,
+                userId
+            }
+        });
+        return createTokenForgot;
+    }
+    catch (error) {
+        if (error instanceof PrismaClientKnownRequestError)
+            throw new AppError(error.message, 400);
+        if (error instanceof PrismaClientUnknownRequestError ||
+            error instanceof PrismaClientRustPanicError ||
+            error instanceof PrismaClientInitializationError ||
+            error instanceof Error)
+            throw new AppError(error.message, 500);
+        throw new AppError('Erro desconhecido', 500);
+    }
+};
+export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail, createRefreshToken, verifyRefreshToken, verifyDeviceId, createTokenForgot };

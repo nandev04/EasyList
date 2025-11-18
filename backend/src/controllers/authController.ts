@@ -41,6 +41,8 @@ const resetPassword = async (req: Request, res: Response) => {
   const token = req.query.token;
   console.log('reset password route, token: ' + token);
   return res.status(200).json(token);
+
+  // CRIAR ENDPOINT DE VALIDACAO DE TOKEN -> ALTERAR A SENHA DO USUÁRIO
 };
 
 export { verifyEmail, forgotPassword, resetPassword };
