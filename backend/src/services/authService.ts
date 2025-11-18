@@ -125,7 +125,10 @@ const forgotPasswordService = async (email: string) => {
   console.log(tokenForgot);
 
   // Disparar email com token e email
+  EmailService.sendForgotPasswordEmail(email, tokenForgot);
 };
+
+const resetPasswordService = async () => {};
 
 interface verifyTokens {
   refreshToken?: string;

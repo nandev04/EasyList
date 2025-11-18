@@ -107,5 +107,7 @@ const forgotPasswordService = async (email) => {
     const hashTokenForgot = transformForHash(tokenForgot);
     console.log(tokenForgot);
     // Disparar email com token e email
+    EmailService.sendForgotPasswordEmail(email, tokenForgot);
 };
+const resetPasswordService = async () => { };
 export { forgotPasswordService };

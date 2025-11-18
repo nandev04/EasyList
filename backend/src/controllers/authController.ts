@@ -37,4 +37,10 @@ const forgotPassword = async (req: Request, res: Response) => {
   }
 };
 
-export { verifyEmail, forgotPassword };
+const resetPassword = async (req: Request, res: Response) => {
+  const token = req.query.token;
+  console.log('reset password route, token: ' + token);
+  return res.status(200).json(token);
+};
+
+export { verifyEmail, forgotPassword, resetPassword };
