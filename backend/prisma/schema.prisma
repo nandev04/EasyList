@@ -31,7 +31,7 @@ model User {
   tasks         Task[]
   refreshTokens RefreshToken[]
 
-  passwordResetTokens PasswordResetToken[]
+  PasswordResetCode PasswordResetCode[]
 }
 
 model RefreshToken {
@@ -46,7 +46,7 @@ model RefreshToken {
   @@unique([userId, deviceId]) 
 }
 
-model PasswordResetToken {
+model PasswordResetCode {
   id         Int      @id @default(autoincrement())
   tokenHash  String
   expiresAt  DateTime
@@ -57,4 +57,5 @@ model PasswordResetToken {
 
   @@index([userId])
   @@index([expiresAt])
+  @@map("PasswordResetToken")
 }
