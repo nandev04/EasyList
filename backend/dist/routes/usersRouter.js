@@ -18,5 +18,5 @@ router.get('/auth/verify', ControllerAuth.verifyEmail);
 router.post('/refresh-token', ControllerToken.refreshToken);
 // recovery password
 router.post('/auth/forgot-password', ControllerAuth.forgotPassword);
-router.get('/auth/reset-password', ControllerAuth.resetPassword);
+router.post('/auth/verify-code', ControllerAuth.verifyCode);
 export default router;

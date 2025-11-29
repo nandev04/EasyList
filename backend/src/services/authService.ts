@@ -6,7 +6,8 @@ import { AppError } from '../utils/error.js';
 import ms from 'ms';
 import { createAccessToken, createRefreshToken, createVerifyToken } from '../utils/createToken.js';
 import { v4 as uuidv4 } from 'uuid';
-import { generateTokenRaw, transformForHash } from '../utils/crypto.js';
+import { generateTokenRaw, transformForHash, tokenUUID } from '../utils/crypto.js';
+import generateCode from '../utils/generateCode.js';
 
 dotenv.config();
 
@@ -122,17 +123,32 @@ const forgotPasswordService = async (email: string) => {
   const userId = await Model.findByEmail(email);
   if (!userId) throw new AppError('Usuário não encontrado', 404);
 
-  const tokenForgot = generateTokenRaw();
-  const hashTokenForgot = transformForHash(tokenForgot);
+  const code = generateCode();
+  const hashCodeForgot = transformForHash(code);
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-  await Model.createTokenForgot(hashTokenForgot, expiresAt, userId.id);
+  await Model.createCodeForgot(hashCodeForgot, expiresAt, userId.id);
 
   // Disparar email com token e email
-  EmailService.sendForgotPasswordEmail(email, tokenForgot);
+  EmailService.sendForgotPasswordEmail(email, code);
 };
 
-const resetPasswordService = async () => {};
+const verifyCodeService = async (code: string, email: string) => {
+  const { id } = await Model.findByEmail(email);
+
+  const dateNow = new Date();
+
+  const codeHash = transformForHash(code);
+
+  const codeFetched = await Model.findCodeForgot(codeHash, id);
+
+  if (codeFetched.expiresAt < dateNow) throw new AppError('Código expirado', 400);
+
+  const token = tokenUUID();
+  console.log(token);
+
+  return codeFetched.userId;
+};
 
 interface verifyTokens {
   refreshToken?: string;
@@ -146,4 +162,4 @@ interface VerifyTokensResult {
   newAccessToken?: string;
 }
 
-export { forgotPasswordService };
+export { forgotPasswordService, verifyCodeService };

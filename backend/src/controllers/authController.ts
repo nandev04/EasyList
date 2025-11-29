@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthService, forgotPasswordService } from '../services/authService.js';
+import { AuthService, forgotPasswordService, verifyCodeService } from '../services/authService.js';
 import { AppError } from '../utils/error.js';
 
 const verifyEmail = async (req: Request, res: Response) => {
@@ -33,16 +33,27 @@ const forgotPassword = async (req: Request, res: Response) => {
     const r = await forgotPasswordService(email);
     return res.status(200).json(r);
   } catch (err) {
-    return res.status(400).json(err);
+    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
+
+    return res
+      .status(500)
+      .json({ message: err instanceof Error ? err.message : 'Erro desconhecido' });
   }
 };
 
-const resetPassword = async (req: Request, res: Response) => {
-  const token = req.query.token;
-  console.log('reset password route, token: ' + token);
-  return res.status(200).json(token);
+const verifyCode = async (req: Request, res: Response) => {
+  try {
+    const { code, email } = req.body;
 
-  // CRIAR ENDPOINT DE VALIDACAO DE TOKEN -> ALTERAR A SENHA DO USUÁRIO
+    const userIdCode = await verifyCodeService(code, email);
+    return res.status(400).json(userIdCode);
+  } catch (err) {
+    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
+
+    return res
+      .status(500)
+      .json({ message: err instanceof Error ? err.message : 'Erro desconhecido' });
+  }
 };
 
-export { verifyEmail, forgotPassword, resetPassword };
+export { verifyEmail, forgotPassword, verifyCode };

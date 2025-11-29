@@ -186,9 +186,9 @@ const verifyDeviceId = async (deviceId: string) => {
   }
 };
 
-const createTokenForgot = async (tokenHash: string, expiresAt: Date, userId: number) => {
+const createCodeForgot = async (tokenHash: string, expiresAt: Date, userId: number) => {
   try {
-    const createTokenForgot = await prisma.passwordResetToken.create({
+    const createTokenForgot = await prisma.passwordResetCode.create({
       data: {
         tokenHash,
         expiresAt,
@@ -209,6 +209,23 @@ const createTokenForgot = async (tokenHash: string, expiresAt: Date, userId: num
   }
 };
 
+const findCodeForgot = async (hashCode: string, userId: number) => {
+  try {
+    const code = await prisma.passwordResetCode.findFirst({
+      where: {
+        userId,
+        tokenHash: hashCode
+      },
+      select: { userId: true, expiresAt: true }
+    });
+    if (!code) throw new AppError('Código não encontrado', 404);
+    return code;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
+  }
+};
+
 export {
   getUser,
   createUser,
@@ -219,5 +236,6 @@ export {
   createRefreshToken,
   verifyRefreshToken,
   verifyDeviceId,
-  createTokenForgot
+  createCodeForgot,
+  findCodeForgot
 };
