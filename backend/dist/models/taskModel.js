@@ -1,7 +1,7 @@
 import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
 import { taskStatus } from '../types/tasks.js';
-import { PrismaClientInitializationError, PrismaClientKnownRequestError, PrismaClientRustPanicError, PrismaClientUnknownRequestError } from '@prisma/client/runtime/library.js';
+import { PrismaClientInitializationError, PrismaClientKnownRequestError, PrismaClientRustPanicError, PrismaClientUnknownRequestError } from '@prisma/client/runtime/client.js';
 const getTasks = async (id) => {
     try {
         const tasks = await prisma.task.findUnique({
