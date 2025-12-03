@@ -186,6 +186,91 @@ const verifyDeviceId = async (deviceId: string) => {
   }
 };
 
+const createCodeOTP = async (tokenHash: string, expiresAt: Date, userId: number) => {
+  try {
+    const createTokenForgot = await prisma.passwordResetOTP.create({
+      data: {
+        tokenHash,
+        expiresAt,
+        userId
+      }
+    });
+    return createTokenForgot;
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) throw new AppError(error.message, 400);
+    if (
+      error instanceof PrismaClientUnknownRequestError ||
+      error instanceof PrismaClientRustPanicError ||
+      error instanceof PrismaClientInitializationError ||
+      error instanceof Error
+    )
+      throw new AppError(error.message, 500);
+    throw new AppError('Erro desconhecido', 500);
+  }
+};
+
+const findCodeOTP = async (hashCode: string, userId: number) => {
+  try {
+    const code = await prisma.passwordResetOTP.findFirst({
+      where: {
+        userId,
+        tokenHash: hashCode
+      },
+      select: { userId: true, used: true, expiresAt: true, id: true }
+    });
+    if (!code) throw new AppError('Código não encontrado', 404);
+    return code;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
+  }
+};
+
+const markCodeAsUsed = async (id: number) => {
+  try {
+    const markCode = await prisma.passwordResetOTP.update({
+      where: { id: id },
+      data: {
+        used: true
+      }
+    });
+    return markCode;
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) throw new AppError(error.message, 400);
+    if (
+      error instanceof PrismaClientUnknownRequestError ||
+      error instanceof PrismaClientRustPanicError ||
+      error instanceof PrismaClientInitializationError ||
+      error instanceof Error
+    )
+      throw new AppError(error.message, 500);
+    throw new AppError('Erro desconhecido', 500);
+  }
+};
+
+const createTokenUUID = async (id: number, token: string) => {
+  try {
+    const createToken = await prisma.passwordResetToken.create({
+      data: {
+        userId: id,
+        token,
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000)
+      }
+    });
+    return createToken;
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) throw new AppError(error.message, 400);
+    if (
+      error instanceof PrismaClientUnknownRequestError ||
+      error instanceof PrismaClientRustPanicError ||
+      error instanceof PrismaClientInitializationError ||
+      error instanceof Error
+    )
+      throw new AppError(error.message, 500);
+    throw new AppError('Erro desconhecido', 500);
+  }
+};
+
 export {
   getUser,
   createUser,
@@ -195,5 +280,9 @@ export {
   findByEmail,
   createRefreshToken,
   verifyRefreshToken,
-  verifyDeviceId
+  verifyDeviceId,
+  createCodeOTP,
+  findCodeOTP,
+  markCodeAsUsed,
+  createTokenUUID
 };

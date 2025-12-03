@@ -17,8 +17,5 @@ ALTER TABLE `RefreshToken` MODIFY `deviceId` VARCHAR(191) NOT NULL;
 -- CreateIndex
 CREATE UNIQUE INDEX `RefreshToken_userId_deviceId_key` ON `RefreshToken`(`userId`, `deviceId`);
 
--- AddForeignKey
-ALTER TABLE `Task` ADD CONSTRAINT `Task_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
 -- RenameIndex
 ALTER TABLE `RefreshToken` RENAME INDEX `deviceId` TO `RefreshToken_deviceId_key`;
