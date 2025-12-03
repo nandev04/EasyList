@@ -1,14 +1,15 @@
-import * as Model from '../models/userModel.js';
 import bcrypt from 'bcrypt';
+import * as Model from '../models/userModel.js';
 import { AuthService } from './authService.js';
 import { AppError } from '../utils/error.js';
+import { createHashPassword } from '../utils/crypto.js';
 const getUser = async (id) => {
     const user = await Model.getUser(+id);
     return user;
 };
 const createUser = async ({ username, password, email }) => {
     try {
-        const hashPassword = await bcrypt.hash(password, 10);
+        const hashPassword = await createHashPassword(password);
         const createdUser = await Model.createUser({ username, hashPassword, email });
         await AuthService.register(createdUser.id, createdUser.email);
         return createdUser;

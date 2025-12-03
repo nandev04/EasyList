@@ -175,9 +175,9 @@ const verifyDeviceId = async (deviceId) => {
         throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
     }
 };
-const createCodeForgot = async (tokenHash, expiresAt, userId) => {
+const createCodeOTP = async (tokenHash, expiresAt, userId) => {
     try {
-        const createTokenForgot = await prisma.passwordResetToken.create({
+        const createTokenForgot = await prisma.passwordResetOTP.create({
             data: {
                 tokenHash,
                 expiresAt,
@@ -197,14 +197,14 @@ const createCodeForgot = async (tokenHash, expiresAt, userId) => {
         throw new AppError('Erro desconhecido', 500);
     }
 };
-const findCodeForgot = async (hashCode, userId) => {
+const findCodeOTP = async (hashCode, userId) => {
     try {
-        const code = await prisma.passwordResetToken.findFirst({
+        const code = await prisma.passwordResetOTP.findFirst({
             where: {
                 userId,
                 tokenHash: hashCode
             },
-            select: { userId: true, expiresAt: true }
+            select: { userId: true, used: true, expiresAt: true, id: true }
         });
         if (!code)
             throw new AppError('Código não encontrado', 404);
@@ -216,4 +216,47 @@ const findCodeForgot = async (hashCode, userId) => {
         throw new AppError(error instanceof Error ? error.message : 'Erro desconhecido', 500);
     }
 };
-export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail, createRefreshToken, verifyRefreshToken, verifyDeviceId, createCodeForgot, findCodeForgot };
+const markCodeAsUsed = async (id) => {
+    try {
+        const markCode = await prisma.passwordResetOTP.update({
+            where: { id: id },
+            data: {
+                used: true
+            }
+        });
+        return markCode;
+    }
+    catch (error) {
+        if (error instanceof PrismaClientKnownRequestError)
+            throw new AppError(error.message, 400);
+        if (error instanceof PrismaClientUnknownRequestError ||
+            error instanceof PrismaClientRustPanicError ||
+            error instanceof PrismaClientInitializationError ||
+            error instanceof Error)
+            throw new AppError(error.message, 500);
+        throw new AppError('Erro desconhecido', 500);
+    }
+};
+const createTokenUUID = async (id, token) => {
+    try {
+        const createToken = await prisma.passwordResetToken.create({
+            data: {
+                userId: id,
+                token,
+                expiresAt: new Date(Date.now() + 15 * 60 * 1000)
+            }
+        });
+        return createToken;
+    }
+    catch (error) {
+        if (error instanceof PrismaClientKnownRequestError)
+            throw new AppError(error.message, 400);
+        if (error instanceof PrismaClientUnknownRequestError ||
+            error instanceof PrismaClientRustPanicError ||
+            error instanceof PrismaClientInitializationError ||
+            error instanceof Error)
+            throw new AppError(error.message, 500);
+        throw new AppError('Erro desconhecido', 500);
+    }
+};
+export { getUser, createUser, editUser, deleteUser, verifyUser, findByEmail, createRefreshToken, verifyRefreshToken, verifyDeviceId, createCodeOTP, findCodeOTP, markCodeAsUsed, createTokenUUID };

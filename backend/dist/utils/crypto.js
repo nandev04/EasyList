@@ -1,4 +1,5 @@
 import { randomBytes, createHash, randomUUID } from 'crypto';
+import bcrypt from 'bcrypt';
 const generateTokenRaw = () => {
     return randomBytes(64).toString('hex');
 };
@@ -8,4 +9,8 @@ const transformForHash = (tokenRaw) => {
 const tokenUUID = () => {
     return randomUUID();
 };
-export { generateTokenRaw, transformForHash, tokenUUID };
+const createHashPassword = async (password) => {
+    const hash = await bcrypt.hash(password, 10);
+    return hash;
+};
+export { generateTokenRaw, transformForHash, tokenUUID, createHashPassword };

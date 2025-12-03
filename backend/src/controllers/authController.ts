@@ -45,8 +45,8 @@ const verifyCode = async (req: Request, res: Response) => {
   try {
     const { code, email } = req.body;
 
-    const userIdCode = await verifyCodeService(code, email);
-    return res.status(400).json(userIdCode);
+    const tokenReset = await verifyCodeService(code, email);
+    return res.status(400).json(tokenReset);
   } catch (err) {
     if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
 

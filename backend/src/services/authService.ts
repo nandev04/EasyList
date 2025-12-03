@@ -127,7 +127,7 @@ const forgotPasswordService = async (email: string) => {
   const hashCodeForgot = transformForHash(code);
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-  await Model.createCodeForgot(hashCodeForgot, expiresAt, userId.id);
+  await Model.createCodeOTP(hashCodeForgot, expiresAt, userId.id);
 
   // Disparar email com token e email
   EmailService.sendForgotPasswordEmail(email, code);
@@ -140,14 +140,18 @@ const verifyCodeService = async (code: string, email: string) => {
 
   const codeHash = transformForHash(code);
 
-  const codeFetched = await Model.findCodeForgot(codeHash, id);
+  const codeFetched = await Model.findCodeOTP(codeHash, id);
 
   if (codeFetched.expiresAt < dateNow) throw new AppError('Código expirado', 400);
+  if (codeFetched.used) throw new AppError('Código já utilizado', 400);
 
-  const token = tokenUUID();
-  console.log(token);
+  await Model.markCodeAsUsed(codeFetched.id);
 
-  return codeFetched.userId;
+  const tokenResetPassword = tokenUUID();
+
+  await Model.createTokenUUID(codeFetched.userId, tokenResetPassword);
+
+  return tokenResetPassword;
 };
 
 interface verifyTokens {
