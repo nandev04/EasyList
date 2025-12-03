@@ -6,7 +6,7 @@ import {
   PrismaClientKnownRequestError,
   PrismaClientRustPanicError,
   PrismaClientUnknownRequestError
-} from '@prisma/client/runtime/library.js';
+} from '@prisma/client/runtime/client.js';
 
 const getTasks = async (id: string) => {
   try {

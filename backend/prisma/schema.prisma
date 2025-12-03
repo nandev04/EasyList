@@ -28,8 +28,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tasks         Task[]
-  refreshTokens RefreshToken[]
+  tasks              Task[]
+  refreshTokens      RefreshToken[]
+  PasswordResetCode  PasswordResetOTP[]
+  PasswordResetToken PasswordResetToken[]
 }
 
 model RefreshToken {
@@ -41,5 +43,29 @@ model RefreshToken {
   createdAt DateTime @default(now())
   expiresAt DateTime
 
-  @@unique([userId, deviceId]) 
+  @@unique([userId, deviceId])
+}
+
+model PasswordResetOTP {
+  id        Int      @id @default(autoincrement())
+  tokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  used Boolean @default(false)
+
+  @@index([userId, expiresAt, id])
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
