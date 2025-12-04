@@ -8,7 +8,7 @@ const cleanResetCodeDb = () => {
     const now = new Date();
 
     try {
-      const result = await prisma.passwordResetCode.deleteMany({
+      const result = await prisma.passwordResetOTP.deleteMany({
         where: {
           expiresAt: {
             lt: now

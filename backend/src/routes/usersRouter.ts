@@ -5,12 +5,14 @@ import { validateLogin } from '../middlewares/validateLogin.js';
 import * as ControllerToken from '../controllers/refreshTokenController.js';
 import * as ControllerResetPassword from '../controllers/resetPasswordController.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import validate from '../middlewares/validate.js';
+import { createUserSchema } from '../schemas/users/createUser.schema.js';
 
 const router = express.Router();
 
 // Create User
 router.get('/user', Controller.getUser);
-router.post('/user', Controller.createUser);
+router.post('/user', validate(createUserSchema), Controller.createUser);
 router.patch('/user/:id', Controller.editUser);
 router.delete('/user', Controller.deleteUser);
 router.get('/auth/verify', ControllerAuth.verifyEmail);

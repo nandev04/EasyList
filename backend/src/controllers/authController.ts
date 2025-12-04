@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AuthService, forgotPasswordService, verifyCodeService } from '../services/authService.js';
 import { AppError } from '../utils/error.js';
 
-const verifyEmail = async (req: Request, res: Response) => {
+const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.query.token as string;
 
@@ -14,15 +14,11 @@ const verifyEmail = async (req: Request, res: Response) => {
 
     return res.status(200).json(verifiedUser);
   } catch (err) {
-    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
-
-    return res
-      .status(500)
-      .json({ message: err instanceof Error ? err.message : 'Erro desconhecido' });
+    next(err);
   }
 };
 
-const forgotPassword = async (req: Request, res: Response) => {
+const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.body;
 
@@ -33,26 +29,18 @@ const forgotPassword = async (req: Request, res: Response) => {
     const r = await forgotPasswordService(email);
     return res.status(200).json(r);
   } catch (err) {
-    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
-
-    return res
-      .status(500)
-      .json({ message: err instanceof Error ? err.message : 'Erro desconhecido' });
+    next(err);
   }
 };
 
-const verifyCode = async (req: Request, res: Response) => {
+const verifyCode = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { code, email } = req.body;
 
     const tokenReset = await verifyCodeService(code, email);
     return res.status(400).json(tokenReset);
   } catch (err) {
-    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
-
-    return res
-      .status(500)
-      .json({ message: err instanceof Error ? err.message : 'Erro desconhecido' });
+    next(err);
   }
 };
 
