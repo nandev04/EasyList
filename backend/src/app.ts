@@ -5,6 +5,7 @@ import usersRouter from './routes/usersRouter.js';
 import dotenv from 'dotenv';
 import cleanRefreshTokenDb from './cron/refreshTokenCleanup.js';
 import cleanResetCodeDb from './cron/passwordCodeCleanup.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
 const app = express();
@@ -16,5 +17,6 @@ app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(tasksRouter);
 app.use(usersRouter);
+app.use(errorHandler);
 
 export default app;
