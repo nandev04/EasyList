@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-const createUserSchema = z.object({
+type CreateUserBodySchemaType = z.infer<typeof createUserBodySchema>;
+
+const createUserBodySchema = z.object({
   username: z
     .string()
     .min(3, 'O nome de usuário deve ter pelo menos 3 caracteres')
@@ -9,4 +11,4 @@ const createUserSchema = z.object({
   email: z.email()
 });
 
-export { createUserSchema };
+export { createUserBodySchema, CreateUserBodySchemaType };

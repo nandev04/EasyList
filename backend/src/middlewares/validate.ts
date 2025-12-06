@@ -1,20 +1,48 @@
 import { Request, Response, NextFunction } from 'express';
-import { ZodError, ZodType } from 'zod';
+import { ZodType } from 'zod';
 
-const validate = <T extends ZodType>(schema: T) => {
+type Schemas = {
+  body?: ZodType;
+  params?: ZodType;
+  query?: ZodType;
+  cookies?: ZodType;
+};
+
+const validate = (schema: Schemas) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const result = schema.safeParse(req.body);
+    try {
+      const validated: Record<string, unknown> = {};
 
-    if (!result.success) {
-      throw next(new ZodError(result.error.issues));
+      if (schema.body) {
+        const result = schema.body.safeParse(req.body);
+        if (!result.success) return next(result.error);
+        validated.body = result.data;
+      }
+
+      if (schema.params) {
+        const result = schema.params.safeParse(req.params);
+        if (!result.success) return next(result.error);
+        validated.params = result.data;
+      }
+
+      if (schema.query) {
+        const result = schema.query.safeParse(req.query);
+        if (!result.success) return next(result.error);
+        validated.query = result.data;
+      }
+
+      if (schema.cookies) {
+        const result = schema.cookies.safeParse(req.signedCookies);
+        if (!result.success) return next(result.error);
+        validated.cookies = result.data;
+      }
+
+      req.validated = validated;
+
+      next();
+    } catch (err) {
+      next(err);
     }
-
-    // FAZER LÓGICA DE VALIDACAO DE DADOS
-
-    console.log('Dados validados com sucesso.', result.data);
-
-    req.body = result.data;
-    next();
   };
 };
 

@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { AuthService, forgotPasswordService, verifyCodeService } from '../services/authService.js';
-import { AppError } from '../utils/error.js';
+import { VerifyUserQuerySchemaType } from '../schemas/users/verifyUser.schema.js';
+import { forgotPasswordBodyType } from '../schemas/auth/forgotPassword.schema.js';
 
 const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.query.token as string;
-
-    if (!token) {
-      return res.status(400).json({ message: 'Token não fornecido!' });
-    }
+    const { token } = <VerifyUserQuerySchemaType>req.validated!.query;
 
     const verifiedUser = await AuthService.verifyEmail(token);
 
@@ -20,7 +17,7 @@ const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
 
 const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email } = req.body;
+    const { email } = <forgotPasswordBodyType>req.validated!.body;
 
     if (!email) {
       return res.status(400).json({ message: 'Email não fornecido' });
