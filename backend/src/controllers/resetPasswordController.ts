@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { AppError } from '../utils/error.js';
 import * as resetPasswordService from '../services/resetPasswordService.js';
+import { resetPasswordBodyType } from '../schemas/auth/resetPassword.schema.js';
 
 const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { newPassword, tokenResetPassword } = req.body;
+    const { newPassword, tokenResetPassword } = <resetPasswordBodyType>req.validated!.body;
 
     const updatedPassword = await resetPasswordService.resetPassword(
       newPassword,

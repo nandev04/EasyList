@@ -1,6 +1,6 @@
 import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
-import { TaskModelInput, TaskType, taskStatus } from '../types/tasks.js';
+import { TaskModelInput, TaskType, taskStatus } from '../typesAndInterfaces/tasks.js';
 
 const getTasks = async (id: string) => {
   const tasks = await prisma.task.findUnique({

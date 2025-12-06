@@ -1,0 +1,10 @@
+import { z } from 'zod';
+
+type loginUserBodySchemaType = z.infer<typeof loginUserBodySchema>;
+
+const loginUserBodySchema = z.object({
+  email: z.email('Email inválido'),
+  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres').max(100)
+});
+
+export { loginUserBodySchema, loginUserBodySchemaType };

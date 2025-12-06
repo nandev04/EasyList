@@ -1,9 +1,10 @@
 import e, { NextFunction, Request, Response } from 'express';
 import * as Service from '../services/userService.js';
-import { AppError } from '../utils/error.js';
 
 import ms from 'ms';
 import dotenv from 'dotenv';
+import { loginUserBodySchemaType } from '../schemas/login/loginUser.schema.js';
+import { CreateUserBodySchemaType } from '../schemas/users/createUser.schema.js';
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { username, password, email } = req.body;
+    const { username, password, email } = <CreateUserBodySchemaType>req.validated!.body;
 
     const createdUser = await Service.createUser({ username, password, email });
 
@@ -57,7 +58,7 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = <loginUserBodySchemaType>req.validated!.body;
 
     const { refreshTokenRaw, accessToken, deviceId, expiresMs } = await Service.loginUser(
       email,

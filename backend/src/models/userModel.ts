@@ -1,6 +1,6 @@
 import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
-import { CreateUserType } from '../types/users.js';
+import { CreateUserType } from '../typesAndInterfaces/users.js';
 
 const getUser = async (id: number) => {
   const user = await prisma.user.findUnique({
