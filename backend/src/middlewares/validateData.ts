@@ -31,12 +31,6 @@ const validate = (schema: Schemas) => {
         validated.query = result.data;
       }
 
-      if (schema.cookies) {
-        const result = schema.cookies.safeParse(req.signedCookies);
-        if (!result.success) return next(result.error);
-        validated.cookies = result.data;
-      }
-
       req.validated = validated;
 
       next();

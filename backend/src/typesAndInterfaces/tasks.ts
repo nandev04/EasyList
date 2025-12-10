@@ -1,7 +1,7 @@
 interface TaskType {
   title: string;
-  description: string;
-  id: string;
+  description?: string;
+  accessToken: string;
   date?: string;
   status?: taskStatus;
 }
@@ -17,7 +17,7 @@ interface TaskModelInput {
 enum taskStatus {
   PENDING = 'PENDING',
   IN_PROGRESS = 'IN_PROGRESS',
-  DONE = 'DONE',
+  DONE = 'DONE'
 }
 
 export { TaskType, taskStatus, TaskModelInput };

@@ -6,6 +6,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
     const { refreshToken, accessToken, deviceId } = req.signedCookies;
 
     const resultToken = await AuthService.verifyTokens({ refreshToken, accessToken, deviceId });
+    // FIX: RETORNANDO HASH DO REFRESH TOKEN AO INVES DO TOKEN RAW
     if (resultToken.tokenDevice) {
       res.cookie('refreshToken', resultToken.tokenDevice, {
         httpOnly: true,
