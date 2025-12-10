@@ -6,7 +6,7 @@ declare module 'express' {
       body?: unknown;
       params?: unknown;
       query?: unknown;
-      cookies?: unknown;
     };
+    userId?: number;
   }
 }

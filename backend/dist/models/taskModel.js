@@ -1,6 +1,6 @@
 import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
-import { taskStatus } from '../types/tasks.js';
+import { taskStatus } from '../typesAndInterfaces/tasks.js';
 const getTasks = async (id) => {
     const tasks = await prisma.task.findUnique({
         where: {
