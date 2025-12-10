@@ -1,41 +1,36 @@
-import e, { Request, Response } from 'express';
+import e, { NextFunction, Request, Response } from 'express';
 import * as Service from '../services/userService.js';
-import { AppError } from '../utils/error.js';
 
 import ms from 'ms';
 import dotenv from 'dotenv';
+import { loginUserBodySchemaType } from '../schemas/login/loginUser.schema.js';
+import { CreateUserBodySchemaType } from '../schemas/users/createUser.schema.js';
 
 dotenv.config();
 
-const getUser = async (req: Request, res: Response) => {
-  // Create User
-
+const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.body;
     const user = await Service.getUser(id);
     return res.status(200).json(user);
-  } catch (err: unknown) {
-    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
-
-    return res.status(500).json({ message: 'Erro desconhecido' });
+  } catch (err) {
+    next(err);
   }
 };
 
-const createUser = async (req: Request, res: Response) => {
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { username, password, email } = req.body;
+    const { username, password, email } = <CreateUserBodySchemaType>req.validated!.body;
 
     const createdUser = await Service.createUser({ username, password, email });
 
     return res.status(200).json(createdUser);
   } catch (err) {
-    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
-
-    return res.status(500).json({ message: 'Erro desconhecido' });
+    next(err);
   }
 };
 
-const editUser = async (req: Request, res: Response) => {
+const editUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const data = req.body;
@@ -43,13 +38,11 @@ const editUser = async (req: Request, res: Response) => {
 
     return res.status(200).json(editedUser);
   } catch (err) {
-    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
-
-    return res.status(500).json({ message: 'Erro desconhecido' });
+    next(err);
   }
 };
 
-const deleteUser = async (req: Request, res: Response) => {
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.body;
 
@@ -57,17 +50,15 @@ const deleteUser = async (req: Request, res: Response) => {
 
     return res.status(200).json(deletedUser);
   } catch (err) {
-    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
-
-    return res.status(500).json({ message: 'Erro desconhecido' });
+    next(err);
   }
 };
 
 // Login User
 
-const loginUser = async (req: Request, res: Response) => {
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = <loginUserBodySchemaType>req.validated!.body;
 
     const { refreshTokenRaw, accessToken, deviceId, expiresMs } = await Service.loginUser(
       email,
@@ -105,12 +96,7 @@ const loginUser = async (req: Request, res: Response) => {
     });
     return res.status(200).json({ token: accessToken });
   } catch (error) {
-    if (error instanceof AppError) {
-      console.log(error);
-      return res.status(error.statusCode).json({ message: error.message });
-    }
-
-    return res.status(500).json({ message: 'Erro desconhecido CONTROLLERRRR' });
+    next(error);
   }
 };
 
