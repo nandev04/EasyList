@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { usersType } from '../types/users.js';
+import { usersType } from '../typesAndInterfaces/users.js';
 import * as Model from '../models/userModel.js';
 import { AuthService } from './authService.js';
 import { AppError } from '../utils/error.js';

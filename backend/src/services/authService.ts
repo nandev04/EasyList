@@ -6,7 +6,7 @@ import { AppError } from '../utils/error.js';
 import ms from 'ms';
 import { createAccessToken, createRefreshToken, createVerifyToken } from '../utils/createToken.js';
 import { v4 as uuidv4 } from 'uuid';
-import { generateTokenRaw, transformForHash, tokenUUID } from '../utils/crypto.js';
+import { transformForHash, tokenUUID } from '../utils/crypto.js';
 import generateCode from '../utils/generateCode.js';
 
 dotenv.config();
@@ -54,7 +54,6 @@ export class AuthService {
 
       const expiresMs = ms(process.env.TOKEN_REFRESH_EXPIRES_IN as ms.StringValue);
 
-      // Transform to date for database
       const expirationDate = new Date(Date.now() + expiresMs);
 
       await Model.createRefreshToken(hashRefreshToken, userId, deviceId, expirationDate);

@@ -22,7 +22,6 @@ const authenticate = async (req, res, next) => {
             });
         }
         if (resultToken.newAccessToken) {
-            console.log({ AUTHENTICATE: resultToken.newAccessToken });
             res.cookie('accessToken', resultToken.newAccessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',

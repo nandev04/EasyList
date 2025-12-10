@@ -28,7 +28,6 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     if (resultToken.newAccessToken) {
-      console.log({ AUTHENTICATE: resultToken.newAccessToken });
       res.cookie('accessToken', resultToken.newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',

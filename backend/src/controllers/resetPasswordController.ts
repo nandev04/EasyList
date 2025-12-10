@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
-import { AppError } from '../utils/error.js';
+import { NextFunction, Request, Response } from 'express';
 import * as resetPasswordService from '../services/resetPasswordService.js';
+import { resetPasswordBodyType } from '../schemas/auth/resetPassword.schema.js';
 
-const resetPassword = async (req: Request, res: Response) => {
+const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { newPassword, tokenResetPassword } = req.body;
+    const { newPassword, tokenResetPassword } = <resetPasswordBodyType>req.validated!.body;
 
     const updatedPassword = await resetPasswordService.resetPassword(
       newPassword,
@@ -13,11 +13,7 @@ const resetPassword = async (req: Request, res: Response) => {
 
     return res.status(200).json(updatedPassword);
   } catch (err) {
-    if (err instanceof AppError) return res.status(err.statusCode).json({ message: err.message });
-
-    return res
-      .status(500)
-      .json({ message: err instanceof Error ? err.message : 'Erro desconhecido' });
+    next(err);
   }
 };
 

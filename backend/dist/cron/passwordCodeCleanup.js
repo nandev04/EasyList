@@ -5,7 +5,7 @@ const cleanResetCodeDb = () => {
         console.log('[CRON] Iniciando limpeza de códigos de reset de senha expirados...');
         const now = new Date();
         try {
-            const result = await prisma.passwordResetCode.deleteMany({
+            const result = await prisma.passwordResetOTP.deleteMany({
                 where: {
                     expiresAt: {
                         lt: now

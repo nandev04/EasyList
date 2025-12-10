@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { taskStatus } from '../types/tasks.js';
+import { taskStatus } from '../typesAndInterfaces/tasks.js';
 
 const validateTaskStatus = (req: Request, _res: Response, next: NextFunction) => {
   const { status } = req.body;
