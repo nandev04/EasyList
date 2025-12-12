@@ -1,4 +1,3 @@
-import { AppError } from '../utils/error.js';
 import * as taskService from '../services/taskService.js';
 import { NextFunction, Request, Response } from 'express';
 import { CreateTaskSchemaType } from '../schemas/tasks/createTask.schema.js';
@@ -7,12 +6,11 @@ const getTasks = async (req: Request, res: Response, next: NextFunction) => {};
 
 const createTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { accessToken } = req.signedCookies;
-    if (!accessToken) throw next(new AppError('Unauthorized', 401));
+    const userId = req.userId!;
 
-    const { title, description } = req.validated!.body as CreateTaskSchemaType;
-    // const createdTask = await taskService.createTask({ title, description });
-    // res.status(201).json(createdTask);
+    const { title, description, status } = req.validated!.body as CreateTaskSchemaType;
+    const createdTask = await taskService.createTask({ title, description, status, userId });
+    res.status(201).json(createdTask);
   } catch (err) {
     next(err);
   }

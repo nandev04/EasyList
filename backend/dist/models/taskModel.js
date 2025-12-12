@@ -1,6 +1,5 @@
 import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
-import { taskStatus } from '../typesAndInterfaces/tasks.js';
 const getTasks = async (id) => {
     const tasks = await prisma.task.findUnique({
         where: {
@@ -11,22 +10,27 @@ const getTasks = async (id) => {
         throw new AppError('Tasks não encontrada', 404);
     return tasks;
 };
-const createTask = async ({ id, title, description, dateUTC }) => {
+const createTask = async ({ userId, title, description, status }) => {
     const createdTask = await prisma.task.create({
         data: {
             title,
             description,
-            status: taskStatus.PENDING,
-            created_at: dateUTC,
+            status: status,
             user: {
-                connect: { id: +id }
+                connect: { id: userId }
             }
         },
         include: {
             user: true
         }
     });
-    return { insertId: createdTask.user, username: createdTask.user.name };
+    return {
+        insertId: createdTask.user.id,
+        username: createdTask.user.name,
+        title: createdTask.title,
+        description: createdTask.description,
+        status: createdTask.status
+    };
 };
 const editTask = async ({ title, description, status, id }) => {
     const editedtask = await prisma.task.update({
