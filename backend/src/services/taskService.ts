@@ -1,6 +1,6 @@
 import * as Model from '../models/taskModel.js';
 import { CreateTaskSchemaType } from '../schemas/tasks/createTask.schema.js';
-import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTaskSchema.js';
+import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTask.schema.js';
 
 // // const getTasks = async ({ id }: TaskType) => {
 //   return await tasksModel.getTasks(id);
