@@ -58,7 +58,7 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = <loginUserBodySchemaType>req.validated!.body;
+    const { email, password } = req.validated!.body as loginUserBodySchemaType;
 
     const { refreshTokenRaw, accessToken, deviceId, expiresMs } = await Service.loginUser(
       email,

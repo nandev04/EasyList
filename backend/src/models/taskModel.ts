@@ -1,16 +1,12 @@
-import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
-import { CreateTaskType } from '../typesAndInterfaces/tasks.js';
 import { createTaskInputType } from '../services/taskService.js';
-import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTaskSchema.js';
+import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTask.schema.js';
 
-const getTasks = async (id: string) => {
-  const tasks = await prisma.task.findUnique({
-    where: {
-      id: +id
-    }
+const getTasks = async (userId: number) => {
+  const tasks = await prisma.task.findMany({
+    where: { userId },
+    select: { title: true, description: true, status: true }
   });
-  if (!tasks) throw new AppError('Tasks não encontrada', 404);
   return tasks;
 };
 
