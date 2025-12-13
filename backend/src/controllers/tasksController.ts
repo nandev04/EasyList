@@ -4,7 +4,7 @@ import { CreateTaskSchemaType } from '../schemas/tasks/createTask.schema.js';
 import {
   updateTaskSchemaBodyType,
   updateTaskSchemaParamsType
-} from '../schemas/tasks/updateTaskSchema.js';
+} from '../schemas/tasks/updateTask.schema.js';
 import { deleteTaskSchemaParamsType } from '../schemas/tasks/deleteTask.schema.js';
 
 const getTasks = async (req: Request, res: Response, next: NextFunction) => {};
