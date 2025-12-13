@@ -2,11 +2,11 @@ const validate = (schema) => {
     return (req, res, next) => {
         try {
             const validated = {};
-            if (schema.body) {
-                const result = schema.body.safeParse(req.body);
+            if (schema.query) {
+                const result = schema.query.safeParse(req.query);
                 if (!result.success)
                     return next(result.error);
-                validated.body = result.data;
+                validated.query = result.data;
             }
             if (schema.params) {
                 const result = schema.params.safeParse(req.params);
@@ -14,11 +14,11 @@ const validate = (schema) => {
                     return next(result.error);
                 validated.params = result.data;
             }
-            if (schema.query) {
-                const result = schema.query.safeParse(req.query);
+            if (schema.body) {
+                const result = schema.body.safeParse(req.body);
                 if (!result.success)
                     return next(result.error);
-                validated.query = result.data;
+                validated.body = result.data;
             }
             req.validated = validated;
             next();
