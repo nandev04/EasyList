@@ -1,11 +1,10 @@
 import express from 'express';
 import * as Controller from '../controllers/usersController.js';
 import * as ControllerAuth from '../controllers/authController.js';
-import { validateLogin } from '../middlewares/validateLogin.js';
 import * as ControllerToken from '../controllers/refreshTokenController.js';
 import * as ControllerResetPassword from '../controllers/resetPasswordController.js';
 import { authenticate } from '../middlewares/authenticate.js';
-import validate from '../middlewares/validate.js';
+import validate from '../middlewares/validateData.js';
 import { createUserBodySchema } from '../schemas/users/createUser.schema.js';
 import { verifyUserQuerySchema } from '../schemas/users/verifyUser.schema.js';
 import { loginUserBodySchema } from '../schemas/login/loginUser.schema.js';

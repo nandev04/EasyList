@@ -14,7 +14,7 @@ const getUser = async (req, res, next) => {
 };
 const createUser = async (req, res, next) => {
     try {
-        const { username, password, email } = req.body;
+        const { username, password, email } = req.validated.body;
         const createdUser = await Service.createUser({ username, password, email });
         return res.status(200).json(createdUser);
     }
@@ -46,7 +46,7 @@ const deleteUser = async (req, res, next) => {
 // Login User
 const loginUser = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = req.validated.body;
         const { refreshTokenRaw, accessToken, deviceId, expiresMs } = await Service.loginUser(email, password);
         const refreshTokenMaxAge = ms(process.env.TOKEN_REFRESH_EXPIRES_IN);
         const accessTokenMaxAge = ms(process.env.JWT_ACCESS_EXPIRES_IN);

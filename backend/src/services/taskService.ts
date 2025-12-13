@@ -1,21 +1,22 @@
-import * as tasksModel from '../models/taskModel.js';
-import { TaskType } from '../typesAndInterfaces/tasks.js';
+import * as Model from '../models/taskModel.js';
+import { CreateTaskSchemaType } from '../schemas/tasks/createTask.schema.js';
+import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTaskSchema.js';
 
-const getTasks = async ({ id }: TaskType) => {
-  return await tasksModel.getTasks(id);
+// // const getTasks = async ({ id }: TaskType) => {
+//   return await tasksModel.getTasks(id);
+// };
+
+type createTaskInputType = CreateTaskSchemaType & { userId: number };
+const createTask = async ({ userId, title, status, description }: createTaskInputType) => {
+  return await Model.createTask({ userId, title, description, status });
 };
 
-const createTask = async ({ id, title, description, date }: TaskType) => {
-  const dateUTC = date ?? new Date(Date.now()).toUTCString();
-  return await tasksModel.createTask({ id: +id, title, description, dateUTC });
-};
-
-const editTask = async ({ title, description, status, id }: TaskType) => {
-  return await tasksModel.editTask({ title, description, status, id: +id });
+const updateTask = async (taskId: number, userId: number, data: updateTaskSchemaBodyType) => {
+  return await Model.updateTask(taskId, userId, data);
 };
 
 const removeTask = async (id: string) => {
-  return await tasksModel.removeTask(+id);
+  // return await tasksModel.removeTask(+id);
 };
 
-export { getTasks, createTask, editTask, removeTask };
+export { createTask, removeTask, updateTask, createTaskInputType };
