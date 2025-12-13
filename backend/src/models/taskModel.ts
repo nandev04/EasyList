@@ -1,7 +1,8 @@
 import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
-import { CreateTaskType, taskStatus } from '../typesAndInterfaces/tasks.js';
+import { CreateTaskType } from '../typesAndInterfaces/tasks.js';
 import { createTaskInputType } from '../services/taskService.js';
+import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTaskSchema.js';
 
 const getTasks = async (id: string) => {
   const tasks = await prisma.task.findUnique({
@@ -37,15 +38,11 @@ const createTask = async ({ userId, title, description, status }: createTaskInpu
   };
 };
 
-type TaskModelEdit = Omit<CreateTaskType, 'userId'> & { id: number };
-const editTask = async ({ title, description, status, id }: TaskModelEdit) => {
+const updateTask = async (id: number, userId: number, data: updateTaskSchemaBodyType) => {
   const editedtask = await prisma.task.update({
-    where: { id: id },
-    data: {
-      title,
-      description,
-      status
-    }
+    where: { id, userId },
+    data: { ...data },
+    select: { id: true, title: true, description: true, status: true }
   });
   return editedtask;
 };
@@ -57,4 +54,4 @@ const removeTask = async (id: number) => {
   return removedTask;
 };
 
-export { getTasks, editTask, createTask, removeTask };
+export { getTasks, updateTask, createTask, removeTask };

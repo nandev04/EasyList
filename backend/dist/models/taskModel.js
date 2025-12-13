@@ -32,14 +32,11 @@ const createTask = async ({ userId, title, description, status }) => {
         status: createdTask.status
     };
 };
-const editTask = async ({ title, description, status, id }) => {
+const updateTask = async (id, userId, data) => {
     const editedtask = await prisma.task.update({
-        where: { id: id },
-        data: {
-            title,
-            description,
-            status
-        }
+        where: { id, userId },
+        data: { ...data },
+        select: { id: true, title: true, description: true, status: true }
     });
     return editedtask;
 };
@@ -49,4 +46,4 @@ const removeTask = async (id) => {
     });
     return removedTask;
 };
-export { getTasks, editTask, createTask, removeTask };
+export { getTasks, updateTask, createTask, removeTask };

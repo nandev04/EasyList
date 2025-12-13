@@ -11,7 +11,18 @@ const createTask = async (req, res, next) => {
         next(err);
     }
 };
-const editTask = async (req, res, next) => { };
+const updateTask = async (req, res, next) => {
+    try {
+        const userId = req.userId;
+        const { id } = req.validated.params;
+        const data = req.validated.body;
+        const updatedTask = await taskService.updateTask(id, userId, data);
+        return res.status(200).json(updatedTask);
+    }
+    catch (err) {
+        next(err);
+    }
+};
 const removeTask = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -22,4 +33,4 @@ const removeTask = async (req, res, next) => {
         next(err);
     }
 };
-export { getTasks, createTask, editTask, removeTask };
+export { getTasks, createTask, updateTask, removeTask };

@@ -1,6 +1,10 @@
 import * as taskService from '../services/taskService.js';
 import { NextFunction, Request, Response } from 'express';
 import { CreateTaskSchemaType } from '../schemas/tasks/createTask.schema.js';
+import {
+  updateTaskSchemaBodyType,
+  updateTaskSchemaParamsType
+} from '../schemas/tasks/updateTaskSchema.js';
 
 const getTasks = async (req: Request, res: Response, next: NextFunction) => {};
 
@@ -16,7 +20,19 @@ const createTask = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const editTask = async (req: Request, res: Response, next: NextFunction) => {};
+const updateTask = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.userId!;
+    const { id } = req.validated!.params as updateTaskSchemaParamsType;
+    const data = req.validated!.body as updateTaskSchemaBodyType;
+
+    const updatedTask = await taskService.updateTask(id, userId, data);
+
+    return res.status(200).json(updatedTask);
+  } catch (err) {
+    next(err);
+  }
+};
 
 const removeTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -29,4 +45,4 @@ const removeTask = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { getTasks, createTask, editTask, removeTask };
+export { getTasks, createTask, updateTask, removeTask };
