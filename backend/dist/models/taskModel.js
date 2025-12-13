@@ -40,9 +40,9 @@ const updateTask = async (id, userId, data) => {
     });
     return editedtask;
 };
-const removeTask = async (id) => {
+const removeTask = async (taskId, userId) => {
     const removedTask = await prisma.task.delete({
-        where: { id: id }
+        where: { id: taskId, userId }
     });
     return removedTask;
 };
