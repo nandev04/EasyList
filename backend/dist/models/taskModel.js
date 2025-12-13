@@ -1,13 +1,9 @@
-import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
-const getTasks = async (id) => {
-    const tasks = await prisma.task.findUnique({
-        where: {
-            id: +id
-        }
+const getTasks = async (userId) => {
+    const tasks = await prisma.task.findMany({
+        where: { userId },
+        select: { title: true, description: true, status: true }
     });
-    if (!tasks)
-        throw new AppError('Tasks não encontrada', 404);
     return tasks;
 };
 const createTask = async ({ userId, title, description, status }) => {
