@@ -47,9 +47,9 @@ const updateTask = async (id: number, userId: number, data: updateTaskSchemaBody
   return editedtask;
 };
 
-const removeTask = async (id: number) => {
+const removeTask = async (taskId: number, userId: number) => {
   const removedTask = await prisma.task.delete({
-    where: { id: id }
+    where: { id: taskId, userId }
   });
   return removedTask;
 };
