@@ -1,34 +1,34 @@
-import { AppError } from '../utils/error.js';
 import * as taskService from '../services/taskService.js';
 import { NextFunction, Request, Response } from 'express';
+import { CreateTaskSchemaType } from '../schemas/tasks/createTask.schema.js';
+import {
+  updateTaskSchemaBodyType,
+  updateTaskSchemaParamsType
+} from '../schemas/tasks/updateTaskSchema.js';
 
-const getTasks = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { id } = req.body;
-    const tasks = await taskService.getTasks(id);
-    res.status(200).json(tasks);
-  } catch (err) {
-    next(err);
-  }
-};
+const getTasks = async (req: Request, res: Response, next: NextFunction) => {};
 
 const createTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id, title, description } = req.body;
-    const createdTask = await taskService.createTask({ id, title, description });
+    const userId = req.userId!;
+
+    const { title, description, status } = req.validated!.body as CreateTaskSchemaType;
+    const createdTask = await taskService.createTask({ title, description, status, userId });
     res.status(201).json(createdTask);
   } catch (err) {
     next(err);
   }
 };
 
-const editTask = async (req: Request, res: Response, next: NextFunction) => {
+const updateTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { title, description, status } = req.body;
-    const { id } = req.params;
-    await taskService.editTask({ title, description, status, id });
+    const userId = req.userId!;
+    const { id } = req.validated!.params as updateTaskSchemaParamsType;
+    const data = req.validated!.body as updateTaskSchemaBodyType;
 
-    return res.status(204).json();
+    const updatedTask = await taskService.updateTask(id, userId, data);
+
+    return res.status(200).json(updatedTask);
   } catch (err) {
     next(err);
   }
@@ -45,4 +45,4 @@ const removeTask = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { getTasks, createTask, editTask, removeTask };
+export { getTasks, createTask, updateTask, removeTask };

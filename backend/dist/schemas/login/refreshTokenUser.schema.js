@@ -1,5 +1,5 @@
 import { z } from 'zod';
-const refreshSchemaUser = z.object({
-    refreshToken: z.string().min(1) // obrigatório e não vazio
+const refreshTokenUserCookieSchema = z.object({
+    token: z.string().min(1)
 });
-export default refreshSchemaUser;
+export { refreshTokenUserCookieSchema };

@@ -1,15 +1,11 @@
-import * as tasksModel from '../models/taskModel.js';
-const getTasks = async ({ id }) => {
-    return await tasksModel.getTasks(id);
+import * as Model from '../models/taskModel.js';
+const createTask = async ({ userId, title, status, description }) => {
+    return await Model.createTask({ userId, title, description, status });
 };
-const createTask = async ({ id, title, description, date }) => {
-    const dateUTC = date ?? new Date(Date.now()).toUTCString();
-    return await tasksModel.createTask({ id: +id, title, description, dateUTC });
-};
-const editTask = async ({ title, description, status, id }) => {
-    return await tasksModel.editTask({ title, description, status, id: +id });
+const updateTask = async (taskId, userId, data) => {
+    return await Model.updateTask(taskId, userId, data);
 };
 const removeTask = async (id) => {
-    return await tasksModel.removeTask(+id);
+    // return await tasksModel.removeTask(+id);
 };
-export { getTasks, createTask, editTask, removeTask };
+export { createTask, removeTask, updateTask };

@@ -10,9 +10,9 @@ datasource db {
 model Task {
   id          Int      @id @default(autoincrement())
   title       String
-  description String
-  status      String   @default("pending")
-  created_at  String
+  description String?
+  status      String   @default("PENDING")
+  created_at  DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   userId Int

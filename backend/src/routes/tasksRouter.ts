@@ -1,13 +1,20 @@
 import express from 'express';
-import validateTaskStatus from '../middlewares/validarTaskStatus.js';
-import validarTasks from '../middlewares/validarTask.js';
 import * as taskController from '../controllers/tasksController.js';
+import validate from '../middlewares/validateData.js';
+import { createTaskSchema } from '../schemas/tasks/createTask.schema.js';
+import { validateJwt } from '../middlewares/validateJwt.js';
+import { updateTaskSchemaBody, updateTaskSchemaParams } from '../schemas/tasks/updateTaskSchema.js';
 
 const router = express.Router();
 
 router.get('/tasks', taskController.getTasks);
-router.post('/tasks', validarTasks, taskController.createTask);
-router.put('/tasks/:id', validateTaskStatus, taskController.editTask);
+router.post('/tasks', validateJwt, validate({ body: createTaskSchema }), taskController.createTask);
+router.put(
+  '/tasks/:id',
+  validateJwt,
+  validate({ body: updateTaskSchemaBody, params: updateTaskSchemaParams }),
+  taskController.updateTask
+);
 router.delete('/tasks/:id', taskController.removeTask);
 
 export default router;

@@ -84,10 +84,6 @@ export class AuthService {
       } catch (err) {
         if (!(err instanceof jwt.TokenExpiredError))
           throw new AppError('Token de acesso inválido', 401);
-
-        console.log('Erro na autenticação', {
-          message: err instanceof Error ? err.message : 'Erro desconhecido'
-        });
       }
     }
 
@@ -105,11 +101,10 @@ export class AuthService {
 
     const hashRefreshToken = transformForHash(refreshToken);
     const { userId, expiresAt } = await Model.verifyRefreshToken(hashRefreshToken);
-    const expiresAtDate = new Date(expiresAt);
     const dateNow = new Date();
 
-    if (dateNow > expiresAtDate) throw new AppError('Token Expirado', 401);
     if (!userId) throw new AppError('Token Inválido', 401);
+    if (dateNow > expiresAt) throw new AppError('Token Expirado', 401);
 
     const newAccessToken = createAccessToken(userId);
     return { newAccessToken, userId };

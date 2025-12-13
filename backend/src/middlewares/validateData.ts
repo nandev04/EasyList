@@ -13,10 +13,10 @@ const validate = (schema: Schemas) => {
     try {
       const validated: Record<string, unknown> = {};
 
-      if (schema.body) {
-        const result = schema.body.safeParse(req.body);
+      if (schema.query) {
+        const result = schema.query.safeParse(req.query);
         if (!result.success) return next(result.error);
-        validated.body = result.data;
+        validated.query = result.data;
       }
 
       if (schema.params) {
@@ -25,16 +25,10 @@ const validate = (schema: Schemas) => {
         validated.params = result.data;
       }
 
-      if (schema.query) {
-        const result = schema.query.safeParse(req.query);
+      if (schema.body) {
+        const result = schema.body.safeParse(req.body);
         if (!result.success) return next(result.error);
-        validated.query = result.data;
-      }
-
-      if (schema.cookies) {
-        const result = schema.cookies.safeParse(req.signedCookies);
-        if (!result.success) return next(result.error);
-        validated.cookies = result.data;
+        validated.body = result.data;
       }
 
       req.validated = validated;

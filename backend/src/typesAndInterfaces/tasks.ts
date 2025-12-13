@@ -1,23 +1,22 @@
-interface TaskType {
-  title: string;
-  description: string;
-  id: string;
-  date?: string;
-  status?: taskStatus;
-}
+// interface TaskType {
+//   title: string;
+//   description?: string;
+//   userId: number;
+//   date?: string;
+//   status?: taskStatus;
+// }
 
-interface TaskModelInput {
-  id: number;
+interface CreateTaskType {
+  userId: number;
   title: string;
-  description: string;
-  dateUTC: string;
+  description?: string | null | undefined;
   status?: taskStatus;
 }
 
 enum taskStatus {
   PENDING = 'PENDING',
   IN_PROGRESS = 'IN_PROGRESS',
-  DONE = 'DONE',
+  COMPLETED = 'COMPLETED'
 }
 
-export { TaskType, taskStatus, TaskModelInput };
+export { taskStatus, CreateTaskType };

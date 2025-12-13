@@ -1,7 +1,7 @@
 import { AuthService, forgotPasswordService, verifyCodeService } from '../services/authService.js';
 const verifyEmail = async (req, res, next) => {
     try {
-        const token = req.query.token;
+        const { token } = req.validated.query;
         const verifiedUser = await AuthService.verifyEmail(token);
         return res.status(200).json(verifiedUser);
     }
@@ -11,7 +11,7 @@ const verifyEmail = async (req, res, next) => {
 };
 const forgotPassword = async (req, res, next) => {
     try {
-        const { email } = req.body;
+        const { email } = req.validated.body;
         if (!email) {
             return res.status(400).json({ message: 'Email não fornecido' });
         }

@@ -79,14 +79,12 @@ const createRefreshToken = async (
 };
 
 const verifyRefreshToken = async (refreshToken: string) => {
-  const token = await prisma.refreshToken.findUnique({
+  return await prisma.refreshToken.findUnique({
     where: {
       token: refreshToken
     },
     select: { token: true, expiresAt: true, userId: true }
   });
-  if (!token) throw new AppError('Token não encontrado', 404);
-  return token;
 };
 
 const verifyDeviceId = async (deviceId: string) => {

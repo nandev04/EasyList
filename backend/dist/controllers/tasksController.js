@@ -1,30 +1,23 @@
 import * as taskService from '../services/taskService.js';
-const getTasks = async (req, res, next) => {
-    try {
-        const { id } = req.body;
-        const tasks = await taskService.getTasks(id);
-        res.status(200).json(tasks);
-    }
-    catch (err) {
-        next(err);
-    }
-};
+const getTasks = async (req, res, next) => { };
 const createTask = async (req, res, next) => {
     try {
-        const { id, title, description } = req.body;
-        const createdTask = await taskService.createTask({ id, title, description });
+        const userId = req.userId;
+        const { title, description, status } = req.validated.body;
+        const createdTask = await taskService.createTask({ title, description, status, userId });
         res.status(201).json(createdTask);
     }
     catch (err) {
         next(err);
     }
 };
-const editTask = async (req, res, next) => {
+const updateTask = async (req, res, next) => {
     try {
-        const { title, description, status } = req.body;
-        const { id } = req.params;
-        await taskService.editTask({ title, description, status, id });
-        return res.status(204).json();
+        const userId = req.userId;
+        const { id } = req.validated.params;
+        const data = req.validated.body;
+        const updatedTask = await taskService.updateTask(id, userId, data);
+        return res.status(200).json(updatedTask);
     }
     catch (err) {
         next(err);
@@ -40,4 +33,4 @@ const removeTask = async (req, res, next) => {
         next(err);
     }
 };
-export { getTasks, createTask, editTask, removeTask };
+export { getTasks, createTask, updateTask, removeTask };
