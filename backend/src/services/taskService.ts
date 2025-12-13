@@ -1,10 +1,10 @@
 import * as Model from '../models/taskModel.js';
 import { CreateTaskSchemaType } from '../schemas/tasks/createTask.schema.js';
-import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTaskSchema.js';
+import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTask.schema.js';
 
-// // const getTasks = async ({ id }: TaskType) => {
-//   return await tasksModel.getTasks(id);
-// };
+const getTasks = async (userId: number) => {
+  return await Model.getTasks(userId);
+};
 
 type createTaskInputType = CreateTaskSchemaType & { userId: number };
 const createTask = async ({ userId, title, status, description }: createTaskInputType) => {
@@ -19,4 +19,4 @@ const removeTask = async (taskId: number, userId: number) => {
   return await Model.removeTask(taskId, userId);
 };
 
-export { createTask, removeTask, updateTask, createTaskInputType };
+export { getTasks, createTask, removeTask, updateTask, createTaskInputType };

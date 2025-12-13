@@ -87,14 +87,14 @@ export class AuthService {
         if (!refreshToken)
             throw new AppError('Token de atualização ausente', 401);
         const hashRefreshToken = transformForHash(refreshToken);
-        const { userId, expiresAt } = await Model.verifyRefreshToken(hashRefreshToken);
+        const tokenData = await Model.verifyRefreshToken(hashRefreshToken);
         const dateNow = new Date();
-        if (!userId)
+        if (!tokenData)
             throw new AppError('Token Inválido', 401);
-        if (dateNow > expiresAt)
+        if (dateNow > tokenData.expiresAt)
             throw new AppError('Token Expirado', 401);
-        const newAccessToken = createAccessToken(userId);
-        return { newAccessToken, userId };
+        const newAccessToken = createAccessToken(tokenData.userId);
+        return { newAccessToken, userId: tokenData.userId };
     }
 }
 // Forgot Password
