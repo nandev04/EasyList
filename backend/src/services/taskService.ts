@@ -15,8 +15,8 @@ const updateTask = async (taskId: number, userId: number, data: updateTaskSchema
   return await Model.updateTask(taskId, userId, data);
 };
 
-const removeTask = async (id: string) => {
-  // return await tasksModel.removeTask(+id);
+const removeTask = async (taskId: number, userId: number) => {
+  return await Model.removeTask(taskId, userId);
 };
 
 export { createTask, removeTask, updateTask, createTaskInputType };

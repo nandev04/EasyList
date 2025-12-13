@@ -5,6 +5,7 @@ import {
   updateTaskSchemaBodyType,
   updateTaskSchemaParamsType
 } from '../schemas/tasks/updateTaskSchema.js';
+import { deleteTaskSchemaParamsType } from '../schemas/tasks/deleteTask.schema.js';
 
 const getTasks = async (req: Request, res: Response, next: NextFunction) => {};
 
@@ -36,8 +37,9 @@ const updateTask = async (req: Request, res: Response, next: NextFunction) => {
 
 const removeTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    await taskService.removeTask(id);
+    const { id } = req.validated!.params as deleteTaskSchemaParamsType;
+    const userId = req.userId!;
+    await taskService.removeTask(id, userId);
 
     return res.status(204).json();
   } catch (err) {

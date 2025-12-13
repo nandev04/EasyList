@@ -5,7 +5,7 @@ const createTask = async ({ userId, title, status, description }) => {
 const updateTask = async (taskId, userId, data) => {
     return await Model.updateTask(taskId, userId, data);
 };
-const removeTask = async (id) => {
-    // return await tasksModel.removeTask(+id);
+const removeTask = async (taskId, userId) => {
+    return await Model.removeTask(taskId, userId);
 };
 export { createTask, removeTask, updateTask };

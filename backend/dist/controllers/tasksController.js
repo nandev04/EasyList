@@ -25,8 +25,9 @@ const updateTask = async (req, res, next) => {
 };
 const removeTask = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        await taskService.removeTask(id);
+        const { id } = req.validated.params;
+        const userId = req.userId;
+        await taskService.removeTask(id, userId);
         return res.status(204).json();
     }
     catch (err) {
