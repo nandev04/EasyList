@@ -26,7 +26,6 @@ const editUser = async (req, res, next) => {
     try {
         const userId = req.userId;
         const data = req.validated.body;
-        console.log(data);
         const editedUser = await Service.editUser(userId, data);
         return res.status(200).json(editedUser);
     }
