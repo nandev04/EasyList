@@ -8,7 +8,7 @@ const getUser = async (id: number) => {
     where: {
       id: +id
     },
-    select: { id: true, name: true, email: true, createdAt: true, updatedAt: true }
+    select: { id: true, username: true, email: true, createdAt: true, updatedAt: true }
   });
   if (!user) throw new AppError('Usuário não encontrado', 404);
   return user;
@@ -17,19 +17,19 @@ const getUser = async (id: number) => {
 const createUser = async ({ username, hashPassword, email }: CreateUserType) => {
   const createdUser = await prisma.user.create({
     data: {
-      name: username,
+      username: username,
       password: hashPassword,
       email: email
     }
   });
-  return { id: createdUser.id, username: createdUser.name, email: createdUser.email };
+  return { id: createdUser.id, username: createdUser.username, email: createdUser.email };
 };
 
 const editUser = async ({ id, data }: { id: number; data: editUserSchemaBodyType }) => {
   const editedUser = await prisma.user.update({
     where: { id },
     data: { ...data },
-    select: { id: true, name: true, updatedAt: true }
+    select: { id: true, username: true, updatedAt: true }
   });
   return editedUser;
 };
