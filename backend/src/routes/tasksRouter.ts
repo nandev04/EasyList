@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/tasks', validateJwt, taskController.getTasks);
 router.post('/tasks', validateJwt, validate({ body: createTaskSchema }), taskController.createTask);
-router.put(
+router.patch(
   '/tasks/:id',
   validateJwt,
   validate({ body: updateTaskSchemaBody, params: deleteTaskSchemaParams }),
