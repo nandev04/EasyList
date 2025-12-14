@@ -4,7 +4,7 @@ import * as Model from '../models/userModel.js';
 import { AuthService } from './authService.js';
 import { AppError } from '../utils/error.js';
 import { createHashPassword } from '../utils/crypto.js';
-import { editUserSchemaBodyType } from '../schemas/users/editUser.schema.js';
+import { updateUserSchemaBodyType } from '../schemas/users/updateUser.schema.js';
 
 const getUser = async (id: string) => {
   const user = await Model.getUser(+id);
@@ -27,8 +27,8 @@ const createUser = async ({ username, password, email }: usersType) => {
   }
 };
 
-const editUser = async (id: number, data: editUserSchemaBodyType) => {
-  return await Model.editUser({ id, data });
+const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
+  return await Model.updateUser({ id, data });
 };
 
 const deleteUser = async (id: string) => {
@@ -49,4 +49,4 @@ const loginUser = async (email: string, password: string) => {
   return { accessToken, refreshTokenRaw, deviceId, expiresMs };
 };
 
-export { getUser, createUser, editUser, deleteUser, loginUser };
+export { getUser, createUser, updateUser, deleteUser, loginUser };

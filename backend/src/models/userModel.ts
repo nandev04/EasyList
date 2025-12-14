@@ -1,7 +1,7 @@
 import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
 import { CreateUserType } from '../typesAndInterfaces/users.js';
-import { editUserSchemaBodyType } from '../schemas/users/editUser.schema.js';
+import { updateUserSchemaBodyType } from '../schemas/users/updateUser.schema.js';
 
 const getUser = async (id: number) => {
   const user = await prisma.user.findUnique({
@@ -25,7 +25,7 @@ const createUser = async ({ username, hashPassword, email }: CreateUserType) => 
   return { id: createdUser.id, username: createdUser.username, email: createdUser.email };
 };
 
-const editUser = async ({ id, data }: { id: number; data: editUserSchemaBodyType }) => {
+const updateUser = async ({ id, data }: { id: number; data: updateUserSchemaBodyType }) => {
   const editedUser = await prisma.user.update({
     where: { id },
     data: { ...data },
@@ -146,7 +146,7 @@ const createTokenUUID = async (id: number, token: string) => {
 export {
   getUser,
   createUser,
-  editUser,
+  updateUser,
   deleteUser,
   verifyUser,
   findByEmail,
