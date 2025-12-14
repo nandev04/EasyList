@@ -35,7 +35,6 @@ const editUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!;
     const data = req.validated!.body as editUserSchemaBodyType;
-    console.log(data);
     const editedUser = await Service.editUser(userId, data);
 
     return res.status(200).json(editedUser);
