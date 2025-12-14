@@ -12,12 +12,13 @@ import { refreshTokenUserCookieSchema } from '../schemas/login/refreshTokenUser.
 import { forgotPasswordBodySchema } from '../schemas/auth/forgotPassword.schema.js';
 import { verifyCodeBodySchema } from '../schemas/auth/verifyCode.schema.js';
 import { resetPasswordBodySchema } from '../schemas/auth/resetPassword.schema.js';
+import { editUserSchemaBody } from '../schemas/users/editUser.schema.js';
+import { validateJwt } from '../middlewares/validateJwt.js';
 const router = express.Router();
 // Create User
 router.get('/user', Controller.getUser);
 router.post('/user', validate({ body: createUserBodySchema }), Controller.createUser);
-// router.patch('/user/:id', validate(editUserSchema), Controller.editUser);
-// Substituir rota antiga por uma rota menos genérica
+router.patch('/user/', validateJwt, validate({ body: editUserSchemaBody }), Controller.editUser);
 // router.delete('/user', validate(deleteUserSchema), Controller.deleteUser);
 // Substituir rota antiga por uma rota mais rigorosa
 router.get('/auth/verify', validate({ query: verifyUserQuerySchema }), ControllerAuth.verifyEmail);

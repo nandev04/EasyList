@@ -24,9 +24,10 @@ const createUser = async (req, res, next) => {
 };
 const editUser = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const data = req.body;
-        const editedUser = await Service.editUser({ id, data });
+        const userId = req.userId;
+        const data = req.validated.body;
+        console.log(data);
+        const editedUser = await Service.editUser(userId, data);
         return res.status(200).json(editedUser);
     }
     catch (err) {
