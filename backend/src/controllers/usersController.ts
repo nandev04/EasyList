@@ -5,6 +5,7 @@ import ms from 'ms';
 import dotenv from 'dotenv';
 import { loginUserBodySchemaType } from '../schemas/login/loginUser.schema.js';
 import { CreateUserBodySchemaType } from '../schemas/users/createUser.schema.js';
+import { editUserSchemaBodyType } from '../schemas/users/editUser.schema.js';
 
 dotenv.config();
 
@@ -32,9 +33,9 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const editUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const data = req.body;
-    const editedUser = await Service.editUser({ id, data });
+    const userId = req.userId!;
+    const data = req.validated!.body as editUserSchemaBodyType;
+    const editedUser = await Service.editUser(userId, data);
 
     return res.status(200).json(editedUser);
   } catch (err) {
