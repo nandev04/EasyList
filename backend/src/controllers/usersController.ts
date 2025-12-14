@@ -7,7 +7,17 @@ import { loginUserBodySchemaType } from '../schemas/login/loginUser.schema.js';
 import { CreateUserBodySchemaType } from '../schemas/users/createUser.schema.js';
 import { updateUserSchemaBodyType } from '../schemas/users/updateUser.schema.js';
 
+import { CookieOptions } from 'express';
+
 dotenv.config();
+
+const cookieUser: CookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
+  signed: true,
+  path: '/'
+};
 
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -44,11 +54,15 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.body;
+    const id = req.userId!;
 
-    const deletedUser = await Service.deleteUser(id);
+    await Service.deleteUser(id);
 
-    return res.status(200).json(deletedUser);
+    res.clearCookie('deviceId', cookieUser);
+    res.clearCookie('refreshToken', cookieUser);
+    res.clearCookie('accessToken', cookieUser);
+
+    return res.status(204).json();
   } catch (err) {
     next(err);
   }
@@ -70,28 +84,19 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
 
     // DeviceID
     res.cookie('deviceId', deviceId, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      signed: true,
+      ...cookieUser,
       maxAge: expiresMs
     });
 
     // Refresh Token
     res.cookie('refreshToken', refreshTokenRaw, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      signed: true,
+      ...cookieUser,
       maxAge: refreshTokenMaxAge
     });
 
     // Access Token
     res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      signed: true,
+      ...cookieUser,
       maxAge: accessTokenMaxAge
     });
     return res.status(200).json({ token: accessToken });

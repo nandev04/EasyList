@@ -31,9 +31,8 @@ const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
   return await Model.updateUser({ id, data });
 };
 
-const deleteUser = async (id: string) => {
-  const deletedUser = await Model.deleteUser(+id);
-  return deletedUser;
+const deleteUser = async (id: number) => {
+  return await Model.deleteUser(id);
 };
 
 const loginUser = async (email: string, password: string) => {
