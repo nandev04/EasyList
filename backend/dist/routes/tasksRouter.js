@@ -8,6 +8,6 @@ import { deleteTaskSchemaParams } from '../schemas/tasks/deleteTask.schema.js';
 const router = express.Router();
 router.get('/tasks', validateJwt, taskController.getTasks);
 router.post('/tasks', validateJwt, validate({ body: createTaskSchema }), taskController.createTask);
-router.put('/tasks/:id', validateJwt, validate({ body: updateTaskSchemaBody, params: deleteTaskSchemaParams }), taskController.updateTask);
+router.patch('/tasks/:id', validateJwt, validate({ body: updateTaskSchemaBody, params: deleteTaskSchemaParams }), taskController.updateTask);
 router.delete('/tasks/:id', validateJwt, validate({ params: deleteTaskSchemaParams }), taskController.removeTask);
 export default router;

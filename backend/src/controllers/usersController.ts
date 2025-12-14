@@ -1,10 +1,11 @@
-import e, { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as Service from '../services/userService.js';
 
 import ms from 'ms';
 import dotenv from 'dotenv';
 import { loginUserBodySchemaType } from '../schemas/login/loginUser.schema.js';
 import { CreateUserBodySchemaType } from '../schemas/users/createUser.schema.js';
+import { updateUserSchemaBodyType } from '../schemas/users/updateUser.schema.js';
 
 dotenv.config();
 
@@ -30,12 +31,11 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const editUser = async (req: Request, res: Response, next: NextFunction) => {
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const data = req.body;
-    const editedUser = await Service.editUser({ id, data });
-
+    const userId = req.userId!;
+    const data = req.validated!.body as updateUserSchemaBodyType;
+    const editedUser = await Service.updateUser(userId, data);
     return res.status(200).json(editedUser);
   } catch (err) {
     next(err);
@@ -100,4 +100,4 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { getUser, createUser, editUser, deleteUser, loginUser };
+export { getUser, createUser, updateUser, deleteUser, loginUser };

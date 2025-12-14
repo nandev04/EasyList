@@ -20,9 +20,8 @@ const createUser = async ({ username, password, email }) => {
         throw new AppError(err instanceof Error ? err.message : 'Erro Desconhecido', 500);
     }
 };
-const editUser = async ({ id, data }) => {
-    const editedUser = await Model.editUser({ id: Number(id), data });
-    return editedUser;
+const updateUser = async (id, data) => {
+    return await Model.updateUser({ id, data });
 };
 const deleteUser = async (id) => {
     const deletedUser = await Model.deleteUser(+id);
@@ -36,4 +35,4 @@ const loginUser = async (email, password) => {
     const { accessToken, refreshTokenRaw, expiresMs, deviceId } = await AuthService.createTokens(user.id);
     return { accessToken, refreshTokenRaw, deviceId, expiresMs };
 };
-export { getUser, createUser, editUser, deleteUser, loginUser };
+export { getUser, createUser, updateUser, deleteUser, loginUser };
