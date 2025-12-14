@@ -17,19 +17,14 @@ import { validateJwt } from '../middlewares/validateJwt.js';
 
 const router = express.Router();
 
-// Create User
-router.get('/user', Controller.getUser);
 router.post('/user', validate({ body: createUserBodySchema }), Controller.createUser);
-
 router.patch(
   '/user/',
   validateJwt,
   validate({ body: updateUserSchemaBody }),
   Controller.updateUser
 );
-
-// router.delete('/user', validate(deleteUserSchema), Controller.deleteUser);
-// Substituir rota antiga por uma rota mais rigorosa
+router.delete('/user', validateJwt, Controller.deleteUser);
 
 router.get('/auth/verify', validate({ query: verifyUserQuerySchema }), ControllerAuth.verifyEmail);
 

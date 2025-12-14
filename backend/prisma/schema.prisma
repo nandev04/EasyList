@@ -7,18 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Task {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String?
-  status      String   @default("PENDING")
-  created_at  DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
-}
-
 model User {
   id        Int      @id @default(autoincrement())
   username  String
@@ -34,16 +22,28 @@ model User {
   PasswordResetToken PasswordResetToken[]
 }
 
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  status      String   @default("PENDING")
+  created_at  DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model RefreshToken {
   id        Int      @id @default(autoincrement())
   deviceId  String   @unique
   token     String   @unique
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   expiresAt DateTime
 
   @@unique([userId, deviceId])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PasswordResetOTP {
@@ -51,21 +51,20 @@ model PasswordResetOTP {
   tokenHash String
   expiresAt DateTime
   createdAt DateTime @default(now())
-
-  user   User @relation(fields: [userId], references: [id])
   userId Int
-
   used Boolean @default(false)
 
   @@index([userId, expiresAt, id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PasswordResetToken {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
   token     String   @unique
   expiresAt DateTime
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

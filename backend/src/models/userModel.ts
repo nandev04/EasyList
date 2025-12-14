@@ -35,12 +35,9 @@ const updateUser = async ({ id, data }: { id: number; data: updateUserSchemaBody
 };
 
 const deleteUser = async (id: number) => {
-  const deletedUser = await prisma.user.delete({
-    where: { id },
-    select: { id: true }
+  return await prisma.user.delete({
+    where: { id }
   });
-
-  return deletedUser;
 };
 
 const verifyUser = async (id: number) => {
