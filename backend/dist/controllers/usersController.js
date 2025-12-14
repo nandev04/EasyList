@@ -22,11 +22,11 @@ const createUser = async (req, res, next) => {
         next(err);
     }
 };
-const editUser = async (req, res, next) => {
+const updateUser = async (req, res, next) => {
     try {
         const userId = req.userId;
         const data = req.validated.body;
-        const editedUser = await Service.editUser(userId, data);
+        const editedUser = await Service.updateUser(userId, data);
         return res.status(200).json(editedUser);
     }
     catch (err) {
@@ -80,4 +80,4 @@ const loginUser = async (req, res, next) => {
         next(error);
     }
 };
-export { getUser, createUser, editUser, deleteUser, loginUser };
+export { getUser, createUser, updateUser, deleteUser, loginUser };

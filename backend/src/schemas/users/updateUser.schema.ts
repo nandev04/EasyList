@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-type editUserSchemaBodyType = z.infer<typeof editUserSchemaBody>;
+type updateUserSchemaBodyType = z.infer<typeof updateUserSchemaBody>;
 
-const editUserSchemaBody = z
+const updateUserSchemaBody = z
   .object({
     username: z
       .string()
@@ -12,4 +12,4 @@ const editUserSchemaBody = z
   })
   .strict();
 
-export { editUserSchemaBody, editUserSchemaBodyType };
+export { updateUserSchemaBody, updateUserSchemaBodyType };
