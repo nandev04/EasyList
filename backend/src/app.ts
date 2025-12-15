@@ -6,11 +6,13 @@ import dotenv from 'dotenv';
 import cleanRefreshTokenDb from './cron/refreshTokenCleanup.js';
 import cleanResetCodeDb from './cron/passwordCodeCleanup.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { cleanupOldDevices } from './cron/cleanupOldDevices.js';
 
 dotenv.config();
 const app = express();
 cleanResetCodeDb();
 cleanRefreshTokenDb();
+cleanupOldDevices();
 
 // Middlewares
 app.use(express.json());

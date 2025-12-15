@@ -7,8 +7,9 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
 
     const resultToken = await AuthService.verifyTokens({ refreshToken, accessToken, deviceId });
     // FIX: RETORNANDO HASH DO REFRESH TOKEN AO INVES DO TOKEN RAW
-    if (resultToken.tokenDevice) {
-      res.cookie('refreshToken', resultToken.tokenDevice, {
+
+    if (resultToken.deviceUUID) {
+      res.cookie('refreshToken', resultToken.newRefreshTokenRaw, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
@@ -23,7 +24,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
       });
 
       return res.status(200).json({
-        message: 'Refresh token recuperado, gerado novo token de acesso',
+        message: 'DeviceID reconhecido, novo refresh token gerado!',
         userId: resultToken.userId
       });
     }

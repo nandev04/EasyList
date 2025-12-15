@@ -14,7 +14,7 @@ const changePassword = async (id: number, newPassword: string) => {
   const updatedUser = await prisma.user.update({
     where: { id },
     data: { password: newPassword },
-    select: { id: true, name: true }
+    select: { id: true, username: true }
   });
   return updatedUser;
 };
