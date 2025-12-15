@@ -3,11 +3,13 @@ import dotenv from 'dotenv';
 import * as Model from '../models/userModel.js';
 import { EmailService } from './emailService.js';
 import { AppError } from '../utils/error.js';
-import ms from 'ms';
+
 import { createAccessToken, createRefreshToken, createVerifyToken } from '../utils/createToken.js';
 import { v4 as uuidv4 } from 'uuid';
 import { transformForHash, tokenUUID } from '../utils/crypto.js';
 import generateCode from '../utils/generateCode.js';
+import { refreshExpirationDate } from '../utils/expirationDate.js';
+import { de } from 'zod/v4/locales/index.cjs';
 
 dotenv.config();
 
@@ -43,31 +45,47 @@ export class AuthService {
   }
 
   static async createTokens(userId: number) {
-    if (!process.env.JWT_ACCESS_SECRET) throw new AppError('JWT_ACCESS_SECRET não definido!', 500);
-    if (!process.env.JWT_REFRESH_SECRET)
-      throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
-    const deviceId = uuidv4();
-
     try {
+      if (!process.env.JWT_ACCESS_SECRET)
+        throw new AppError('JWT_ACCESS_SECRET não definido!', 500);
+      if (!process.env.JWT_REFRESH_SECRET)
+        throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
+
+      const deviceUUID = uuidv4();
       const accessToken = createAccessToken(userId);
       const { refreshTokenRaw, hashRefreshToken } = createRefreshToken();
 
-      const expiresMs = ms(process.env.TOKEN_REFRESH_EXPIRES_IN as ms.StringValue);
+      const { expirationDate, expiresMs } = refreshExpirationDate();
 
-      const expirationDate = new Date(Date.now() + expiresMs);
-
-      await Model.createRefreshToken(hashRefreshToken, userId, deviceId, expirationDate);
-
-      return { accessToken, refreshTokenRaw, expiresMs, deviceId };
+      return {
+        accessToken,
+        refreshTokenRaw,
+        expiresMs,
+        deviceUUID,
+        expirationDate,
+        hashRefreshToken
+      };
     } catch (err) {
       if (err instanceof AppError) throw err;
       throw new AppError(err instanceof Error ? err.message : 'Token Inválido', 401);
     }
   }
 
-  static async getRefreshTokenFromDevice(deviceId: string) {
-    const tokenDevice = await Model.verifyDeviceId(deviceId);
-    return tokenDevice ?? null;
+  static async verifyTokenDevice(deviceId: string) {
+    const deviceUUIDRecovered = await Model.verifyDeviceId(deviceId);
+    return deviceUUIDRecovered ?? null;
+  }
+
+  static async createTokenFromDeviceUUID(userId: number, deviceId: number) {
+    const { hashRefreshToken, refreshTokenRaw } = createRefreshToken();
+    const { expirationDate } = refreshExpirationDate();
+    await Model.createRefreshToken({
+      hashRefreshToken,
+      userId,
+      deviceId,
+      expiresAt: expirationDate
+    });
+    return refreshTokenRaw;
   }
 
   static async verifyTokens({
@@ -88,12 +106,15 @@ export class AuthService {
     }
 
     if (!refreshToken && deviceId) {
-      const { userId, token } = await this.getRefreshTokenFromDevice(deviceId);
+      const { deviceUUID, userId, id } = await this.verifyTokenDevice(deviceId);
+      await Model.revokeRefreshToken(id);
+      const newRefreshTokenRaw = await this.createTokenFromDeviceUUID(userId, id);
       const newAccessToken = createAccessToken(userId);
       return {
         userId,
         newAccessToken,
-        tokenDevice: token
+        deviceUUID,
+        newRefreshTokenRaw
       };
     }
 
@@ -155,9 +176,10 @@ interface verifyTokens {
 }
 
 interface VerifyTokensResult {
-  tokenDevice?: string;
+  deviceUUID?: string;
   userId: number;
   newAccessToken?: string;
+  newRefreshTokenRaw?: string;
 }
 
 export { forgotPasswordService, verifyCodeService };

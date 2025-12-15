@@ -20,6 +20,17 @@ model User {
   refreshTokens      RefreshToken[]
   PasswordResetCode  PasswordResetOTP[]
   PasswordResetToken PasswordResetToken[]
+  devices            Device[]
+}
+
+model Device {
+  id         Int      @id @default(autoincrement())
+  deviceUUID String   @unique
+  userId     Int
+  createdAt  DateTime @default(now())
+
+  refreshToken RefreshToken[]
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Task {
@@ -35,15 +46,15 @@ model Task {
 }
 
 model RefreshToken {
-  id        Int      @id @default(autoincrement())
-  deviceId  String   @unique
-  token     String   @unique
+  id        Int       @id @default(autoincrement())
+  deviceId  Int
+  token     String    @unique
   userId    Int
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   expiresAt DateTime
-
-  @@unique([userId, deviceId])
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revokedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device    Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }
 
 model PasswordResetOTP {
@@ -51,11 +62,11 @@ model PasswordResetOTP {
   tokenHash String
   expiresAt DateTime
   createdAt DateTime @default(now())
-  userId Int
-  used Boolean @default(false)
+  userId    Int
+  used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, expiresAt, id])
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PasswordResetToken {
@@ -66,5 +77,5 @@ model PasswordResetToken {
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

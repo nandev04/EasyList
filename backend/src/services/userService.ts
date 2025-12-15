@@ -1,10 +1,14 @@
 import bcrypt from 'bcrypt';
 import { usersType } from '../typesAndInterfaces/users.js';
 import * as Model from '../models/userModel.js';
+import * as ModelDevice from '../models/DeviceModel.js';
 import { AuthService } from './authService.js';
 import { AppError } from '../utils/error.js';
 import { createHashPassword } from '../utils/crypto.js';
 import { updateUserSchemaBodyType } from '../schemas/users/updateUser.schema.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const getUser = async (id: string) => {
   const user = await Model.getUser(+id);
@@ -41,11 +45,19 @@ const loginUser = async (email: string, password: string) => {
 
   if (!verifyHash) throw new AppError('Credenciais inválidas', 401);
 
-  const { accessToken, refreshTokenRaw, expiresMs, deviceId } = await AuthService.createTokens(
-    user.id
-  );
+  const { accessToken, refreshTokenRaw, expiresMs, deviceUUID, expirationDate, hashRefreshToken } =
+    await AuthService.createTokens(user.id);
 
-  return { accessToken, refreshTokenRaw, deviceId, expiresMs };
+  const maxDevicePerUser = Number(process.env.MAX_DEVICES_PER_USER);
+  const { id } = await ModelDevice.createDevice({ deviceUUID, userId: user.id, maxDevicePerUser });
+  await Model.createRefreshToken({
+    hashRefreshToken,
+    userId: user.id,
+    deviceId: id,
+    expiresAt: expirationDate
+  });
+
+  return { accessToken, refreshTokenRaw, deviceUUID, expiresMs };
 };
 
 export { getUser, createUser, updateUser, deleteUser, loginUser };

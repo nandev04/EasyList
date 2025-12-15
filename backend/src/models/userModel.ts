@@ -2,6 +2,7 @@ import { AppError } from '../utils/error.js';
 import prisma from '../lib/prisma.js';
 import { CreateUserType } from '../typesAndInterfaces/users.js';
 import { updateUserSchemaBodyType } from '../schemas/users/updateUser.schema.js';
+import { createTokensType } from '../typesAndInterfaces/createTokens.js';
 
 const getUser = async (id: number) => {
   const user = await prisma.user.findUnique({
@@ -59,15 +60,15 @@ const findByEmail = async (email: string) => {
   return user;
 };
 
-const createRefreshToken = async (
-  refreshToken: string,
-  userId: number,
-  deviceId: string,
-  expiresAt: Date
-) => {
+const createRefreshToken = async ({
+  hashRefreshToken,
+  userId,
+  deviceId,
+  expiresAt
+}: createTokensType) => {
   const createRefreshToken = await prisma.refreshToken.create({
     data: {
-      token: refreshToken,
+      token: hashRefreshToken,
       userId,
       deviceId,
       expiresAt
@@ -86,14 +87,21 @@ const verifyRefreshToken = async (refreshToken: string) => {
 };
 
 const verifyDeviceId = async (deviceId: string) => {
-  const tokenDevice = await prisma.refreshToken.findUnique({
+  const deviceUUID = await prisma.device.findUnique({
     where: {
-      deviceId: deviceId
+      deviceUUID: deviceId
     },
-    select: { token: true, userId: true }
+    select: { deviceUUID: true, userId: true, refreshToken: true, id: true }
   });
-  if (!tokenDevice) throw new AppError('Token não encontrado', 404);
-  return tokenDevice;
+  if (!deviceUUID) throw new AppError('DeviceUUID não encontrado', 404);
+  return deviceUUID;
+};
+
+const revokeRefreshToken = async (deviceId: number) => {
+  return await prisma.refreshToken.updateMany({
+    where: { deviceId },
+    data: { revokedAt: new Date() }
+  });
 };
 
 const createCodeOTP = async (tokenHash: string, expiresAt: Date, userId: number) => {
@@ -149,6 +157,7 @@ export {
   findByEmail,
   createRefreshToken,
   verifyRefreshToken,
+  revokeRefreshToken,
   verifyDeviceId,
   createCodeOTP,
   findCodeOTP,
