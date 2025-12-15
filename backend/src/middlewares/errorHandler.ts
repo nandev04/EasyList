@@ -20,7 +20,5 @@ export const errorHandler = (err: unknown, req: Request, res: Response, next: Ne
   }
 
   // Erros inesperados
-  return res.status(500).json({
-    message: err.message
-  });
+  return res.status(500).json({ message: err.message });
 };

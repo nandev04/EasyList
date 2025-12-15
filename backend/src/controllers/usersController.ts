@@ -74,7 +74,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.validated!.body as loginUserBodySchemaType;
 
-    const { refreshTokenRaw, accessToken, deviceId, expiresMs } = await Service.loginUser(
+    const { refreshTokenRaw, accessToken, deviceUUID, expiresMs } = await Service.loginUser(
       email,
       password
     );
@@ -83,7 +83,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const accessTokenMaxAge = ms(process.env.JWT_ACCESS_EXPIRES_IN as ms.StringValue);
 
     // DeviceID
-    res.cookie('deviceId', deviceId, {
+    res.cookie('deviceId', deviceUUID, {
       ...cookieUser,
       maxAge: expiresMs
     });
