@@ -27,7 +27,7 @@ const createTask = async ({ userId, title, description, status }: createTaskInpu
 
   return {
     insertId: createdTask.user.id,
-    username: createdTask.user.name,
+    username: createdTask.user.username,
     title: createdTask.title,
     description: createdTask.description,
     status: createdTask.status

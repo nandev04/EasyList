@@ -55,8 +55,6 @@ model RefreshToken {
   revokedAt DateTime?
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   device    Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, deviceId])
 }
 
 model PasswordResetOTP {
