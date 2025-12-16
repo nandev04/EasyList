@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 type CreateUserBodySchemaType = z.infer<typeof createUserBodySchema>;
 type updateUserSchemaBodyType = z.infer<typeof updateUserSchemaBody>;
-type VerifyUserQuerySchemaType = z.infer<typeof verifyUserQuerySchema>;
 
 const createUserBodySchema = z.object({
   username: z
@@ -23,15 +22,9 @@ const updateUserSchemaBody = z
   })
   .strict();
 
-const verifyUserQuerySchema = z.object({
-  token: z.string().min(1, 'Token is required')
-});
-
 export {
   createUserBodySchema,
   CreateUserBodySchemaType,
   updateUserSchemaBody,
-  updateUserSchemaBodyType,
-  verifyUserQuerySchema,
-  VerifyUserQuerySchemaType
+  updateUserSchemaBodyType
 };

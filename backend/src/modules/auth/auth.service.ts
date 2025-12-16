@@ -1,116 +1,93 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import * as Model_User from '../user/user.model.js';
-import * as Model_Device from '../device/device.model.js';
 import * as Model_Token from './token.model.js';
-import * as Model_OTP from '../codeOTP/codeOTP.model.js';
+import * as Model_OTP from './codeOTP.model.js';
 import { EmailService } from '../../services/emailService.js';
 import { AppError } from '../../shared/utils/error.js';
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  generateVerifyToken
-} from '../../shared/utils/generateToken.js';
+import { generateAccessToken, generateVerifyToken } from '../../shared/utils/generateToken.js';
 import { transformForHash, tokenUUID } from '../../shared/utils/crypto.js';
 import generateCode from '../../shared/utils/generateCode.js';
-import { generateRefreshExpirationDate } from '../../shared/utils/expirationDate.js';
+import * as Service_Device from '../device/device.service.js';
+import * as Service_Token from './token.service.js';
+import { verifyTokens, VerifyTokensResult } from './auth.types.js';
 
 dotenv.config();
 
-export class AuthService {
-  register(userId: number, email: string) {
-    if (!process.env.JWT_EMAIL_SECRET) throw new AppError('JWT_EMAIL_SECRET não definido!', 500);
+const emailVerificationAccount = (userId: number, email: string) => {
+  if (!process.env.JWT_EMAIL_SECRET) throw new AppError('JWT_EMAIL_SECRET não definido!', 500);
 
+  try {
+    const token = generateVerifyToken(userId);
+    EmailService.sendVerificationEmail(email, token);
+    return token;
+  } catch (err) {
+    if (err instanceof AppError) throw err;
+
+    if (err instanceof jwt.JsonWebTokenError) throw new AppError(err.message, 401);
+
+    throw new AppError(err instanceof Error ? err.message : 'Erro desconhecido', 500);
+  }
+};
+
+const verifyTokenEmailAccount = async (token: string) => {
+  if (!process.env.JWT_EMAIL_SECRET) throw new Error('JWT_EMAIL_SECRET não definido!');
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_EMAIL_SECRET!) as { userId: number };
+
+    const verifiedUser = await Model_User.verifyUser(payload.userId);
+    return verifiedUser;
+  } catch (err) {
+    if (err instanceof AppError) throw err;
+    throw new AppError(err instanceof Error ? err.message : 'Token Inválido', 401);
+  }
+};
+
+const verifyTokens = async ({
+  refreshToken,
+  accessToken,
+  deviceId
+}: verifyTokens): Promise<VerifyTokensResult> => {
+  if (accessToken) {
     try {
-      const token = generateVerifyToken(userId);
-      EmailService.sendVerificationEmail(email, token);
-      return token;
-    } catch (err) {
-      if (err instanceof AppError) throw err;
-
-      if (err instanceof jwt.JsonWebTokenError) throw new AppError(err.message, 401);
-
-      throw new AppError(err instanceof Error ? err.message : 'Erro desconhecido', 500);
-    }
-  }
-
-  static async verifyEmail(token: string) {
-    if (!process.env.JWT_EMAIL_SECRET) throw new Error('JWT_EMAIL_SECRET não definido!');
-
-    try {
-      const payload = jwt.verify(token, process.env.JWT_EMAIL_SECRET!) as { userId: number };
-
-      const verifiedUser = await Model_User.verifyUser(payload.userId);
-      return verifiedUser;
-    } catch (err) {
-      if (err instanceof AppError) throw err;
-      throw new AppError(err instanceof Error ? err.message : 'Token Inválido', 401);
-    }
-  }
-
-  static async verifyTokenDevice(deviceId: string) {
-    const deviceUUIDRecovered = await Model_Device.verifyDeviceId(deviceId);
-    return deviceUUIDRecovered ?? null;
-  }
-
-  static async createTokenFromDeviceUUID(userId: number, deviceId: number) {
-    const { hashRefreshToken, refreshTokenRaw } = generateRefreshToken();
-    const { expirationDate } = generateRefreshExpirationDate();
-    await Model_Token.createRefreshToken({
-      hashRefreshToken,
-      userId,
-      deviceId,
-      expiresAt: expirationDate
-    });
-    return refreshTokenRaw;
-  }
-
-  static async verifyTokens({
-    refreshToken,
-    accessToken,
-    deviceId
-  }: verifyTokens): Promise<VerifyTokensResult> {
-    if (accessToken) {
-      try {
-        const { userId } = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as {
-          userId: number;
-        };
-        return { userId };
-      } catch (err) {
-        if (!(err instanceof jwt.TokenExpiredError))
-          throw new AppError('Token de acesso inválido', 401);
-      }
-    }
-
-    if (!refreshToken && deviceId) {
-      const { deviceUUID, userId, id } = await this.verifyTokenDevice(deviceId);
-      await Model_Token.revokeRefreshToken(id);
-      const newRefreshTokenRaw = await this.createTokenFromDeviceUUID(userId, id);
-      const newAccessToken = generateAccessToken(userId);
-      return {
-        userId,
-        newAccessToken,
-        deviceUUID,
-        newRefreshTokenRaw
+      const { userId } = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as {
+        userId: number;
       };
+      return { userId };
+    } catch (err) {
+      if (!(err instanceof jwt.TokenExpiredError))
+        throw new AppError('Token de acesso inválido', 401);
     }
-
-    if (!refreshToken) throw new AppError('Token de atualização ausente', 401);
-
-    const hashRefreshToken = transformForHash(refreshToken);
-    const tokenData = await Model_Token.verifyRefreshToken(hashRefreshToken);
-    const dateNow = new Date();
-
-    if (!tokenData) throw new AppError('Token Inválido', 401);
-    if (dateNow > tokenData.expiresAt) throw new AppError('Token Expirado', 401);
-
-    const newAccessToken = generateAccessToken(tokenData.userId);
-    return { newAccessToken, userId: tokenData.userId };
   }
-}
+
+  if (!refreshToken && deviceId) {
+    const { deviceUUID, userId, id } = await Service_Device.verifyTokenDevice(deviceId);
+    await Model_Token.revokeRefreshToken(id);
+    const newRefreshTokenRaw = await Service_Token.createTokenFromDeviceUUID(userId, id);
+    const newAccessToken = generateAccessToken(userId);
+    return {
+      userId,
+      newAccessToken,
+      deviceUUID,
+      newRefreshTokenRaw
+    };
+  }
+
+  if (!refreshToken) throw new AppError('Token de atualização ausente', 401);
+
+  const hashRefreshToken = transformForHash(refreshToken);
+  const tokenData = await Model_Token.verifyRefreshToken(hashRefreshToken);
+  const dateNow = new Date();
+
+  if (!tokenData) throw new AppError('Token Inválido', 401);
+  if (dateNow > tokenData.expiresAt) throw new AppError('Token Expirado', 401);
+
+  const newAccessToken = generateAccessToken(tokenData.userId);
+  return { newAccessToken, userId: tokenData.userId };
+};
 
 // Forgot Password
-
 const forgotPasswordService = async (email: string) => {
   const userId = await Model_User.findByEmail(email);
   if (!userId) throw new AppError('Usuário não encontrado', 404);
@@ -146,17 +123,9 @@ const verifyCodeService = async (code: string, email: string) => {
   return tokenResetPassword;
 };
 
-interface verifyTokens {
-  refreshToken?: string;
-  accessToken?: string;
-  deviceId?: string;
-}
-
-interface VerifyTokensResult {
-  deviceUUID?: string;
-  userId: number;
-  newAccessToken?: string;
-  newRefreshTokenRaw?: string;
-}
-
-export { forgotPasswordService, verifyCodeService };
+export {
+  emailVerificationAccount,
+  verifyTokenEmailAccount,
+  forgotPasswordService,
+  verifyCodeService
+};
