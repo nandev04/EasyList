@@ -1,4 +1,4 @@
-import * as Service from './task.service';
+import * as Service from './task.service.js';
 import { NextFunction, Request, Response } from 'express';
 import {
   CreateTaskSchemaType,
