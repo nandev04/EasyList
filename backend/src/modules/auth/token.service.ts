@@ -1,4 +1,5 @@
 import { generateAccessToken, generateRefreshToken } from '../../shared/utils/generateToken.js';
+import * as Model_Token from './token.model.js';
 import generateDeviceId from '../../shared/utils/generateDeviceId.js';
 import { AppError } from '../../shared/utils/error.js';
 import { generateRefreshExpirationDate } from '../../shared/utils/expirationDate.js';
@@ -29,4 +30,16 @@ const createTokens = (userId: number) => {
   }
 };
 
-export { createTokens };
+const createTokenFromDeviceUUID = async (userId: number, deviceId: number) => {
+  const { hashRefreshToken, refreshTokenRaw } = generateRefreshToken();
+  const { expirationDate } = generateRefreshExpirationDate();
+  await Model_Token.createRefreshToken({
+    hashRefreshToken,
+    userId,
+    deviceId,
+    expiresAt: expirationDate
+  });
+  return refreshTokenRaw;
+};
+
+export { createTokens, createTokenFromDeviceUUID };

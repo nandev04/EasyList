@@ -1,12 +1,13 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import tasksRouter from './modules/task/tasks.router.js';
-import usersRouter from './modules/user/users.router.js';
 import dotenv from 'dotenv';
 import cleanRefreshTokenDb from './cron/refreshTokenCleanup.js';
 import cleanResetCodeDb from './cron/passwordCodeCleanup.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { cleanupOldDevices } from './cron/cleanupOldDevices.js';
+import taskRoutes from './modules/task/tasks.routes.js';
+import authRoutes from './modules/auth/auth.routes.js';
+import userRoutes from './modules/user/users.routes.js';
 
 dotenv.config();
 const app = express();
@@ -17,8 +18,9 @@ cleanupOldDevices();
 // Middlewares
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(tasksRouter);
-app.use(usersRouter);
+app.use(authRoutes);
+app.use(taskRoutes);
+app.use(userRoutes);
 app.use(errorHandler);
 
 export default app;
