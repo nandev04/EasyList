@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { AccessTokenPayload } from '../typesAndInterfaces/jwtPayload.js';
+import { AccessTokenPayload } from '../shared/types/jwtPayload.js';
 import { transformForHash } from '../shared/utils/crypto.js';
 import { AppError } from '../shared/utils/error.js';
-import * as Model from '../models/userModel.js';
-import { createAccessToken } from '../shared/utils/generateToken.js';
+import * as Model_User from '../modules/auth/token.model.js';
+import { generateAccessToken } from '../shared/utils/generateToken.js';
 
 const validateJwt = async (req: Request, res: Response, next: NextFunction) => {
   const { accessToken, refreshToken } = req.signedCookies;
@@ -21,14 +21,14 @@ const validateJwt = async (req: Request, res: Response, next: NextFunction) => {
     if (!refreshToken) res.status(401).json({ message: 'Acesso negado. Refresh token ausente.' });
 
     const hashRefreshToken = transformForHash(refreshToken);
-    const refreshTokenRecovered = await Model.verifyRefreshToken(hashRefreshToken);
+    const refreshTokenRecovered = await Model_User.verifyRefreshToken(hashRefreshToken);
     if (!refreshTokenRecovered) throw new AppError('Refresh Token não encontrado', 401);
     const dateNow = new Date();
 
     if (dateNow > refreshTokenRecovered.expiresAt)
       throw new AppError('Refresh Token expirado', 401);
 
-    const newAccessToken = createAccessToken(refreshTokenRecovered.userId);
+    const newAccessToken = generateAccessToken(refreshTokenRecovered.userId);
     req.userId = refreshTokenRecovered.userId;
     res.cookie('accessToken', newAccessToken, {
       httpOnly: true,

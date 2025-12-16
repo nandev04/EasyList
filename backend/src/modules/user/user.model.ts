@@ -34,6 +34,15 @@ const updateUser = async ({ id, data }: { id: number; data: updateUserSchemaBody
   return editedUser;
 };
 
+const changePassword = async (id: number, newPassword: string) => {
+  const updatedUser = await prisma.user.update({
+    where: { id },
+    data: { password: newPassword },
+    select: { id: true, username: true }
+  });
+  return updatedUser;
+};
+
 const deleteUser = async (id: number) => {
   return await prisma.user.delete({
     where: { id }
@@ -59,4 +68,4 @@ const findByEmail = async (email: string) => {
   return user;
 };
 
-export { getUser, createUser, updateUser, deleteUser, verifyUser, findByEmail };
+export { getUser, createUser, updateUser, changePassword, deleteUser, verifyUser, findByEmail };
