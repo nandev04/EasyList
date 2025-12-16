@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 import * as Model_User from '../user/user.model.js';
 import * as Model_Token from './token.model.js';
 import * as Model_OTP from './codeOTP.model.js';
-import { EmailService } from '../../services/emailService.js';
+import { EmailService } from '../../shared/services/mail.service.js';
 import { AppError } from '../../shared/utils/error.js';
 import { generateAccessToken, generateVerifyToken } from '../../shared/utils/generateToken.js';
-import { transformForHash, tokenUUID } from '../../shared/utils/crypto.js';
+import { transformForHash, tokenUUID, createHashPassword } from '../../shared/utils/crypto.js';
 import generateCode from '../../shared/utils/generateCode.js';
 import * as Service_Device from '../device/device.service.js';
 import * as Service_Token from './token.service.js';
@@ -87,6 +87,21 @@ const verifyTokens = async ({
   return { newAccessToken, userId: tokenData.userId };
 };
 
+const refreshToken = async (token: string) => {
+  try {
+    if (!process.env.JWT_REFRESH_SECRET)
+      throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
+    const { userId } = jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as { userId: number };
+
+    const newAccessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, {
+      expiresIn: '1h'
+    });
+    return newAccessToken;
+  } catch (error) {
+    throw new AppError('Refresh token inválido ou expirado', 401);
+  }
+};
+
 // Forgot Password
 const forgotPasswordService = async (email: string) => {
   const userId = await Model_User.findByEmail(email);
@@ -100,6 +115,25 @@ const forgotPasswordService = async (email: string) => {
 
   // Disparar email com token e email
   EmailService.sendForgotPasswordEmail(email, code);
+};
+
+const resetPassword = async (newPassword: string, tokenReset: string) => {
+  const dateNow = new Date();
+  const TokenResetPassword = await Model_Token.validateTokenResetPassword(tokenReset);
+
+  if (TokenResetPassword.expiresAt < dateNow) throw new AppError('Código expirado', 400);
+  if (TokenResetPassword.used) throw new AppError('Código já utilizado', 400);
+
+  const hashNewPassword = await createHashPassword(newPassword);
+
+  const updatedPassword = await Model_User.changePassword(
+    TokenResetPassword.userId,
+    hashNewPassword
+  );
+
+  await Model_Token.markTokenAsUsed(TokenResetPassword.id);
+
+  return updatedPassword;
 };
 
 const verifyCodeService = async (code: string, email: string) => {
@@ -126,6 +160,8 @@ const verifyCodeService = async (code: string, email: string) => {
 export {
   emailVerificationAccount,
   verifyTokenEmailAccount,
+  refreshToken,
   forgotPasswordService,
+  resetPassword,
   verifyCodeService
 };

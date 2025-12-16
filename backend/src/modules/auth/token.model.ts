@@ -1,5 +1,6 @@
 import { createTokensType } from './token.type.js';
 import prisma from '../../lib/prisma.js';
+import { AppError } from '../../shared/utils/error.js';
 
 const createRefreshToken = async ({
   hashRefreshToken,
@@ -38,6 +39,22 @@ const verifyRefreshToken = async (refreshToken: string) => {
   });
 };
 
+const validateTokenResetPassword = async (tokenHash: string) => {
+  const token = await prisma.passwordResetToken.findUnique({
+    where: { token: tokenHash },
+    select: { token: true, used: true, expiresAt: true, user: true, userId: true, id: true }
+  });
+  if (!token) throw new AppError('Usuário não encontrado', 404);
+  return token;
+};
+
+const markTokenAsUsed = async (tokenId: number) => {
+  await prisma.passwordResetToken.update({
+    where: { id: tokenId },
+    data: { used: true }
+  });
+};
+
 const revokeRefreshToken = async (deviceId: number) => {
   return await prisma.refreshToken.updateMany({
     where: { deviceId },
@@ -45,4 +62,11 @@ const revokeRefreshToken = async (deviceId: number) => {
   });
 };
 
-export { createRefreshToken, verifyRefreshToken, revokeRefreshToken, createTokenUUID };
+export {
+  createRefreshToken,
+  verifyRefreshToken,
+  revokeRefreshToken,
+  createTokenUUID,
+  validateTokenResetPassword,
+  markTokenAsUsed
+};
