@@ -1,23 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import * as Service from '../services/userService.js';
 
-import ms from 'ms';
 import dotenv from 'dotenv';
-import { loginUserBodySchemaType } from '../schemas/login/loginUser.schema.js';
 import { CreateUserBodySchemaType } from '../schemas/users/createUser.schema.js';
 import { updateUserSchemaBodyType } from '../schemas/users/updateUser.schema.js';
-
-import { CookieOptions } from 'express';
+import cookieUser from '../../shared/constants/cookieUser.js';
 
 dotenv.config();
-
-const cookieUser: CookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict',
-  signed: true,
-  path: '/'
-};
 
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -68,41 +57,4 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// Login User
-
-const loginUser = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { email, password } = req.validated!.body as loginUserBodySchemaType;
-
-    const { refreshTokenRaw, accessToken, deviceUUID, expiresMs } = await Service.loginUser(
-      email,
-      password
-    );
-
-    const refreshTokenMaxAge = ms(process.env.TOKEN_REFRESH_EXPIRES_IN as ms.StringValue);
-    const accessTokenMaxAge = ms(process.env.JWT_ACCESS_EXPIRES_IN as ms.StringValue);
-
-    // DeviceID
-    res.cookie('deviceId', deviceUUID, {
-      ...cookieUser,
-      maxAge: expiresMs
-    });
-
-    // Refresh Token
-    res.cookie('refreshToken', refreshTokenRaw, {
-      ...cookieUser,
-      maxAge: refreshTokenMaxAge
-    });
-
-    // Access Token
-    res.cookie('accessToken', accessToken, {
-      ...cookieUser,
-      maxAge: accessTokenMaxAge
-    });
-    return res.status(200).json({ token: accessToken });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export { getUser, createUser, updateUser, deleteUser, loginUser };
+export { getUser, createUser, updateUser, deleteUser };

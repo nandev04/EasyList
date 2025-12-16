@@ -1,20 +1,20 @@
 import jwt from 'jsonwebtoken';
 import { generateTokenRaw, transformForHash } from './crypto.js';
 
-const createVerifyToken = (userId: number) => {
+const generateVerifyToken = (userId: number) => {
   const token = jwt.sign({ userId }, process.env.JWT_EMAIL_SECRET!, { expiresIn: '15m' });
   return token;
 };
 
-const createAccessToken = (userId: number) => {
+const generateAccessToken = (userId: number) => {
   const token = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, { expiresIn: '15m' });
   return token;
 };
 
-const createRefreshToken = () => {
+const generateRefreshToken = () => {
   const refreshTokenRaw = generateTokenRaw();
   const hashRefreshToken = transformForHash(refreshTokenRaw);
   return { refreshTokenRaw, hashRefreshToken };
 };
 
-export { createAccessToken, createRefreshToken, createVerifyToken };
+export { generateAccessToken, generateVerifyToken, generateRefreshToken };

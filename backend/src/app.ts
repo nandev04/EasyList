@@ -1,6 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import tasksRouter from './routes/tasksRouter.js';
+import tasksRouter from './modules/task/tasks.router.js';
 import usersRouter from './modules/user/users.router.js';
 import dotenv from 'dotenv';
 import cleanRefreshTokenDb from './cron/refreshTokenCleanup.js';

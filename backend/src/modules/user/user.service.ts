@@ -39,23 +39,23 @@ const deleteUser = async (id: number) => {
   return await Model.deleteUser(id);
 };
 
-const loginUser = async (email: string, password: string) => {
-  const user = await Model.findByEmail(email);
-  const verifyHash = await bcrypt.compare(password, user.password);
+// const loginUser = async (email: string, password: string) => {
+//   const user = await Model.findByEmail(email);
+//   const verifyHash = await bcrypt.compare(password, user.password);
 
-  if (!verifyHash) throw new AppError('Credenciais inválidas', 401);
+//   if (!verifyHash) throw new AppError('Credenciais inválidas', 401);
 
-  const { accessToken, refreshTokenRaw, expiresMs, deviceUUID, expirationDate, hashRefreshToken } =
-    await AuthService.createTokens(user.id);
+//   const { accessToken, refreshTokenRaw, expiresMs, deviceUUID, expirationDate, hashRefreshToken } =
+//     await AuthService.createTokens(user.id);
 
-  const maxDevicePerUser = Number(process.env.MAX_DEVICES_PER_USER);
-  const { id } = await ModelDevice.createDevice({ deviceUUID, userId: user.id, maxDevicePerUser });
-  await Model.createRefreshToken({
-    hashRefreshToken,
-    userId: user.id,
-    deviceId: id,
-    expiresAt: expirationDate
-  });
+//   const maxDevicePerUser = Number(process.env.MAX_DEVICES_PER_USER);
+//   const { id } = await ModelDevice.createDevice({ deviceUUID, userId: user.id, maxDevicePerUser });
+//   await Model.createRefreshToken({
+//     hashRefreshToken,
+//     userId: user.id,
+//     deviceId: id,
+//     expiresAt: expirationDate
+//   });
 
   return { accessToken, refreshTokenRaw, deviceUUID, expiresMs };
 };

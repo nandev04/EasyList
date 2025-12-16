@@ -1,6 +1,6 @@
-import { AppError } from '../utils/error.js';
+import { AppError } from '../shared/utils/error.js';
 import * as resetPasswordModel from '../models/resetPasswordModel.js';
-import { createHashPassword } from '../utils/crypto.js';
+import { createHashPassword } from '../shared/utils/crypto.js';
 
 const resetPassword = async (newPassword: string, tokenReset: string) => {
   const dateNow = new Date();

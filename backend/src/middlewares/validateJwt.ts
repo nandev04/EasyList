@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { AccessTokenPayload } from '../typesAndInterfaces/jwtPayload.js';
-import { transformForHash } from '../utils/crypto.js';
-import { AppError } from '../utils/error.js';
+import { transformForHash } from '../shared/utils/crypto.js';
+import { AppError } from '../shared/utils/error.js';
 import * as Model from '../models/userModel.js';
-import { createAccessToken } from '../utils/createToken.js';
+import { createAccessToken } from '../shared/utils/generateToken.js';
 
 const validateJwt = async (req: Request, res: Response, next: NextFunction) => {
   const { accessToken, refreshToken } = req.signedCookies;

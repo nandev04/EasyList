@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthService } from '../services/authService.js';
+import { AuthService } from '../modules/auth/auth.service.js';
 
 const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {

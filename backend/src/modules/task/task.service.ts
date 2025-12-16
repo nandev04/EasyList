@@ -1,12 +1,11 @@
-import * as Model from '../models/taskModel.js';
-import { CreateTaskSchemaType } from '../schemas/tasks/createTask.schema.js';
-import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTask.schema.js';
+import * as Model from '../task/task.model.js';
+import { updateTaskSchemaBodyType } from '../task/task.schema.js';
+import { createTaskInputType } from './task.type.js';
 
 const getTasks = async (userId: number) => {
   return await Model.getTasks(userId);
 };
 
-type createTaskInputType = CreateTaskSchemaType & { userId: number };
 const createTask = async ({ userId, title, status, description }: createTaskInputType) => {
   return await Model.createTask({ userId, title, description, status });
 };

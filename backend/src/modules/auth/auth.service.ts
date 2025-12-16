@@ -1,24 +1,28 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import * as Model from '../models/userModel.js';
-import { EmailService } from './emailService.js';
-import { AppError } from '../utils/error.js';
-
-import { createAccessToken, createRefreshToken, createVerifyToken } from '../utils/createToken.js';
-import { v4 as uuidv4 } from 'uuid';
-import { transformForHash, tokenUUID } from '../utils/crypto.js';
-import generateCode from '../utils/generateCode.js';
-import { refreshExpirationDate } from '../utils/expirationDate.js';
-import { de } from 'zod/v4/locales/index.cjs';
+import * as Model_User from '../user/user.model.js';
+import * as Model_Device from '../device/device.model.js';
+import * as Model_Token from './token.model.js';
+import * as Model_OTP from '../codeOTP/codeOTP.model.js';
+import { EmailService } from '../../services/emailService.js';
+import { AppError } from '../../shared/utils/error.js';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  generateVerifyToken
+} from '../../shared/utils/generateToken.js';
+import { transformForHash, tokenUUID } from '../../shared/utils/crypto.js';
+import generateCode from '../../shared/utils/generateCode.js';
+import { generateRefreshExpirationDate } from '../../shared/utils/expirationDate.js';
 
 dotenv.config();
 
 export class AuthService {
-  static async register(userId: number, email: string) {
+  register(userId: number, email: string) {
     if (!process.env.JWT_EMAIL_SECRET) throw new AppError('JWT_EMAIL_SECRET não definido!', 500);
 
     try {
-      const token = createVerifyToken(userId);
+      const token = generateVerifyToken(userId);
       EmailService.sendVerificationEmail(email, token);
       return token;
     } catch (err) {
@@ -36,7 +40,7 @@ export class AuthService {
     try {
       const payload = jwt.verify(token, process.env.JWT_EMAIL_SECRET!) as { userId: number };
 
-      const verifiedUser = await Model.verifyUser(payload.userId);
+      const verifiedUser = await Model_User.verifyUser(payload.userId);
       return verifiedUser;
     } catch (err) {
       if (err instanceof AppError) throw err;
@@ -44,42 +48,15 @@ export class AuthService {
     }
   }
 
-  static async createTokens(userId: number) {
-    try {
-      if (!process.env.JWT_ACCESS_SECRET)
-        throw new AppError('JWT_ACCESS_SECRET não definido!', 500);
-      if (!process.env.JWT_REFRESH_SECRET)
-        throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
-
-      const deviceUUID = uuidv4();
-      const accessToken = createAccessToken(userId);
-      const { refreshTokenRaw, hashRefreshToken } = createRefreshToken();
-
-      const { expirationDate, expiresMs } = refreshExpirationDate();
-
-      return {
-        accessToken,
-        refreshTokenRaw,
-        expiresMs,
-        deviceUUID,
-        expirationDate,
-        hashRefreshToken
-      };
-    } catch (err) {
-      if (err instanceof AppError) throw err;
-      throw new AppError(err instanceof Error ? err.message : 'Token Inválido', 401);
-    }
-  }
-
   static async verifyTokenDevice(deviceId: string) {
-    const deviceUUIDRecovered = await Model.verifyDeviceId(deviceId);
+    const deviceUUIDRecovered = await Model_Device.verifyDeviceId(deviceId);
     return deviceUUIDRecovered ?? null;
   }
 
   static async createTokenFromDeviceUUID(userId: number, deviceId: number) {
-    const { hashRefreshToken, refreshTokenRaw } = createRefreshToken();
-    const { expirationDate } = refreshExpirationDate();
-    await Model.createRefreshToken({
+    const { hashRefreshToken, refreshTokenRaw } = generateRefreshToken();
+    const { expirationDate } = generateRefreshExpirationDate();
+    await Model_Token.createRefreshToken({
       hashRefreshToken,
       userId,
       deviceId,
@@ -107,9 +84,9 @@ export class AuthService {
 
     if (!refreshToken && deviceId) {
       const { deviceUUID, userId, id } = await this.verifyTokenDevice(deviceId);
-      await Model.revokeRefreshToken(id);
+      await Model_Token.revokeRefreshToken(id);
       const newRefreshTokenRaw = await this.createTokenFromDeviceUUID(userId, id);
-      const newAccessToken = createAccessToken(userId);
+      const newAccessToken = generateAccessToken(userId);
       return {
         userId,
         newAccessToken,
@@ -121,13 +98,13 @@ export class AuthService {
     if (!refreshToken) throw new AppError('Token de atualização ausente', 401);
 
     const hashRefreshToken = transformForHash(refreshToken);
-    const tokenData = await Model.verifyRefreshToken(hashRefreshToken);
+    const tokenData = await Model_Token.verifyRefreshToken(hashRefreshToken);
     const dateNow = new Date();
 
     if (!tokenData) throw new AppError('Token Inválido', 401);
     if (dateNow > tokenData.expiresAt) throw new AppError('Token Expirado', 401);
 
-    const newAccessToken = createAccessToken(tokenData.userId);
+    const newAccessToken = generateAccessToken(tokenData.userId);
     return { newAccessToken, userId: tokenData.userId };
   }
 }
@@ -135,36 +112,36 @@ export class AuthService {
 // Forgot Password
 
 const forgotPasswordService = async (email: string) => {
-  const userId = await Model.findByEmail(email);
+  const userId = await Model_User.findByEmail(email);
   if (!userId) throw new AppError('Usuário não encontrado', 404);
 
   const code = generateCode();
   const hashCodeForgot = transformForHash(code);
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-  await Model.createCodeOTP(hashCodeForgot, expiresAt, userId.id);
+  await Model_OTP.createCodeOTP(hashCodeForgot, expiresAt, userId.id);
 
   // Disparar email com token e email
   EmailService.sendForgotPasswordEmail(email, code);
 };
 
 const verifyCodeService = async (code: string, email: string) => {
-  const { id } = await Model.findByEmail(email);
+  const { id } = await Model_User.findByEmail(email);
 
   const dateNow = new Date();
 
   const codeHash = transformForHash(code);
 
-  const codeFetched = await Model.findCodeOTP(codeHash, id);
+  const codeFetched = await Model_OTP.findCodeOTP(codeHash, id);
 
   if (codeFetched.expiresAt < dateNow) throw new AppError('Código expirado', 400);
   if (codeFetched.used) throw new AppError('Código já utilizado', 400);
 
-  await Model.markCodeAsUsed(codeFetched.id);
+  await Model_OTP.markCodeAsUsed(codeFetched.id);
 
   const tokenResetPassword = tokenUUID();
 
-  await Model.createTokenUUID(codeFetched.userId, tokenResetPassword);
+  await Model_Token.createTokenUUID(codeFetched.userId, tokenResetPassword);
 
   return tokenResetPassword;
 };
