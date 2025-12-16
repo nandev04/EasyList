@@ -10,7 +10,7 @@ import { transformForHash, tokenUUID, createHashPassword } from '../../shared/ut
 import generateCode from '../../shared/utils/generateCode.js';
 import * as Service_Device from '../device/device.service.js';
 import * as Service_Token from './token.service.js';
-import { verifyTokens, VerifyTokensResult } from './auth.types.js';
+import { VerifyTokensTypeResult, verifyTokensType } from './auth.types.js';
 
 dotenv.config();
 
@@ -48,7 +48,7 @@ const verifyTokens = async ({
   refreshToken,
   accessToken,
   deviceId
-}: verifyTokens): Promise<VerifyTokensResult> => {
+}: verifyTokensType): Promise<VerifyTokensTypeResult> => {
   if (accessToken) {
     try {
       const { userId } = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as {
@@ -160,6 +160,7 @@ const verifyCodeService = async (code: string, email: string) => {
 export {
   emailVerificationAccount,
   verifyTokenEmailAccount,
+  verifyTokens,
   refreshToken,
   forgotPasswordService,
   resetPassword,

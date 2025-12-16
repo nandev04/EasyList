@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import * as Service from '../services/userService.js';
+import * as Service from './user.service.js';
 
 import dotenv from 'dotenv';
-import { CreateUserBodySchemaType } from '../schemas/users/createUser.schema.js';
-import { updateUserSchemaBodyType } from '../schemas/users/updateUser.schema.js';
+import { CreateUserBodySchemaType, updateUserSchemaBodyType } from './user.schema.js';
 import cookieUser from '../../shared/constants/cookieUser.js';
 
 dotenv.config();
