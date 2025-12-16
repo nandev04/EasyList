@@ -1,11 +1,11 @@
-import * as Service from '../services/taskService.js';
+import * as Service from './task.service';
 import { NextFunction, Request, Response } from 'express';
-import { CreateTaskSchemaType } from '../schemas/tasks/createTask.schema.js';
 import {
+  CreateTaskSchemaType,
   updateTaskSchemaBodyType,
-  updateTaskSchemaParamsType
-} from '../schemas/tasks/updateTask.schema.js';
-import { deleteTaskSchemaParamsType } from '../schemas/tasks/deleteTask.schema.js';
+  updateTaskSchemaParamsType,
+  deleteTaskSchemaParamsType
+} from './task.schema.js';
 
 const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   try {

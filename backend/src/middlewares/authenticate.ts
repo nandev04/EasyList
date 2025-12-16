@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthService } from '../modules/auth/auth.service.js';
+import * as Service_Auth from '../modules/auth/auth.service.js';
 
 const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { refreshToken, accessToken, deviceId } = req.signedCookies;
 
-    const resultToken = await AuthService.verifyTokens({ refreshToken, accessToken, deviceId });
+    const resultToken = await Service_Auth.verifyTokens({ refreshToken, accessToken, deviceId });
     // FIX: RETORNANDO HASH DO REFRESH TOKEN AO INVES DO TOKEN RAW
 
     if (resultToken.deviceUUID) {

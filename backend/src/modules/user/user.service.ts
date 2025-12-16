@@ -1,27 +1,24 @@
-import bcrypt from 'bcrypt';
-import { usersType } from '../typesAndInterfaces/users.js';
-import * as Model from '../models/userModel.js';
-import * as ModelDevice from '../models/DeviceModel.js';
-import { AuthService } from './authService.js';
-import { AppError } from '../utils/error.js';
-import { createHashPassword } from '../utils/crypto.js';
-import { updateUserSchemaBodyType } from '../schemas/users/updateUser.schema.js';
+import { CreateUserBodySchemaType, updateUserSchemaBodyType } from './user.schema.js';
+import * as Model_User from './user.model.js';
+import { AppError } from '../../shared/utils/error.js';
+import { createHashPassword } from '../../shared/utils/crypto.js';
 import dotenv from 'dotenv';
+import * as Service_Auth from '../auth/auth.service.js';
 
 dotenv.config();
 
 const getUser = async (id: string) => {
-  const user = await Model.getUser(+id);
+  const user = await Model_User.getUser(+id);
   return user;
 };
 
-const createUser = async ({ username, password, email }: usersType) => {
+const createUser = async ({ username, password, email }: CreateUserBodySchemaType) => {
   try {
     const hashPassword = await createHashPassword(password);
 
-    const createdUser = await Model.createUser({ username, hashPassword, email });
+    const createdUser = await Model_User.createUser({ username, hashPassword, email });
 
-    await AuthService.register(createdUser.id, createdUser.email);
+    await Service_Auth.emailVerificationAccount(createdUser.id, createdUser.email);
 
     return createdUser;
   } catch (err) {
@@ -32,32 +29,11 @@ const createUser = async ({ username, password, email }: usersType) => {
 };
 
 const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
-  return await Model.updateUser({ id, data });
+  return await Model_User.updateUser({ id, data });
 };
 
 const deleteUser = async (id: number) => {
-  return await Model.deleteUser(id);
+  return await Model_User.deleteUser(id);
 };
 
-// const loginUser = async (email: string, password: string) => {
-//   const user = await Model.findByEmail(email);
-//   const verifyHash = await bcrypt.compare(password, user.password);
-
-//   if (!verifyHash) throw new AppError('Credenciais inválidas', 401);
-
-//   const { accessToken, refreshTokenRaw, expiresMs, deviceUUID, expirationDate, hashRefreshToken } =
-//     await AuthService.createTokens(user.id);
-
-//   const maxDevicePerUser = Number(process.env.MAX_DEVICES_PER_USER);
-//   const { id } = await ModelDevice.createDevice({ deviceUUID, userId: user.id, maxDevicePerUser });
-//   await Model.createRefreshToken({
-//     hashRefreshToken,
-//     userId: user.id,
-//     deviceId: id,
-//     expiresAt: expirationDate
-//   });
-
-  return { accessToken, refreshTokenRaw, deviceUUID, expiresMs };
-};
-
-export { getUser, createUser, updateUser, deleteUser, loginUser };
+export { getUser, createUser, updateUser, deleteUser };

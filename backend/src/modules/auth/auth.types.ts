@@ -1,14 +1,14 @@
-interface verifyTokens {
+interface verifyTokensType {
   refreshToken?: string;
   accessToken?: string;
   deviceId?: string;
 }
 
-interface VerifyTokensResult {
+interface VerifyTokensTypeResult {
   deviceUUID?: string;
   userId: number;
   newAccessToken?: string;
   newRefreshTokenRaw?: string;
 }
 
-export { verifyTokens, VerifyTokensResult };
+export { verifyTokensType, VerifyTokensTypeResult };
