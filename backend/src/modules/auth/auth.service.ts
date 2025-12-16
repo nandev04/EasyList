@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import * as Model_User from '../user/user.model.js';
 import * as Model_Token from './token.model.js';
 import * as Model_OTP from './codeOTP.model.js';
-import { EmailService } from '../../shared/services/mail.service.js';
+import * as mailService from '../../shared/services/mail.service.js';
 import { AppError } from '../../shared/utils/error.js';
 import { generateAccessToken, generateVerifyToken } from '../../shared/utils/generateToken.js';
 import { transformForHash, tokenUUID, createHashPassword } from '../../shared/utils/crypto.js';
@@ -19,7 +19,7 @@ const emailVerificationAccount = (userId: number, email: string) => {
 
   try {
     const token = generateVerifyToken(userId);
-    EmailService.sendVerificationEmail(email, token);
+    mailService.sendVerificationMail(email, token);
     return token;
   } catch (err) {
     if (err instanceof AppError) throw err;
@@ -114,7 +114,7 @@ const forgotPasswordService = async (email: string) => {
   await Model_OTP.createCodeOTP(hashCodeForgot, expiresAt, userId.id);
 
   // Disparar email com token e email
-  EmailService.sendForgotPasswordEmail(email, code);
+  mailService.sendForgotPasswordEmail(email, code);
 };
 
 const resetPassword = async (newPassword: string, tokenReset: string) => {
