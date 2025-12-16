@@ -1,6 +1,6 @@
-import prisma from '../lib/prisma.js';
-import { createTaskInputType } from '../services/taskService.js';
-import { updateTaskSchemaBodyType } from '../schemas/tasks/updateTask.schema.js';
+import prisma from '../../lib/prisma.js';
+import { createTaskInputType } from '../task/task.type.js';
+import { updateTaskSchemaBodyType } from '../task/task.schema.js';
 
 const getTasks = async (userId: number) => {
   const tasks = await prisma.task.findMany({

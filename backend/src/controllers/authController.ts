@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { AuthService, forgotPasswordService, verifyCodeService } from '../services/authService.js';
+import {
+  AuthService,
+  forgotPasswordService,
+  verifyCodeService
+} from '../modules/auth/auth.service.js';
 import { VerifyUserQuerySchemaType } from '../schemas/users/verifyUser.schema.js';
 import { forgotPasswordBodyType } from '../schemas/auth/forgotPassword.schema.js';
 

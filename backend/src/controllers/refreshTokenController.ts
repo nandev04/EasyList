@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as Service from '../services/refreshTokenService.js';
-import { AppError } from '../utils/error.js';
+import { AppError } from '../shared/utils/error.js';
 import { RefreshTokenUserCookieType } from '../schemas/login/refreshTokenUser.schema.js';
 
 const refreshToken = async (req: Request, res: Response, next: NextFunction) => {

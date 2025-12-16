@@ -1,4 +1,4 @@
-import { AppError } from '../utils/error.js';
+import { AppError } from '../shared/utils/error.js';
 import prisma from '../lib/prisma.js';
 
 const validateTokenResetPassword = async (tokenHash: string) => {

@@ -1,10 +1,8 @@
 import express from 'express';
-import * as taskController from '../controllers/tasksController.js';
-import validate from '../middlewares/validateData.js';
-import { createTaskSchema } from '../schemas/tasks/createTask.schema.js';
-import { validateJwt } from '../middlewares/validateJwt.js';
-import { updateTaskSchemaBody } from '../schemas/tasks/updateTask.schema.js';
-import { deleteTaskSchemaParams } from '../schemas/tasks/deleteTask.schema.js';
+import * as taskController from './task.controller.js';
+import validate from '../../middlewares/validateData.js';
+import { validateJwt } from '../../middlewares/validateJwt.js';
+import { createTaskSchema, updateTaskSchemaBody, deleteTaskSchemaParams } from './task.schema.js';
 
 const router = express.Router();
 
