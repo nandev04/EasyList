@@ -113,7 +113,6 @@ const forgotPasswordService = async (email: string) => {
 
   await Model_OTP.createCodeOTP(hashCodeForgot, expiresAt, userId.id);
 
-  // Disparar email com token e email
   mailService.sendForgotPasswordEmail(email, code);
 };
 
