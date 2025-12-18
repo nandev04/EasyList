@@ -14,13 +14,12 @@ import { VerifyTokensTypeResult, verifyTokensType } from './auth.types.js';
 
 dotenv.config();
 
-const emailVerificationAccount = (userId: number, email: string) => {
+const emailVerificationAccount = async (userId: number, email: string): Promise<void> => {
   if (!process.env.JWT_EMAIL_SECRET) throw new AppError('JWT_EMAIL_SECRET não definido!', 500);
 
   try {
     const token = generateVerifyToken(userId);
     mailService.sendVerificationMail(email, token);
-    return token;
   } catch (err) {
     if (err instanceof AppError) throw err;
 
