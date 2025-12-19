@@ -18,4 +18,7 @@ const createHashPassword = async (password: string) => {
   return hash;
 };
 
-export { generateTokenRaw, transformForHash, tokenUUID, createHashPassword };
+const compareHash = async (password: string, hashPassword: string) =>
+  bcrypt.compare(password, hashPassword);
+
+export { generateTokenRaw, transformForHash, tokenUUID, createHashPassword, compareHash };

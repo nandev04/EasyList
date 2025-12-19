@@ -5,7 +5,7 @@ import * as Model_Token from './token.model.js';
 import * as Model_OTP from './codeOTP.model.js';
 import * as mailService from '../../shared/services/mail.service.js';
 import { AppError } from '../../shared/utils/error.js';
-import { generateAccessToken, generateVerifyToken } from '../../shared/utils/generateToken.js';
+import { generateAccessToken, generateVerifyToken } from '../../shared/utils/refreshTokenUtils.js';
 import { transformForHash, tokenUUID, createHashPassword } from '../../shared/utils/crypto.js';
 import generateCode from '../../shared/utils/generateCode.js';
 import * as Service_Device from '../device/device.service.js';
