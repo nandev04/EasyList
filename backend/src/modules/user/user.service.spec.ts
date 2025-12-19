@@ -6,9 +6,9 @@ import { AppError } from '../../shared/utils/error';
 import { createHashPassword } from '../../shared/utils/crypto';
 import * as Service_Auth from '../auth/auth.service';
 import * as Model_User from './user.model';
-import { createUser, updateUser } from './user.service';
+import { createUser } from './user.service';
 
-describe('createUser', () => {
+describe('Create user flow', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

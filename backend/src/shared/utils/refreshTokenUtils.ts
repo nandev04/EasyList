@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { generateTokenRaw, transformForHash } from './crypto.js';
+import ms from 'ms';
 
 const generateVerifyToken = (userId: number) => {
   const token = jwt.sign({ userId }, process.env.JWT_EMAIL_SECRET!, { expiresIn: '15m' });
@@ -15,6 +16,13 @@ const generateRefreshToken = () => {
   const refreshTokenRaw = generateTokenRaw();
   const hashRefreshToken = transformForHash(refreshTokenRaw);
   return { refreshTokenRaw, hashRefreshToken };
+};
+
+export const generateRefreshExpirationDate = () => {
+  const expiresMs = ms(process.env.TOKEN_REFRESH_EXPIRES_IN as ms.StringValue);
+
+  const expirationDate = new Date(Date.now() + expiresMs);
+  return { expirationDate, expiresMs };
 };
 
 export { generateAccessToken, generateVerifyToken, generateRefreshToken };

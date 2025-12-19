@@ -1,10 +1,13 @@
-import { generateAccessToken, generateRefreshToken } from '../../shared/utils/generateToken.js';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  generateRefreshExpirationDate
+} from '../../shared/utils/refreshTokenUtils.js';
 import * as Model_Token from './token.model.js';
 import generateDeviceId from '../../shared/utils/generateDeviceId.js';
 import { AppError } from '../../shared/utils/error.js';
-import { generateRefreshExpirationDate } from '../../shared/utils/expirationDate.js';
 
-const createTokens = (userId: number) => {
+const createTokens = async (userId: number) => {
   try {
     if (!process.env.JWT_ACCESS_SECRET) throw new AppError('JWT_ACCESS_SECRET não definido!', 500);
     if (!process.env.JWT_REFRESH_SECRET)
