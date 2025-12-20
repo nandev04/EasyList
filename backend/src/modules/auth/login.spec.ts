@@ -58,10 +58,10 @@ describe('Login flow', () => {
     token: 'tokenTeste',
     revokedAt: null
   };
-  test('Should successfully find the user and create their data for cookies.', async () => {
-    const returnFindByEmail = { id: 777, password: 'testPassword' };
-    const resultCreateDeviceId = 10;
 
+  const returnFindByEmail = { id: 777, password: 'testPassword' };
+  const resultCreateDeviceId = 10;
+  test('Should successfully find the user and create their data for cookies.', async () => {
     vi.mocked(Model_User.findByEmail).mockResolvedValue(returnFindByEmail);
     vi.spyOn(crypto, 'compareHash').mockResolvedValue(true);
     vi.mocked(Service_Token.createTokens).mockResolvedValue(resultCreateTokens);
@@ -94,5 +94,16 @@ describe('Login flow', () => {
       expiresAt: resultCreateTokens.expirationDate
     });
     expect(Model_Token.createRefreshToken).toBeCalledTimes(1);
+  });
+
+  test('It should throw a 401 error in case of an invalid password, with the message: Credenciais inválidas.', async () => {
+    vi.mocked(Model_User.findByEmail).mockResolvedValue(returnFindByEmail);
+    const verifyHash = await crypto.compareHash('wrong-password', returnFindByEmail.password);
+
+    expect(verifyHash).toBeFalsy();
+    await expect(loginUser).rejects.toMatchObject({
+      message: 'Credenciais inválidas',
+      statusCode: 401
+    });
   });
 });
