@@ -4,7 +4,7 @@ import { AccessTokenPayload } from '../shared/types/jwtPayload.js';
 import { transformForHash } from '../shared/utils/crypto.js';
 import { AppError } from '../shared/utils/error.js';
 import * as Model_User from '../modules/auth/token.model.js';
-import { generateAccessToken } from '../shared/utils/refreshTokenUtils.js';
+import { generateAccessToken } from '../shared/utils/TokenUtils.js';
 
 const validateJwt = async (req: Request, res: Response, next: NextFunction) => {
   const { accessToken, refreshToken } = req.signedCookies;

@@ -2,7 +2,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
   generateRefreshExpirationDate
-} from '../../shared/utils/refreshTokenUtils.js';
+} from '../../shared/utils/TokenUtils.js';
 import * as Model_Token from './token.model.js';
 import generateDeviceId from '../../shared/utils/generateDeviceId.js';
 import { AppError } from '../../shared/utils/error.js';
