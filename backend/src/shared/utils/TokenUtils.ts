@@ -25,8 +25,14 @@ const generateRefreshExpirationDate = () => {
   return { expirationDate, expiresMs };
 };
 
-const utilJwtVerify = async (token: string) => {
+const utilJwtVerifyEmail = async (token: string) => {
   return jwt.verify(token, process.env.JWT_EMAIL_SECRET!) as { userId: number };
+};
+
+const utilJwtVerifyAccess = async (accessToken: string) => {
+  return jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as {
+    userId: number;
+  };
 };
 
 export {
@@ -34,5 +40,6 @@ export {
   generateVerifyToken,
   generateRefreshToken,
   generateRefreshExpirationDate,
-  utilJwtVerify
+  utilJwtVerifyEmail,
+  utilJwtVerifyAccess
 };

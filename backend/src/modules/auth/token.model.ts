@@ -55,8 +55,8 @@ const markTokenAsUsed = async (tokenId: number) => {
   });
 };
 
-const revokeRefreshToken = async (deviceId: number) => {
-  return await prisma.refreshToken.updateMany({
+const revokeRefreshToken = async (deviceId: number): Promise<void> => {
+  await prisma.refreshToken.updateMany({
     where: { deviceId },
     data: { revokedAt: new Date() }
   });

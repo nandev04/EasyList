@@ -24,7 +24,7 @@ const verifyDeviceId = async (deviceId: string) => {
     where: {
       deviceUUID: deviceId
     },
-    select: { deviceUUID: true, userId: true, refreshToken: true, id: true }
+    select: { deviceUUID: true, userId: true, id: true }
   });
   if (!deviceUUID) throw new AppError('DeviceUUID não encontrado', 404);
   return deviceUUID;
