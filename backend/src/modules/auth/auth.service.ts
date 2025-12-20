@@ -5,7 +5,11 @@ import * as Model_Token from './token.model.js';
 import * as Model_OTP from './codeOTP.model.js';
 import * as mailService from '../../shared/services/mail.service.js';
 import { AppError } from '../../shared/utils/error.js';
-import { generateAccessToken, generateVerifyToken } from '../../shared/utils/refreshTokenUtils.js';
+import {
+  generateAccessToken,
+  generateVerifyToken,
+  utilJwtVerify
+} from '../../shared/utils/TokenUtils.js';
 import { transformForHash, tokenUUID, createHashPassword } from '../../shared/utils/crypto.js';
 import generateCode from '../../shared/utils/generateCode.js';
 import * as Service_Device from '../device/device.service.js';
@@ -33,7 +37,7 @@ const verifyTokenEmailAccount = async (token: string) => {
   if (!process.env.JWT_EMAIL_SECRET) throw new Error('JWT_EMAIL_SECRET não definido!');
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_EMAIL_SECRET!) as { userId: number };
+    const payload = await utilJwtVerify(token);
 
     const verifiedUser = await Model_User.verifyUser(payload.userId);
     return verifiedUser;

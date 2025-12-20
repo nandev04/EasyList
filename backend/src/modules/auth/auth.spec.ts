@@ -1,7 +1,9 @@
-vi.mock('../../shared/utils/refreshTokenUtils');
+vi.mock('../../shared/utils/TokenUtils');
+vi.mock('../user/user.model');
 import jwt from 'jsonwebtoken';
-import { generateVerifyToken } from '../../shared/utils/refreshTokenUtils';
-import { emailVerificationAccount } from './auth.service';
+import { generateVerifyToken, utilJwtVerify } from '../../shared/utils/TokenUtils';
+import { emailVerificationAccount, verifyTokenEmailAccount } from './auth.service';
+import * as Model_User from '../user/user.model';
 
 describe('emailVerificationAccount', () => {
   const OLD_ENV = process.env;
@@ -54,5 +56,21 @@ describe('emailVerificationAccount', () => {
       message: 'Falha inesperada',
       statusCode: 500
     });
+  });
+});
+
+describe('verifyTokenEmailAccount', async () => {
+  test('Should successfully verify jwt token and call verifyUser function.', async () => {
+    const returnModelVerifyUser = {
+      verified: true,
+      updatedAt: new Date()
+    };
+    vi.mocked(utilJwtVerify).mockResolvedValue({ userId: 7 });
+    vi.mocked(Model_User.verifyUser).mockResolvedValue(returnModelVerifyUser);
+
+    await verifyTokenEmailAccount('token-test');
+    expect(utilJwtVerify).toBeCalledTimes(1);
+    expect(Model_User.verifyUser).toBeCalledWith(7);
+    expect(Model_User.verifyUser).toBeCalledTimes(1);
   });
 });

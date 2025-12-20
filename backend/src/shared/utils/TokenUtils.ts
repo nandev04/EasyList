@@ -18,11 +18,21 @@ const generateRefreshToken = () => {
   return { refreshTokenRaw, hashRefreshToken };
 };
 
-export const generateRefreshExpirationDate = () => {
+const generateRefreshExpirationDate = () => {
   const expiresMs = ms(process.env.TOKEN_REFRESH_EXPIRES_IN as ms.StringValue);
 
   const expirationDate = new Date(Date.now() + expiresMs);
   return { expirationDate, expiresMs };
 };
 
-export { generateAccessToken, generateVerifyToken, generateRefreshToken };
+const utilJwtVerify = async (token: string) => {
+  return jwt.verify(token, process.env.JWT_EMAIL_SECRET!) as { userId: number };
+};
+
+export {
+  generateAccessToken,
+  generateVerifyToken,
+  generateRefreshToken,
+  generateRefreshExpirationDate,
+  utilJwtVerify
+};
