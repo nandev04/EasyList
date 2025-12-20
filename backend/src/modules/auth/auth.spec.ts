@@ -3,6 +3,8 @@ vi.mock('../user/user.model');
 vi.mock('../device/device.service');
 vi.mock('../auth/token.model');
 vi.mock('./token.service');
+vi.mock('../../shared/utils/crypto');
+
 import jwt from 'jsonwebtoken';
 import {
   generateAccessToken,
@@ -20,7 +22,7 @@ import * as Model_Token from '../auth/token.model';
 import * as Service_Device from '../device/device.service';
 import { AppError } from '../../shared/utils/error';
 import * as Service_Token from './token.service';
-import { error } from 'console';
+import { transformForHash } from '../../shared/utils/crypto';
 
 describe('emailVerificationAccount', () => {
   const OLD_ENV = process.env;
@@ -141,5 +143,24 @@ describe('verifyTokensLogin', () => {
       message: error.message,
       statusCode: error.statusCode
     });
+  });
+
+  test('Should access token be created successfully.', async () => {
+    const hashRefreshToken = 'tokenHashTest';
+    const accessToken = 'tokenAccess';
+    const verifyRefreshTokenResolved = { userId: 2, token: 'tokenHashTest', expiresAt: new Date() };
+    const resultVerifyTokensLogin = {
+      newAccessToken: accessToken,
+      userId: verifyRefreshTokenResolved.userId
+    };
+
+    vi.mocked(transformForHash).mockReturnValue(hashRefreshToken);
+    vi.mocked(Model_Token.verifyRefreshToken).mockResolvedValue(verifyRefreshTokenResolved);
+    vi.mocked(generateAccessToken).mockReturnValue(accessToken);
+
+    const result = await verifyTokensLogin({ refreshToken: 'refreshTokenTest' });
+
+    expect(Model_Token.verifyRefreshToken).toBeCalledTimes(1);
+    expect(result).toEqual(resultVerifyTokensLogin);
   });
 });
