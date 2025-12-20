@@ -1,4 +1,4 @@
-interface verifyTokensType {
+interface verifyTokensLoginType {
   refreshToken?: string;
   accessToken?: string;
   deviceId?: string;
@@ -11,4 +11,4 @@ interface VerifyTokensTypeResult {
   newRefreshTokenRaw?: string;
 }
 
-export { verifyTokensType, VerifyTokensTypeResult };
+export { verifyTokensLoginType, VerifyTokensTypeResult };

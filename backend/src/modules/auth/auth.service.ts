@@ -8,13 +8,14 @@ import { AppError } from '../../shared/utils/error.js';
 import {
   generateAccessToken,
   generateVerifyToken,
-  utilJwtVerify
+  utilJwtVerifyAccess,
+  utilJwtVerifyEmail
 } from '../../shared/utils/TokenUtils.js';
 import { transformForHash, tokenUUID, createHashPassword } from '../../shared/utils/crypto.js';
 import generateCode from '../../shared/utils/generateCode.js';
 import * as Service_Device from '../device/device.service.js';
 import * as Service_Token from './token.service.js';
-import { VerifyTokensTypeResult, verifyTokensType } from './auth.types.js';
+import { VerifyTokensTypeResult, verifyTokensLoginType } from './auth.types.js';
 
 dotenv.config();
 
@@ -37,7 +38,7 @@ const verifyTokenEmailAccount = async (token: string) => {
   if (!process.env.JWT_EMAIL_SECRET) throw new Error('JWT_EMAIL_SECRET não definido!');
 
   try {
-    const payload = await utilJwtVerify(token);
+    const payload = await utilJwtVerifyEmail(token);
 
     const verifiedUser = await Model_User.verifyUser(payload.userId);
     return verifiedUser;
@@ -47,17 +48,15 @@ const verifyTokenEmailAccount = async (token: string) => {
   }
 };
 
-const verifyTokens = async ({
+const verifyTokensLogin = async ({
   refreshToken,
   accessToken,
   deviceId
-}: verifyTokensType): Promise<VerifyTokensTypeResult> => {
+}: verifyTokensLoginType): Promise<VerifyTokensTypeResult> => {
   if (accessToken) {
     try {
-      const { userId } = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as {
-        userId: number;
-      };
-      return { userId };
+      const payloadAccess = await utilJwtVerifyAccess(accessToken);
+      return payloadAccess;
     } catch (err) {
       if (!(err instanceof jwt.TokenExpiredError))
         throw new AppError('Token de acesso inválido', 401);
@@ -67,7 +66,7 @@ const verifyTokens = async ({
   if (!refreshToken && deviceId) {
     const { deviceUUID, userId, id } = await Service_Device.verifyTokenDevice(deviceId);
     await Model_Token.revokeRefreshToken(id);
-    const newRefreshTokenRaw = await Service_Token.createTokenFromDeviceUUID(userId, id);
+    const newRefreshTokenRaw = await Service_Token.createRefreshTokenFromDeviceUUID(userId, id);
     const newAccessToken = generateAccessToken(userId);
     return {
       userId,
@@ -162,7 +161,7 @@ const verifyCodeService = async (code: string, email: string) => {
 export {
   emailVerificationAccount,
   verifyTokenEmailAccount,
-  verifyTokens,
+  verifyTokensLogin,
   refreshToken,
   forgotPasswordService,
   resetPassword,

@@ -33,7 +33,7 @@ const createTokens = async (userId: number) => {
   }
 };
 
-const createTokenFromDeviceUUID = async (userId: number, deviceId: number) => {
+const createRefreshTokenFromDeviceUUID = async (userId: number, deviceId: number) => {
   const { hashRefreshToken, refreshTokenRaw } = generateRefreshToken();
   const { expirationDate } = generateRefreshExpirationDate();
   await Model_Token.createRefreshToken({
@@ -45,4 +45,4 @@ const createTokenFromDeviceUUID = async (userId: number, deviceId: number) => {
   return refreshTokenRaw;
 };
 
-export { createTokens, createTokenFromDeviceUUID };
+export { createTokens, createRefreshTokenFromDeviceUUID };

@@ -1,9 +1,26 @@
 vi.mock('../../shared/utils/TokenUtils');
 vi.mock('../user/user.model');
+vi.mock('../device/device.service');
+vi.mock('../auth/token.model');
+vi.mock('./token.service');
 import jwt from 'jsonwebtoken';
-import { generateVerifyToken, utilJwtVerify } from '../../shared/utils/TokenUtils';
-import { emailVerificationAccount, verifyTokenEmailAccount } from './auth.service';
+import {
+  generateAccessToken,
+  generateVerifyToken,
+  utilJwtVerifyAccess,
+  utilJwtVerifyEmail
+} from '../../shared/utils/TokenUtils';
+import {
+  emailVerificationAccount,
+  verifyTokenEmailAccount,
+  verifyTokensLogin
+} from './auth.service';
 import * as Model_User from '../user/user.model';
+import * as Model_Token from '../auth/token.model';
+import * as Service_Device from '../device/device.service';
+import { AppError } from '../../shared/utils/error';
+import * as Service_Token from './token.service';
+import { error } from 'console';
 
 describe('emailVerificationAccount', () => {
   const OLD_ENV = process.env;
@@ -65,12 +82,64 @@ describe('verifyTokenEmailAccount', async () => {
       verified: true,
       updatedAt: new Date()
     };
-    vi.mocked(utilJwtVerify).mockResolvedValue({ userId: 7 });
+    vi.mocked(utilJwtVerifyEmail).mockResolvedValue({ userId: 7 });
     vi.mocked(Model_User.verifyUser).mockResolvedValue(returnModelVerifyUser);
 
     await verifyTokenEmailAccount('token-test');
-    expect(utilJwtVerify).toBeCalledTimes(1);
+    expect(utilJwtVerifyEmail).toBeCalledTimes(1);
     expect(Model_User.verifyUser).toBeCalledWith(7);
     expect(Model_User.verifyUser).toBeCalledTimes(1);
+  });
+});
+
+describe('verifyTokensLogin', () => {
+  test('Should throw an AppError if an invalid access token with status code 401 is encountered.', async () => {
+    vi.mocked(utilJwtVerifyAccess).mockRejectedValueOnce(
+      new AppError('Token de acesso inválido', 401)
+    );
+
+    await expect(verifyTokensLogin({ accessToken: 'accessTokenTest' })).rejects.toMatchObject({
+      message: 'Token de acesso inválido',
+      statusCode: 401
+    });
+  });
+
+  test('Should validate the deviceId and create news tokens', async () => {
+    const sendDeviceUUID = 'deviceuuid-test';
+    const verifyTokenDeviceResolved = {
+      deviceUUID: sendDeviceUUID,
+      userId: 1,
+      id: 10
+    };
+
+    const newRefreshToken = 'newRefreshTokenFromDevice';
+    const newAccessToken = 'newAccessTokenFromDevice';
+
+    vi.mocked(Service_Device.verifyTokenDevice).mockResolvedValue(verifyTokenDeviceResolved);
+    vi.mocked(Model_Token.revokeRefreshToken).mockResolvedValueOnce(undefined);
+    vi.mocked(Service_Token.createRefreshTokenFromDeviceUUID).mockResolvedValue(newRefreshToken);
+    vi.mocked(generateAccessToken).mockReturnValue(newAccessToken);
+
+    const result = await verifyTokensLogin({ deviceId: sendDeviceUUID });
+
+    expect(Service_Token.createRefreshTokenFromDeviceUUID).toBeCalledWith(
+      verifyTokenDeviceResolved.userId,
+      verifyTokenDeviceResolved.id
+    );
+    expect(result).toEqual({
+      userId: verifyTokenDeviceResolved.userId,
+      newAccessToken,
+      deviceUUID: verifyTokenDeviceResolved.deviceUUID,
+      newRefreshTokenRaw: newRefreshToken
+    });
+  });
+
+  test('Should throw an AppError if the refresh token is missing.', async () => {
+    const error = new AppError('Token de atualização ausente', 401);
+
+    await expect(verifyTokensLogin({})).rejects.toMatchObject({
+      message: error.message,
+      statusCode: error.statusCode
+    });
   });
 });
