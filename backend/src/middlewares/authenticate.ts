@@ -5,7 +5,11 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const { refreshToken, accessToken, deviceId } = req.signedCookies;
 
-    const resultToken = await Service_Auth.verifyTokens({ refreshToken, accessToken, deviceId });
+    const resultToken = await Service_Auth.verifyTokensLogin({
+      refreshToken,
+      accessToken,
+      deviceId
+    });
     // FIX: RETORNANDO HASH DO REFRESH TOKEN AO INVES DO TOKEN RAW
 
     if (resultToken.deviceUUID) {
