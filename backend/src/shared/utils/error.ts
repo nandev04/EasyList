@@ -6,6 +6,13 @@ export class AppError extends Error {
     this.name = 'AppError';
     this.message = message;
     this.statusCode = statusCode;
+
+    Object.defineProperty(this, 'message', {
+      value: message,
+      enumerable: true,
+      writable: false
+    });
+
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
