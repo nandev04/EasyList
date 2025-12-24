@@ -4,7 +4,8 @@ export class AppError extends Error {
   constructor(message: string, statusCode: number) {
     super(message);
     this.name = 'AppError';
+    this.message = message;
     this.statusCode = statusCode;
-    Object.setPrototypeOf(this, new.target.prototype); // necessário para instanceof funcionar
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }

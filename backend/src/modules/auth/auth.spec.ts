@@ -212,7 +212,7 @@ describe('resetPassword', () => {
   const resultValidateTokenResetPassword = {
     id: 31321,
     userId: 4325,
-    expiresAt: new Date('2035-23-04'),
+    expiresAt: new Date(),
     used: false
   };
 
@@ -223,6 +223,22 @@ describe('resetPassword', () => {
 
   test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 404', async () => {
     const err = new AppError('Token não encontrado', 404);
+
+    await expect(
+      resetPassword(resetPasswordInput.email, resetPasswordInput.password)
+    ).rejects.toMatchObject({
+      message: err.message,
+      statusCode: err.statusCode
+    });
+  });
+
+  test('Should throw an AppError when the TokenResetPassword has been expired with the message: Código expirado; and statusCode: 400', async () => {
+    const err = new AppError('Código expirado', 400);
+
+    vi.mocked(Model_Token.validateTokenResetPassword).mockResolvedValue({
+      ...resultValidateTokenResetPassword,
+      expiresAt: new Date(Date.now() - 100000)
+    });
 
     await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
