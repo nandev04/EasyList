@@ -42,9 +42,8 @@ const verifyRefreshToken = async (refreshToken: string) => {
 const validateTokenResetPassword = async (tokenHash: string) => {
   const token = await prisma.passwordResetToken.findUnique({
     where: { token: tokenHash },
-    select: { token: true, used: true, expiresAt: true, user: true, userId: true, id: true }
+    select: { used: true, expiresAt: true, userId: true, id: true }
   });
-  if (!token) throw new AppError('Usuário não encontrado', 404);
   return token;
 };
 
