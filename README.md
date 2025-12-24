@@ -24,7 +24,7 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 - 🔑 [bcrypt](https://www.npmjs.com/package/bcrypt) (hash de senhas)  
 - 🛢️ [MySQL](https://www.mysql.com/) (banco de dados principal)  
 - 📧 [SendGrid](https://sendgrid.com/) (envio de emails de confirmação de login)  
-- 🧪 [Vitest](https://jestjs.io/) (testes unitários)  
+- 🧪 [Vitest](https://vitest.dev/) (testes unitários)  
 - ✨ ESLint + Prettier  
 
 ### Infraestrutura
