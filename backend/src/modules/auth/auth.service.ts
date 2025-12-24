@@ -117,7 +117,7 @@ const forgotPasswordService = async (email: string): Promise<void> => {
   mailService.sendForgotPasswordEmail(email, code);
 };
 
-const resetPassword = async (newPassword: string, tokenReset: string) => {
+const resetPassword = async (newPassword: string, tokenReset: string): Promise<void> => {
   const dateNow = new Date();
   const TokenResetPassword = await Model_Token.validateTokenResetPassword(tokenReset);
 
@@ -127,14 +127,9 @@ const resetPassword = async (newPassword: string, tokenReset: string) => {
 
   const hashNewPassword = await createHashPassword(newPassword);
 
-  const updatedPassword = await Model_User.changePassword(
-    TokenResetPassword.userId,
-    hashNewPassword
-  );
+  await Model_User.changePassword(TokenResetPassword.userId, hashNewPassword);
 
   await Model_Token.markTokenAsUsed(TokenResetPassword.id);
-
-  return updatedPassword;
 };
 
 const verifyCodeService = async (code: string, email: string) => {

@@ -4,7 +4,16 @@ vi.mock('../device/device.service');
 vi.mock('../auth/token.model');
 vi.mock('./token.service');
 vi.mock('./codeOTP.model');
-vi.mock('../../shared/utils/crypto');
+vi.mock('../../shared/utils/crypto', async () => {
+  const actual = await vi.importActual<typeof import('../../shared/utils/crypto')>(
+    '../../shared/utils/crypto'
+  );
+
+  return {
+    ...actual,
+    transformForHash: vi.fn()
+  };
+});
 vi.mock('../../shared/utils/generateCode');
 vi.mock('../../shared/services/mail.service');
 
@@ -27,7 +36,7 @@ import * as Model_Token from '../auth/token.model';
 import * as Service_Device from '../device/device.service';
 import { AppError } from '../../shared/utils/error';
 import * as Service_Token from './token.service';
-import { transformForHash } from '../../shared/utils/crypto';
+import * as hashUtils from '../../shared/utils/crypto';
 import generateCode from '../../shared/utils/generateCode';
 import * as Model_OTP from './codeOTP.model';
 import * as mailService from '../../shared/services/mail.service';
@@ -166,7 +175,7 @@ describe('verifyTokensLogin', () => {
       userId: verifyRefreshTokenResolved.userId
     };
 
-    vi.mocked(transformForHash).mockReturnValue(hashRefreshToken);
+    vi.mocked(hashUtils.transformForHash).mockReturnValue(hashRefreshToken);
     vi.mocked(Model_Token.verifyRefreshToken).mockResolvedValue(verifyRefreshTokenResolved);
     vi.mocked(generateAccessToken).mockReturnValue(accessToken);
 
@@ -199,7 +208,7 @@ describe('forgotPasswordService', () => {
 
     vi.mocked(Model_User.findByEmail).mockResolvedValue(user);
     vi.mocked(generateCode).mockReturnValue(code);
-    vi.mocked(transformForHash).mockReturnValue(hashCodeForgot);
+    vi.mocked(hashUtils.transformForHash).mockReturnValue(hashCodeForgot);
     vi.mocked(Model_OTP.createCodeOTP);
     vi.mocked(mailService.sendForgotPasswordEmail);
 
@@ -216,7 +225,7 @@ describe('resetPassword', () => {
   const resultValidateTokenResetPassword = {
     id: 31321,
     userId: 4325,
-    expiresAt: new Date(),
+    expiresAt: new Date(Date.now() + 100000),
     used: false
   };
 
@@ -264,5 +273,28 @@ describe('resetPassword', () => {
     await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({ statusCode: err.statusCode, message: err.message });
+  });
+
+  test('Should call the functions correctly, create new password for the user, and return it.', async () => {
+    const newPassword = 'newPassword';
+    const hashNewPassword = 'hashNewPassword';
+
+    vi.mocked(Model_Token.validateTokenResetPassword).mockResolvedValue(
+      resultValidateTokenResetPassword
+    );
+    const spy = vi.spyOn(hashUtils, 'createHashPassword').mockResolvedValue(hashNewPassword);
+    vi.mocked(Model_User.changePassword);
+    vi.mocked(Model_Token.markTokenAsUsed);
+
+    await resetPassword(newPassword, 'token-reset-test');
+
+    expect(spy).toBeCalledWith(newPassword);
+    expect(Model_User.changePassword).toBeCalledWith(
+      resultValidateTokenResetPassword.userId,
+      hashNewPassword
+    );
+    expect(Model_User.changePassword).toBeCalledTimes(1);
+    expect(Model_Token.markTokenAsUsed).toBeCalledWith(resultValidateTokenResetPassword.id);
+    expect(Model_Token.markTokenAsUsed).toBeCalledTimes(1);
   });
 });
