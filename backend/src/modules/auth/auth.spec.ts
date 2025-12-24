@@ -18,6 +18,7 @@ import {
 import {
   emailVerificationAccount,
   forgotPasswordService,
+  resetPassword,
   verifyTokenEmailAccount,
   verifyTokensLogin
 } from './auth.service';
@@ -204,5 +205,30 @@ describe('forgotPasswordService', () => {
     expect(Model_OTP.createCodeOTP).toBeCalledWith(hashCodeForgot, expiresAt, user.id);
     expect(mailService.sendForgotPasswordEmail).toBeCalledTimes(1);
     expect(mailService.sendForgotPasswordEmail).toBeCalledWith(email, code);
+  });
+});
+
+describe('resetPassword', () => {
+  const resultValidateTokenResetPassword = {
+    id: 31321,
+    userId: 4325,
+    expiresAt: new Date('2035-23-04'),
+    used: false
+  };
+
+  const resetPasswordInput = {
+    email: 'email@test',
+    password: 'password!test'
+  };
+
+  test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 404', async () => {
+    const err = new AppError('Token não encontrado', 404);
+
+    await expect(
+      resetPassword(resetPasswordInput.email, resetPasswordInput.password)
+    ).rejects.toMatchObject({
+      message: err.message,
+      statusCode: err.statusCode
+    });
   });
 });

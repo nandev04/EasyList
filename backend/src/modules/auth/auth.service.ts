@@ -104,7 +104,6 @@ const refreshToken = async (token: string) => {
   }
 };
 
-// Forgot Password
 const forgotPasswordService = async (email: string): Promise<void> => {
   const user = await Model_User.findByEmail(email);
   if (!user) throw new AppError('Usuário não encontrado', 404);
@@ -122,6 +121,7 @@ const resetPassword = async (newPassword: string, tokenReset: string) => {
   const dateNow = new Date();
   const TokenResetPassword = await Model_Token.validateTokenResetPassword(tokenReset);
 
+  if (!TokenResetPassword) throw new AppError('Token não encontrado', 404);
   if (TokenResetPassword.expiresAt < dateNow) throw new AppError('Código expirado', 400);
   if (TokenResetPassword.used) throw new AppError('Código já utilizado', 400);
 
