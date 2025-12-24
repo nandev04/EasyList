@@ -3,7 +3,10 @@ vi.mock('../user/user.model');
 vi.mock('../device/device.service');
 vi.mock('../auth/token.model');
 vi.mock('./token.service');
+vi.mock('./codeOTP.model');
 vi.mock('../../shared/utils/crypto');
+vi.mock('../../shared/utils/generateCode');
+vi.mock('../../shared/services/mail.service');
 
 import jwt from 'jsonwebtoken';
 import {
@@ -24,6 +27,9 @@ import * as Service_Device from '../device/device.service';
 import { AppError } from '../../shared/utils/error';
 import * as Service_Token from './token.service';
 import { transformForHash } from '../../shared/utils/crypto';
+import generateCode from '../../shared/utils/generateCode';
+import * as Model_OTP from './codeOTP.model';
+import * as mailService from '../../shared/services/mail.service';
 
 describe('emailVerificationAccount', () => {
   const OLD_ENV = process.env;
@@ -175,5 +181,28 @@ describe('forgotPasswordService', () => {
       message: error.message,
       statusCode: error.statusCode
     });
+  });
+
+  test('Should call createCodeOTP function of Model and call the email service for email trigger', async () => {
+    const user = {
+      id: 10,
+      password: 'test-password'
+    };
+    const code = 'TsT032';
+    const hashCodeForgot = 'hashCodeForgot';
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    vi.mocked(Model_User.findByEmail).mockResolvedValue(user);
+    vi.mocked(generateCode).mockReturnValue(code);
+    vi.mocked(transformForHash).mockReturnValue(hashCodeForgot);
+    vi.mocked(Model_OTP.createCodeOTP);
+    vi.mocked(mailService.sendForgotPasswordEmail);
+
+    await forgotPasswordService(email);
+
+    expect(Model_OTP.createCodeOTP).toBeCalledTimes(1);
+    expect(Model_OTP.createCodeOTP).toBeCalledWith(hashCodeForgot, expiresAt, user.id);
+    expect(mailService.sendForgotPasswordEmail).toBeCalledTimes(1);
+    expect(mailService.sendForgotPasswordEmail).toBeCalledWith(email, code);
   });
 });

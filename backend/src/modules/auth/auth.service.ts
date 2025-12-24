@@ -105,15 +105,15 @@ const refreshToken = async (token: string) => {
 };
 
 // Forgot Password
-const forgotPasswordService = async (email: string) => {
-  const userId = await Model_User.findByEmail(email);
-  if (!userId) throw new AppError('Usuário não encontrado', 404);
+const forgotPasswordService = async (email: string): Promise<void> => {
+  const user = await Model_User.findByEmail(email);
+  if (!user) throw new AppError('Usuário não encontrado', 404);
 
   const code = generateCode();
   const hashCodeForgot = transformForHash(code);
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-  await Model_OTP.createCodeOTP(hashCodeForgot, expiresAt, userId.id);
+  await Model_OTP.createCodeOTP(hashCodeForgot, expiresAt, user.id);
 
   mailService.sendForgotPasswordEmail(email, code);
 };
