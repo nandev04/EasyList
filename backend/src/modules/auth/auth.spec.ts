@@ -14,6 +14,7 @@ import {
 } from '../../shared/utils/TokenUtils';
 import {
   emailVerificationAccount,
+  forgotPasswordService,
   verifyTokenEmailAccount,
   verifyTokensLogin
 } from './auth.service';
@@ -162,5 +163,17 @@ describe('verifyTokensLogin', () => {
 
     expect(Model_Token.verifyRefreshToken).toBeCalledTimes(1);
     expect(result).toEqual(resultVerifyTokensLogin);
+  });
+});
+
+describe('forgotPasswordService', () => {
+  const email = 'teste@gmail.com';
+  test('Should throw an AppError if the user is not found with message: Usuário não encontrado and statusCode 404', async () => {
+    const error = new AppError('Usuário não encontrado', 404);
+
+    await expect(forgotPasswordService(email)).rejects.toMatchObject({
+      message: error.message,
+      statusCode: error.statusCode
+    });
   });
 });
