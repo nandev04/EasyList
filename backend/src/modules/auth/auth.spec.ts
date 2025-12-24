@@ -156,7 +156,11 @@ describe('verifyTokensLogin', () => {
   test('Should access token be created successfully.', async () => {
     const hashRefreshToken = 'tokenHashTest';
     const accessToken = 'tokenAccess';
-    const verifyRefreshTokenResolved = { userId: 2, token: 'tokenHashTest', expiresAt: new Date() };
+    const verifyRefreshTokenResolved = {
+      userId: 2,
+      token: 'tokenHashTest',
+      expiresAt: new Date(Date.now() + 10000)
+    };
     const resultVerifyTokensLogin = {
       newAccessToken: accessToken,
       userId: verifyRefreshTokenResolved.userId
@@ -232,8 +236,8 @@ describe('resetPassword', () => {
     });
   });
 
-  test('Should throw an AppError when the TokenResetPassword has been expired with the message: Código expirado; and statusCode: 400', async () => {
-    const err = new AppError('Código expirado', 400);
+  test('Should throw an AppError when the TokenResetPassword has been expired with the message: Token expirado; and statusCode: 400', async () => {
+    const err = new AppError('Token expirado', 400);
 
     vi.mocked(Model_Token.validateTokenResetPassword).mockResolvedValue({
       ...resultValidateTokenResetPassword,
@@ -246,5 +250,19 @@ describe('resetPassword', () => {
       message: err.message,
       statusCode: err.statusCode
     });
+  });
+
+  test('Should throw an AppError when the TokenResetPassword has been marked as used with the message: Token já utilizado; and statusCode: 400', async () => {
+    const err = new AppError('Token já utilizado', 400);
+
+    vi.mocked(Model_Token.validateTokenResetPassword).mockResolvedValue({
+      ...resultValidateTokenResetPassword,
+      expiresAt: new Date(Date.now() + 100000),
+      used: true
+    });
+
+    await expect(
+      resetPassword(resetPasswordInput.email, resetPasswordInput.password)
+    ).rejects.toMatchObject({ statusCode: err.statusCode, message: err.message });
   });
 });
