@@ -5,8 +5,8 @@ const generateTokenRaw = () => {
   return randomBytes(64).toString('hex');
 };
 
-const transformForHash = (tokenRaw: string) => {
-  return createHash('sha256').update(tokenRaw).digest('hex');
+const transformForHash = (stringToTransform: string) => {
+  return createHash('sha256').update(stringToTransform).digest('hex');
 };
 
 const tokenUUID = () => {

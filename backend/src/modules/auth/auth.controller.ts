@@ -53,13 +53,13 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
   try {
     const { newPassword, tokenResetPassword } = <resetPasswordBodyType>req.validated!.body;
 
-    const updatedPassword = await Service_Auth.resetPassword(newPassword, tokenResetPassword);
+    await Service_Auth.resetPassword(newPassword, tokenResetPassword);
 
     res.clearCookie('deviceId', cookieUser);
     res.clearCookie('accessToken', cookieUser);
     res.clearCookie('refreshToken', cookieUser);
 
-    return res.status(200).json(updatedPassword);
+    return res.status(204).json();
   } catch (err) {
     next(err);
   }
