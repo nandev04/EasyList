@@ -75,6 +75,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
 
+      - name: Install dependencies
+        run: cd backend && pnpm install --frozen-lockfile
+
       - name: Run ESLint
         run: cd backend && pnpm run lint
 
@@ -103,6 +106,9 @@ jobs:
           key: ${{ runner.os }}-pnpm-${{ hashFiles('backend/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: cd backend && pnpm install --frozen-lockfile
 
       - name: Run tests
         run: cd backend && pnpm test
