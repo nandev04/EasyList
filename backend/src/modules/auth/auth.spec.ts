@@ -44,18 +44,10 @@ import * as Model_OTP from './codeOTP.model';
 import * as mailService from '../../shared/services/mail.service';
 
 describe('emailVerificationAccount', () => {
-  const OLD_ENV = process.env;
+  const ORIGINAL_ENV = process.env.JWT_EMAIL_SECRET;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env = {
-      ...OLD_ENV,
-      JWT_EMAIL_SECRET: 'EMAIL_SECRET_TEST'
-    };
-  });
-
-  afterEach(() => {
-    process.env = OLD_ENV;
   });
 
   const { userId, email } = {
@@ -66,10 +58,12 @@ describe('emailVerificationAccount', () => {
   test('should throw a dotenv error with the message: JWT_EMAIL_SECRET não definido! and statusCode 500', async () => {
     delete process.env.JWT_EMAIL_SECRET;
 
-    expect(emailVerificationAccount(userId, email)).rejects.toMatchObject({
+    await expect(emailVerificationAccount(userId, email)).rejects.toMatchObject({
       message: 'JWT_EMAIL_SECRET não definido!',
       statusCode: 500
     });
+
+    process.env.JWT_EMAIL_SECRET = ORIGINAL_ENV;
   });
 
   test('should throw an JsonWebTokenError if the parameter type is incorrect with a statusCode of 401.', async () => {
