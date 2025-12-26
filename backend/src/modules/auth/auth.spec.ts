@@ -11,7 +11,8 @@ vi.mock('../../shared/utils/crypto', async () => {
 
   return {
     ...actual,
-    transformForHash: vi.fn()
+    transformForHash: vi.fn(),
+    tokenUUID: vi.fn()
   };
 });
 vi.mock('../../shared/utils/generateCode');
@@ -307,6 +308,9 @@ describe('verifyCodeService', () => {
     userId: 873,
     used: false
   };
+
+  const code = 'code_test';
+  const email = 'email_test';
   test('Should throw an AppError if the OTP Code has been expired with the message: Código expirado; and statusCode: 400', async () => {
     const err = new AppError('Código expirado', 400);
 
@@ -334,5 +338,28 @@ describe('verifyCodeService', () => {
       message: err.message,
       statusCode: err.statusCode
     });
+  });
+
+  test('Should call the functions correctly, create a token for reset password, save it in database and return', async () => {
+    const findByEmailResolved = {
+      id: 77,
+      password: 'password-test'
+    };
+    const codeHash = 'codeHash-test';
+    const tokenReset = 'tkn-tkn-tkn-tkn-tkn';
+
+    vi.mocked(Model_User.findByEmail).mockResolvedValue(findByEmailResolved);
+    vi.mocked(hashUtils.transformForHash).mockReturnValue(codeHash);
+    vi.mocked(Model_OTP.findCodeOTP).mockResolvedValue({
+      ...codeFetched,
+      expiresAt: new Date(Date.now() + 9999)
+    });
+    vi.mocked(hashUtils.tokenUUID).mockReturnValue(tokenReset);
+    vi.mocked(Model_Token.createTokenUUID);
+
+    expect(await verifyCodeService(code, email)).toEqual(tokenReset);
+    expect(Model_Token.createTokenUUID).toBeCalledWith(codeFetched.userId, tokenReset);
+    expect(Model_Token.createTokenUUID).toBeCalledTimes(1);
+    expect(Model_OTP.markCodeAsUsed).toBeCalledWith(codeFetched.id);
   });
 });
