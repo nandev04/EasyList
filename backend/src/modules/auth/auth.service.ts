@@ -104,37 +104,32 @@ const refreshToken = async (token: string) => {
   }
 };
 
-// Forgot Password
-const forgotPasswordService = async (email: string) => {
-  const userId = await Model_User.findByEmail(email);
-  if (!userId) throw new AppError('Usuário não encontrado', 404);
+const forgotPasswordService = async (email: string): Promise<void> => {
+  const user = await Model_User.findByEmail(email);
+  if (!user) throw new AppError('Usuário não encontrado', 404);
 
   const code = generateCode();
   const hashCodeForgot = transformForHash(code);
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-  await Model_OTP.createCodeOTP(hashCodeForgot, expiresAt, userId.id);
+  await Model_OTP.createCodeOTP(hashCodeForgot, expiresAt, user.id);
 
   mailService.sendForgotPasswordEmail(email, code);
 };
 
-const resetPassword = async (newPassword: string, tokenReset: string) => {
+const resetPassword = async (newPassword: string, tokenReset: string): Promise<void> => {
   const dateNow = new Date();
   const TokenResetPassword = await Model_Token.validateTokenResetPassword(tokenReset);
 
-  if (TokenResetPassword.expiresAt < dateNow) throw new AppError('Código expirado', 400);
-  if (TokenResetPassword.used) throw new AppError('Código já utilizado', 400);
+  if (!TokenResetPassword) throw new AppError('Token não encontrado', 404);
+  if (TokenResetPassword.expiresAt < dateNow) throw new AppError('Token expirado', 400);
+  if (TokenResetPassword.used) throw new AppError('Token já utilizado', 400);
 
   const hashNewPassword = await createHashPassword(newPassword);
 
-  const updatedPassword = await Model_User.changePassword(
-    TokenResetPassword.userId,
-    hashNewPassword
-  );
+  await Model_User.changePassword(TokenResetPassword.userId, hashNewPassword);
 
   await Model_Token.markTokenAsUsed(TokenResetPassword.id);
-
-  return updatedPassword;
 };
 
 const verifyCodeService = async (code: string, email: string) => {
