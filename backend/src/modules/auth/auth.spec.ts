@@ -28,6 +28,7 @@ import {
   emailVerificationAccount,
   forgotPasswordService,
   resetPassword,
+  verifyCodeService,
   verifyTokenEmailAccount,
   verifyTokensLogin
 } from './auth.service';
@@ -64,7 +65,7 @@ describe('emailVerificationAccount', () => {
   test('should throw a dotenv error with the message: JWT_EMAIL_SECRET não definido! and statusCode 500', async () => {
     delete process.env.JWT_EMAIL_SECRET;
 
-    await expect(emailVerificationAccount(userId, email)).rejects.toMatchObject({
+    expect(emailVerificationAccount(userId, email)).rejects.toMatchObject({
       message: 'JWT_EMAIL_SECRET não definido!',
       statusCode: 500
     });
@@ -77,7 +78,7 @@ describe('emailVerificationAccount', () => {
       throw jwtError;
     });
 
-    await expect(emailVerificationAccount).rejects.toMatchObject({
+    expect(emailVerificationAccount).rejects.toMatchObject({
       message: 'Token Inválido',
       statusCode: 401
     });
@@ -88,7 +89,7 @@ describe('emailVerificationAccount', () => {
       throw new Error('Falha inesperada');
     });
 
-    await expect(emailVerificationAccount(userId, email)).rejects.toMatchObject({
+    expect(emailVerificationAccount(userId, email)).rejects.toMatchObject({
       message: 'Falha inesperada',
       statusCode: 500
     });
@@ -117,7 +118,7 @@ describe('verifyTokensLogin', () => {
       new AppError('Token de acesso inválido', 401)
     );
 
-    await expect(verifyTokensLogin({ accessToken: 'accessTokenTest' })).rejects.toMatchObject({
+    expect(verifyTokensLogin({ accessToken: 'accessTokenTest' })).rejects.toMatchObject({
       message: 'Token de acesso inválido',
       statusCode: 401
     });
@@ -156,7 +157,7 @@ describe('verifyTokensLogin', () => {
   test('Should throw an AppError if the refresh token is missing.', async () => {
     const error = new AppError('Token de atualização ausente', 401);
 
-    await expect(verifyTokensLogin({})).rejects.toMatchObject({
+    expect(verifyTokensLogin({})).rejects.toMatchObject({
       message: error.message,
       statusCode: error.statusCode
     });
@@ -191,7 +192,7 @@ describe('forgotPasswordService', () => {
   test('Should throw an AppError if the user is not found with message: Usuário não encontrado and statusCode 404', async () => {
     const error = new AppError('Usuário não encontrado', 404);
 
-    await expect(forgotPasswordService(email)).rejects.toMatchObject({
+    expect(forgotPasswordService(email)).rejects.toMatchObject({
       message: error.message,
       statusCode: error.statusCode
     });
@@ -237,7 +238,7 @@ describe('resetPassword', () => {
   test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 404', async () => {
     const err = new AppError('Token não encontrado', 404);
 
-    await expect(
+    expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({
       message: err.message,
@@ -253,7 +254,7 @@ describe('resetPassword', () => {
       expiresAt: new Date(Date.now() - 100000)
     });
 
-    await expect(
+    expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({
       message: err.message,
@@ -270,7 +271,7 @@ describe('resetPassword', () => {
       used: true
     });
 
-    await expect(
+    expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({ statusCode: err.statusCode, message: err.message });
   });
@@ -296,5 +297,27 @@ describe('resetPassword', () => {
     expect(Model_User.changePassword).toBeCalledTimes(1);
     expect(Model_Token.markTokenAsUsed).toBeCalledWith(resultValidateTokenResetPassword.id);
     expect(Model_Token.markTokenAsUsed).toBeCalledTimes(1);
+  });
+});
+
+describe('verifyCodeService', () => {
+  const codeFetched = {
+    id: 313,
+    expiresAt: new Date(),
+    userId: 873,
+    used: false
+  };
+  test('Should throw an AppError if the OTP Code has been expired with the message: Código expirado; and statusCode: 400', async () => {
+    const err = new AppError('Código expirado', 400);
+
+    vi.mocked(Model_OTP.findCodeOTP).mockResolvedValue({
+      ...codeFetched,
+      expiresAt: new Date(Date.now() - 2000)
+    });
+
+    expect(verifyCodeService).rejects.toMatchObject({
+      message: err.message,
+      statusCode: err.statusCode
+    });
   });
 });
