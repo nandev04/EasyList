@@ -312,7 +312,22 @@ describe('verifyCodeService', () => {
 
     vi.mocked(Model_OTP.findCodeOTP).mockResolvedValue({
       ...codeFetched,
-      expiresAt: new Date(Date.now() - 2000)
+      expiresAt: new Date(Date.now() - 99999)
+    });
+
+    expect(verifyCodeService).rejects.toMatchObject({
+      message: err.message,
+      statusCode: err.statusCode
+    });
+  });
+
+  test('Should throw an AppError if the code has already been used with the message: Código já utilizado; and statusCode: 400', async () => {
+    const err = new AppError('Código já utilizado', 400);
+
+    vi.mocked(Model_OTP.findCodeOTP).mockResolvedValue({
+      ...codeFetched,
+      expiresAt: new Date(Date.now() + 99999),
+      used: true
     });
 
     expect(verifyCodeService).rejects.toMatchObject({
