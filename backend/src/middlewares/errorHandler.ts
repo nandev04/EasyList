@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../shared/utils/error.js';
 import { ZodError } from 'zod';
 
-export const errorHandler = (err: unknown, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   // Erro Zod-Validation
   if (err instanceof ZodError) {
     return res.status(400).json({
