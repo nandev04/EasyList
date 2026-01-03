@@ -8,8 +8,6 @@ import { cleanupOldDevices } from './cron/cleanupOldDevices.js';
 import taskRoutes from './modules/task/tasks.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import userRoutes from './modules/user/users.routes.js';
-import { validateJwt } from './middlewares/validateJwt.js';
-import rateLimitAuth from './modules/auth/auth.rate-limit.js';
 
 const app = express();
 app.set('trust proxy', true);
@@ -21,9 +19,9 @@ cleanupOldDevices();
 
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(rateLimitAuth, authRoutes);
-app.use(validateJwt, taskRoutes);
+app.use(authRoutes);
 app.use(userRoutes);
+app.use(taskRoutes);
 app.use(errorHandler);
 
 export default app;
