@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { redisClient } from '../lib/redis.js';
 
+const default_message = 'Too many requests, try again later.';
+
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   const key = `rate:auth:${req.ip}`;
 
@@ -12,7 +14,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (value > 8) {
-      return res.status(429).json({ message: 'Too many requests, try again later.' });
+      return res.status(429).json({ message: default_message });
     }
 
     next();
@@ -22,7 +24,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:create:${req.ip}`;
+  const key = `rate:createUser:${req.ip}`;
 
   try {
     const value = await redisClient.incr(key);
@@ -32,7 +34,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (value > 10) {
-      return res.status(429).json({ message: 'Too many requests, try again later.' });
+      return res.status(429).json({ message: default_message });
     }
 
     next();
@@ -42,7 +44,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const editUser = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:edit:${req.ip}`;
+  const key = `rate:editUser:${req.ip}`;
 
   try {
     const value = await redisClient.incr(key);
@@ -52,7 +54,7 @@ const editUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (value > 30) {
-      return res.status(429).json({ message: 'Too many requests, try again later.' });
+      return res.status(429).json({ message: default_message });
     }
 
     next();
@@ -62,17 +64,17 @@ const editUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:delete:${req.ip}`;
+  const key = `rate:deleteUser:${req.ip}`;
 
   try {
     const value = await redisClient.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 300);
+      await redisClient.expire(key, 600);
     }
 
-    if (value > 5) {
-      return res.status(429).json({ message: 'Too many requests, try again later.' });
+    if (value > 8) {
+      return res.status(429).json({ message: default_message });
     }
 
     next();
@@ -81,4 +83,84 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { auth, createUser, editUser, deleteUser };
+const getTasks = async (req: Request, res: Response, next: NextFunction) => {
+  const key = `rate:getTask:${req.ip}`;
+
+  try {
+    const value = await redisClient.incr(key);
+
+    if (value === 1) {
+      await redisClient.expire(key, 300);
+    }
+
+    if (value > 100) {
+      return res.status(429).json({ message: default_message });
+    }
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+const createtask = async (req: Request, res: Response, next: NextFunction) => {
+  const key = `rate:createTask:${req.ip}`;
+
+  try {
+    const value = await redisClient.incr(key);
+
+    if (value === 1) {
+      await redisClient.expire(key, 300);
+    }
+
+    if (value > 35) {
+      return res.status(429).json({ message: default_message });
+    }
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+const editTask = async (req: Request, res: Response, next: NextFunction) => {
+  const key = `rate:editTask:${req.ip}`;
+
+  try {
+    const value = await redisClient.incr(key);
+
+    if (value === 1) {
+      await redisClient.expire(key, 300);
+    }
+
+    if (value > 75) {
+      return res.status(429).json({ message: default_message });
+    }
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
+  const key = `rate:deleteTask:${req.ip}`;
+
+  try {
+    const value = await redisClient.incr(key);
+
+    if (value === 1) {
+      await redisClient.expire(key, 300);
+    }
+
+    if (value > 30) {
+      return res.status(429).json({ message: default_message });
+    }
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { auth, createUser, editUser, deleteUser, getTasks, createtask, editTask, deleteTask };
