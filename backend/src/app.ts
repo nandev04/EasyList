@@ -5,7 +5,7 @@ import cleanRefreshTokenDb from './cron/refreshTokenCleanup.js';
 import cleanResetCodeDb from './cron/passwordCodeCleanup.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { cleanupOldDevices } from './cron/cleanupOldDevices.js';
-import taskRoutes from './modules/task/tasks.routes.js';
+import taskRoutes from './modules/task/task.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import userRoutes from './modules/user/users.routes.js';
 
