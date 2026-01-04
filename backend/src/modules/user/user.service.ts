@@ -4,6 +4,7 @@ import { AppError } from '../../shared/utils/error.js';
 import { createHashPassword } from '../../shared/utils/crypto.js';
 import dotenv from 'dotenv';
 import * as Service_Auth from '../auth/auth.service.js';
+import { PutObjectCommand } from '@aws-sdk/client-s3/dist-types/index.js';
 
 dotenv.config();
 
@@ -36,4 +37,14 @@ const deleteUser = async (id: number) => {
   return await Model_User.deleteUser(id);
 };
 
-export { getUser, createUser, updateUser, deleteUser };
+const uploadAvatar = async (userId: number) => {
+  const key = `avatars/users/${userId}/avatar.webp`;
+
+  const putCommand = new PutObjectCommand({
+    Bucket: process.env.S3_BUCKET_NAME!,
+    Key: key,
+    ContentType: 'image/webp'
+  });
+};
+
+export { getUser, createUser, updateUser, deleteUser, uploadAvatar };
