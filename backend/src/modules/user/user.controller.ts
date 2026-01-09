@@ -23,12 +23,9 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
     await Service.createUser({ username, password, email });
 
-    return res
-      .status(201)
-      .json({
-        message:
-          'Usuário criado com sucesso, verifique sua caixa de entrada para verificar sua conta'
-      });
+    return res.status(201).json({
+      message: 'Usuário criado com sucesso, verifique sua caixa de entrada para verificar sua conta'
+    });
   } catch (err) {
     next(err);
   }
@@ -47,9 +44,9 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = req.userId!;
+    const userId = req.userId!;
 
-    await Service.deleteUser(id);
+    await Service.deleteUser(userId);
 
     res.clearCookie('deviceId', cookieUser);
     res.clearCookie('refreshToken', cookieUser);
@@ -61,4 +58,18 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { getUser, createUser, updateUser, deleteUser };
+const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.userId!;
+
+    if (!req.file) return res.status(400).json({ message: 'Imagem não enviada' });
+
+    const signedUrl = await Service.uploadAvatar(userId, req.file);
+
+    res.status(200).json({ signedUrl: signedUrl });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { getUser, createUser, updateUser, deleteUser, uploadAvatar };
