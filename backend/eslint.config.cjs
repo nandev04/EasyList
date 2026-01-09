@@ -13,7 +13,11 @@ const compat = new FlatCompat({
 });
 
 module.exports = defineConfig([
+  {
+    ignores: ['dist/**', 'node_modules/**']
+  },
   globalIgnores(['eslint.config.cjs']),
+
   {
     languageOptions: {
       parser: tsParser
