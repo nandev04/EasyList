@@ -10,7 +10,6 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
       accessToken,
       deviceId
     });
-    // FIX: RETORNANDO HASH DO REFRESH TOKEN AO INVES DO TOKEN RAW
 
     if (resultToken.deviceUUID) {
       res.cookie('refreshToken', resultToken.newRefreshTokenRaw, {
@@ -49,10 +48,11 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
       .status(200)
       .json({ message: 'Login automático autorizado', userId: resultToken.userId });
   } catch (err) {
-    console.error('Erro na autenticação', {
-      message: err instanceof Error ? err.message : 'Erro desconhecido',
-      route: req.originalUrl
+    res.status(401).json({
+      message: 'Erro na autenticação',
+      error: err instanceof Error ? err.message : 'Erro desconhecido'
     });
+
     return next();
   }
 };
