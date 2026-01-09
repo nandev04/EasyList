@@ -23,7 +23,7 @@ const createTask = async (req: Request, res: Response, next: NextFunction) => {
 
     const { title, description, status } = req.validated!.body as CreateTaskSchemaType;
     const createdTask = await Service.createTask({ title, description, status, userId });
-    res.status(201).json(createdTask);
+    res.status(204).json(createdTask);
   } catch (err) {
     next(err);
   }

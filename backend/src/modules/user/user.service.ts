@@ -4,6 +4,10 @@ import { AppError } from '../../shared/utils/error.js';
 import { createHashPassword } from '../../shared/utils/crypto.js';
 import dotenv from 'dotenv';
 import * as Service_Auth from '../auth/auth.service.js';
+import processAvatarImage from '../../shared/utils/processAvatarImage.js';
+import s3 from '../../lib/s3.js';
+import generateSignedUrl from '../../shared/utils/getSignedUrlImage.js';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 
 dotenv.config();
 
@@ -36,4 +40,24 @@ const deleteUser = async (id: number) => {
   return await Model_User.deleteUser(id);
 };
 
-export { getUser, createUser, updateUser, deleteUser };
+const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
+  const key = `avatars/users/${userId}/avatar.webp`;
+
+  const processedImageBuffer = await processAvatarImage(file.buffer);
+
+  const putCommand = new PutObjectCommand({
+    Bucket: process.env.S3_BUCKET_NAME!,
+    Key: key,
+    Body: processedImageBuffer,
+    ContentType: 'image/webp'
+  });
+
+  await s3.send(putCommand);
+
+  const signedUrl = await generateSignedUrl(key);
+  console.log(signedUrl);
+
+  return signedUrl;
+};
+
+export { getUser, createUser, updateUser, deleteUser, uploadAvatar };
