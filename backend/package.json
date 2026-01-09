@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "dev": "concurrently \"npx tsc --watch --project tsconfig.json\" \"nodemon dist/server.js\"",
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "concurrently \"npx tsc --watch --project tsconfig.build.json\" \"nodemon dist/server.js\"",
     "start": "node dist/server.js",
     "lint": "eslint 'src/**/*.ts'",
     "testscript": "echo 'Hello World'",
