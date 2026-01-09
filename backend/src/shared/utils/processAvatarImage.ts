@@ -1,4 +1,4 @@
-import sharp from 'sharp/lib';
+import sharp from 'sharp';
 
 const processAvatarImage = async (fileBuffer: Buffer) => {
   return sharp(fileBuffer)

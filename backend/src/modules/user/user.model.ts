@@ -49,6 +49,13 @@ const deleteUser = async (id: number) => {
   });
 };
 
+const insertAvatar = async (id: number, avatarUrl: string) => {
+  return await prisma.user.update({
+    where: { id },
+    data: { avatarUrl }
+  });
+};
+
 const verifyUser = async (id: number) => {
   const verifiedUser = await prisma.user.update({
     where: { id },
@@ -68,4 +75,13 @@ const findByEmail = async (email: string) => {
   return user;
 };
 
-export { getUser, createUser, updateUser, changePassword, deleteUser, verifyUser, findByEmail };
+export {
+  getUser,
+  createUser,
+  updateUser,
+  changePassword,
+  deleteUser,
+  verifyUser,
+  findByEmail,
+  insertAvatar
+};
