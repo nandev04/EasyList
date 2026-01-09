@@ -48,11 +48,6 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
       .status(200)
       .json({ message: 'Login automático autorizado', userId: resultToken.userId });
   } catch (err) {
-    res.status(401).json({
-      message: 'Erro na autenticação',
-      error: err instanceof Error ? err.message : 'Erro desconhecido'
-    });
-
     return next();
   }
 };
