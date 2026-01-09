@@ -15,6 +15,7 @@ model User {
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  avatarUrl String?
 
   tasks              Task[]
   refreshTokens      RefreshToken[]
@@ -38,7 +39,7 @@ model Task {
   title       String
   description String?
   status      String   @default("PENDING")
-  created_at  DateTime @default(now())
+  createdAt  DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   userId Int

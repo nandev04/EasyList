@@ -6,8 +6,7 @@ import dotenv from 'dotenv';
 import * as Service_Auth from '../auth/auth.service.js';
 import processAvatarImage from '../../shared/utils/processAvatarImage.js';
 import s3 from '../../lib/s3.js';
-import generateSignedUrl from '../../shared/utils/getSignedUrlImage.js';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { putAvatarS3, generateSignedUrl } from '../../shared/utils/S3ClientCommands.js';
 
 dotenv.config();
 
@@ -45,17 +44,13 @@ const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
 
   const processedImageBuffer = await processAvatarImage(file.buffer);
 
-  const putCommand = new PutObjectCommand({
-    Bucket: process.env.S3_BUCKET_NAME!,
-    Key: key,
-    Body: processedImageBuffer,
-    ContentType: 'image/webp'
-  });
+  const putCommand = await putAvatarS3(key, processedImageBuffer);
 
   await s3.send(putCommand);
 
   const signedUrl = await generateSignedUrl(key);
-  console.log(signedUrl);
+
+  await Model_User.insertAvatar(userId, key);
 
   return signedUrl;
 };
