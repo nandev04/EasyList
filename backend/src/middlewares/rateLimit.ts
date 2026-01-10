@@ -183,4 +183,14 @@ const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { auth, createUser, editUser, deleteUser, getTasks, createtask, editTask, deleteTask };
+export {
+  auth,
+  getUser,
+  createUser,
+  editUser,
+  deleteUser,
+  getTasks,
+  createtask,
+  editTask,
+  deleteTask
+};
