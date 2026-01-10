@@ -86,7 +86,7 @@ const verifyTokensLogin = async ({
   if (dateNow > tokenData.expiresAt) throw new AppError('Token Expirado', 401);
 
   const newAccessToken = generateAccessToken(tokenData.userId);
-  return { newAccessToken, userId: tokenData.userId };
+  return { newAccessToken, userId: tokenData.userId, deviceUUID: tokenData.device.deviceUUID };
 };
 
 const refreshToken = async (token: string) => {
