@@ -9,9 +9,9 @@ dotenv.config();
 
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.body;
-    const user = await Service.getUser(id);
-    return res.status(200).json(user);
+    const id = req.userId!;
+    const data = await Service.getUser(id);
+    return res.status(200).json(data);
   } catch (err) {
     next(err);
   }

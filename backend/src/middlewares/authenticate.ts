@@ -1,54 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
-import * as Service_Auth from '../modules/auth/auth.service.js';
+import resolveSession from '../shared/utils/resolveSession.js';
+import applyAuthCookies from '../shared/utils/applyAuthCookies.js';
 
 const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { refreshToken, accessToken, deviceId } = req.signedCookies;
+    const result = await resolveSession(req.signedCookies);
 
-    const resultToken = await Service_Auth.verifyTokensLogin({
-      refreshToken,
-      accessToken,
-      deviceId
-    });
+    if (!result.userId) return res.status(401).json({ message: 'Não autenticado' });
 
-    if (resultToken.deviceUUID) {
-      res.cookie('refreshToken', resultToken.newRefreshTokenRaw, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        signed: true
-      });
+    req.userId = result.userId;
+    applyAuthCookies(res, result);
 
-      res.cookie('accessToken', resultToken.newAccessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        signed: true
-      });
-
-      return res.status(200).json({
-        message: 'DeviceID reconhecido, novo refresh token gerado!',
-        userId: resultToken.userId
-      });
-    }
-
-    if (resultToken.newAccessToken) {
-      res.cookie('accessToken', resultToken.newAccessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        signed: true
-      });
-
-      return res
-        .status(200)
-        .json({ message: 'Novo access token gerado', userId: resultToken.userId });
-    }
-    return res
-      .status(200)
-      .json({ message: 'Login automático autorizado', userId: resultToken.userId });
-  } catch (err) {
     return next();
+  } catch (err) {
+    return res.status(401).json({ message: 'Sessão inválida' });
   }
 };
 

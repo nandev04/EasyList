@@ -10,8 +10,8 @@ import { putAvatarS3, generateSignedUrl } from '../../shared/utils/S3ClientComma
 
 dotenv.config();
 
-const getUser = async (id: string) => {
-  const user = await Model_User.getUser(+id);
+const getUser = async (id: number) => {
+  const user = await Model_User.getUser(id);
   return user;
 };
 

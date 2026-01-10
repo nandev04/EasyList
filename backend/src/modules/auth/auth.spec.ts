@@ -161,14 +161,17 @@ describe('verifyTokensLogin', () => {
   test('Should access token be created successfully.', async () => {
     const hashRefreshToken = 'tokenHashTest';
     const accessToken = 'tokenAccess';
+    const deviceUUID = 'device-uuid-test';
     const verifyRefreshTokenResolved = {
       userId: 2,
       token: 'tokenHashTest',
-      expiresAt: new Date(Date.now() + 10000)
+      expiresAt: new Date(Date.now() + 10000),
+      device: { userId: 2, id: 1, createdAt: new Date(), deviceUUID: deviceUUID }
     };
     const resultVerifyTokensLogin = {
       newAccessToken: accessToken,
-      userId: verifyRefreshTokenResolved.userId
+      userId: verifyRefreshTokenResolved.userId,
+      deviceUUID
     };
 
     vi.mocked(hashUtils.transformForHash).mockReturnValue(hashRefreshToken);

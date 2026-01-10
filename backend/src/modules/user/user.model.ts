@@ -8,9 +8,15 @@ const getUser = async (id: number) => {
     where: {
       id: +id
     },
-    select: { id: true, username: true, email: true, createdAt: true, updatedAt: true }
+    select: {
+      username: true,
+      email: true,
+      avatarUrl: true,
+      createdAt: true,
+      updatedAt: true,
+      verified: true
+    }
   });
-  if (!user) throw new AppError('Usuário não encontrado', 404);
   return user;
 };
 

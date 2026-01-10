@@ -35,7 +35,7 @@ const verifyRefreshToken = async (refreshToken: string) => {
     where: {
       token: refreshToken
     },
-    select: { token: true, expiresAt: true, userId: true }
+    select: { token: true, expiresAt: true, userId: true, device: true }
   });
 };
 
