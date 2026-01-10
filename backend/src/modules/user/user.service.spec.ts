@@ -6,7 +6,33 @@ import { AppError } from '../../shared/utils/error';
 import { createHashPassword } from '../../shared/utils/crypto';
 import * as Service_Auth from '../auth/auth.service';
 import * as Model_User from './user.model';
-import { createUser } from './user.service';
+import { createUser, getUser } from './user.service';
+
+describe('get user flow', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('Should get user from the model by id', async () => {
+    const userId = 123;
+
+    const returnGetUser = {
+      email: 'email@test.com',
+      username: 'usernameTest',
+      verified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      avatarUrl: 'avatar/url/test'
+    };
+
+    vi.mocked(Model_User.getUser).mockResolvedValue(returnGetUser);
+
+    await getUser(userId);
+
+    expect(Model_User.getUser).toHaveBeenCalledWith(userId);
+    expect(Model_User.getUser).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe('Create user flow', () => {
   beforeEach(() => {
