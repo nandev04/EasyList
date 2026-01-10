@@ -11,6 +11,8 @@ const userRoutes = express.Router();
 
 // Criar rota de getUser
 
+userRoutes.get('/user', Rate_Limit.getUser, validateJwt, Controller.getUser);
+
 userRoutes.post(
   '/user',
   Rate_Limit.createUser,

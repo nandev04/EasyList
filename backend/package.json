@@ -2,6 +2,7 @@
   "name": "api-task",
   "version": "1.0.0",
   "main": "index.js",
+  "packageManager": "pnpm@10.26.1",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "dev": "concurrently \"npx tsc --watch --project tsconfig.build.json\" \"nodemon dist/server.js\"",
