@@ -9,8 +9,6 @@ import * as Validate_Avatar from '../../middlewares/validateFile.js';
 
 const userRoutes = express.Router();
 
-// Criar rota de getUser
-
 userRoutes.get('/user', Rate_Limit.getUser, validateJwt, Controller.getUser);
 
 userRoutes.post(
