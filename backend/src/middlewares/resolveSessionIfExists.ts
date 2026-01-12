@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import applyAuthCookies from '../shared/utils/applyAuthCookies';
-import resolveSession from '../shared/utils/resolveSession';
+import applyAuthCookies from '../shared/utils/applyAuthCookies.js';
+import resolveSession from '../shared/utils/resolveSession.js';
 
 const resolveSessionIfExists = async (req: Request, res: Response, next: NextFunction) => {
   try {
