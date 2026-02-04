@@ -22,6 +22,24 @@ ul {
   text-decoration: none;
 }
 
+/* neutraliza o autofill do Chrome */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fff;
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0 1000px transparent inset;
+}
+
+input {
+  background: transparent;
+  color: #fff;
+  width: 100%;
+  border: none;
+  outline: none;
+}
+
 * {
   box-sizing: border-box;
 }

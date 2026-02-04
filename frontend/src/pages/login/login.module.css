@@ -35,26 +35,6 @@
   margin-bottom: 1.5rem;
 }
 
-.links {
-  cursor: pointer;
-  font-family: var(--primary-font);
-  font-weight: 400;
-  font-style: italic;
-  font-size: 14px;
-  color: #ffff;
-}
-
-.links > span {
-  display: inline;
-  color: var(--primary-color);
-}
-
-.links:hover {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-color: #ffff;
-}
-
 .container_input > div > button {
   margin-top: 3rem;
   margin-bottom: 0.7rem;

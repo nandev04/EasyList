@@ -2,8 +2,6 @@ import { useState } from "react";
 import styles from "./home.module.css";
 import { IoIosArrowDown } from "react-icons/io";
 import { motion } from "framer-motion";
-import ButtonToDo from "../../components/ButtonToDo";
-import AccordionTask from "../../components/AccordionTask";
 
 const Home = () => {
   const [modal, setModal] = useState(false);
@@ -34,12 +32,7 @@ const Home = () => {
         </div>
       </header>
       <main className={styles.main}>
-        <div className={styles.container_add}>
-          <ButtonToDo type="add" size={40} />
-        </div>
-        <AccordionTask />
-        <AccordionTask />
-        <AccordionTask />
+        <div className={styles.container_add}></div>
       </main>
     </>
   );
