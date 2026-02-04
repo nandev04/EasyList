@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./home.module.css";
 import { IoIosArrowDown } from "react-icons/io";
 import { motion } from "framer-motion";
