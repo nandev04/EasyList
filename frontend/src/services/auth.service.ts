@@ -1,6 +1,6 @@
-import loginDTO from "../dto/user/loginDTO";
+import { loginSchemaType } from "../schemas/loginSchema";
 import apiPublic from "./publicApi";
 
-export async function loginUser(data: loginDTO) {
+export async function loginUser(data: loginSchemaType) {
   return await apiPublic.post("/login", data);
 }
