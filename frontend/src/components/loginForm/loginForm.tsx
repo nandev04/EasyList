@@ -3,8 +3,10 @@ import styles from "./loginform.module.css";
 import { loginSchema, loginSchemaType } from "../../schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "../../services/auth.service";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -15,7 +17,12 @@ export default function LoginForm() {
   });
 
   async function onSubmit(data: loginSchemaType) {
-    await loginUser(data);
+    try {
+      await loginUser(data);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
