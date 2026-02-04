@@ -72,3 +72,12 @@
   height: 3.5rem;
   margin-bottom: 12px;
 }
+
+.error_message {
+  font-family: var(--primary-font);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--error-message-color);
+  margin-top: -0.975rem;
+}

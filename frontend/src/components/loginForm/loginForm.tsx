@@ -1,11 +1,21 @@
 import { useForm } from "react-hook-form";
 import styles from "./loginform.module.css";
+import { loginSchema, loginSchemaType } from "../../schemas/loginSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginUser } from "../../services/auth.service";
 
 export default function LoginForm() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<loginSchemaType>({
+    resolver: zodResolver(loginSchema),
+    mode: "onSubmit",
+  });
 
-  function onSubmit(data: any) {
-    console.log(data);
+  async function onSubmit(data: loginSchemaType) {
+    await loginUser(data);
   }
 
   return (
@@ -15,17 +25,27 @@ export default function LoginForm() {
           <input
             className={styles.input}
             placeholder="Email"
+            autoComplete="username"
             {...register("email")}
           />
         </div>
+        {errors.email && (
+          <span className={styles.error_message}>{errors.email.message}</span>
+        )}
         <div className={styles.wrapper}>
           <input
             placeholder="Senha"
             type="password"
+            autoComplete="current-password"
             className={styles.input}
             {...register("password")}
           />
         </div>
+        {errors.password && (
+          <span className={styles.error_message}>
+            {errors.password.message}
+          </span>
+        )}
       </div>
 
       <a className={styles.links}>
