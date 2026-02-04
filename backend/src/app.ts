@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import cleanRefreshTokenDb from './cron/refreshTokenCleanup.js';
@@ -10,6 +11,11 @@ import authRoutes from './modules/auth/auth.routes.js';
 import userRoutes from './modules/user/users.routes.js';
 
 const app = express();
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(cors);
+}
+
 app.set('trust proxy', true);
 
 dotenv.config();
