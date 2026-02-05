@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 
-export default function LoginForm() {
+const loginForm = () => {
   const navigate = useNavigate();
   const {
     register,
@@ -70,4 +70,6 @@ export default function LoginForm() {
       </a>
     </form>
   );
-}
+};
+
+export default loginForm;
