@@ -1,6 +1,6 @@
 import { privateApi } from "./privateApi";
 
-export async function getUser() {
+export async function loadUser() {
   const user = await privateApi.get("/user");
   return user.data;
 }

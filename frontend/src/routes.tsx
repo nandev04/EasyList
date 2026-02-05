@@ -1,15 +1,25 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/login";
 import { setupInterceptors } from "./services/privateApi";
+import ProtectedRoutes from "./components/protectedRoutes/protectedRoutes";
+import { useUserStore } from "./store/userSession.store";
+import { useEffect } from "react";
 
 function MainRoutes() {
-  const navigate = useNavigate();
+  setupInterceptors();
 
-  setupInterceptors(navigate);
+  const { loadUser } = useUserStore();
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route element={<ProtectedRoutes />}>
+        <Route path="/" element={<Home />} />
+      </Route>
       <Route path="/login" element={<Login />} />
     </Routes>
   );
