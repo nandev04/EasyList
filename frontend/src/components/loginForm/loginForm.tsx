@@ -4,9 +4,11 @@ import { loginSchema, loginSchemaType } from "../../schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../../store/userSession.store";
 
 const loginForm = () => {
   const navigate = useNavigate();
+  const { setUser } = useUserStore();
   const {
     register,
     handleSubmit,
@@ -16,9 +18,10 @@ const loginForm = () => {
     mode: "onSubmit",
   });
 
-  async function onSubmit(data: loginSchemaType) {
+  async function onSubmit(dataInput: loginSchemaType) {
     try {
-      await loginUser(data);
+      const { data } = await loginUser(dataInput);
+      setUser(data);
       navigate("/");
     } catch (err) {
       console.log(err);
