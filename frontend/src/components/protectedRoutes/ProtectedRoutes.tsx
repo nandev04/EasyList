@@ -5,7 +5,7 @@ const ProtectedRoutes = () => {
   const { user, loading } = useUserStore();
 
   if (loading) return <div>Carregando...</div>;
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/login" replace />;
 
   return <Outlet />;
 };
