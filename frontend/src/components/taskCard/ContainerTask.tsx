@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./taskCard.module.css";
+import styles from "./containerTask.module.css";
 
-const TaskCard = () => {
+const ContainerTask = () => {
   return (
     <div className={styles.task_container}>
       <div className={styles.wrapper_card}>
@@ -17,4 +17,4 @@ const TaskCard = () => {
   );
 };
 
-export default TaskCard;
+export default ContainerTask;
