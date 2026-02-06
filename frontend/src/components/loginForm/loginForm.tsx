@@ -8,7 +8,7 @@ import { useUserStore } from "../../store/userSession.store";
 
 const loginForm = () => {
   const navigate = useNavigate();
-  const { setUser } = useUserStore();
+  const { loadUser } = useUserStore();
   const {
     register,
     handleSubmit,
@@ -20,8 +20,8 @@ const loginForm = () => {
 
   async function onSubmit(dataInput: loginSchemaType) {
     try {
-      const { data } = await loginUser(dataInput);
-      setUser(data);
+      await loginUser(dataInput);
+      loadUser();
       navigate("/");
     } catch (err) {
       console.log(err);
