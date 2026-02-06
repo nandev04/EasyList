@@ -1,0 +1,83 @@
+.container_input {
+  display: flex;
+  gap: 1.4rem;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.wrapper {
+  display: grid;
+  border: none;
+  font-family: var(--primary-font);
+  color: white;
+  padding-left: 0.575rem;
+  width: 100%;
+  border-radius: 6px;
+  height: 45px;
+  background: linear-gradient(
+    90deg,
+    rgba(219, 218, 224, 0.1),
+    rgba(151, 149, 163, 0.1)
+  );
+}
+
+.wrapper input {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.links {
+  cursor: pointer;
+  font-family: var(--primary-font);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 14px;
+  color: #ffff;
+}
+
+.links > span {
+  display: inline;
+
+  font-weight: 200;
+  margin-top: 200px;
+}
+
+.contrast {
+  color: var(--primary-color);
+  display: inline;
+}
+
+.links:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: #ffff;
+}
+
+.btnSubmit {
+  cursor: pointer;
+  display: block;
+  color: white;
+  font-family: var(--primary-font);
+  background: linear-gradient(90deg, #705dc9, #685c8b);
+  border: none;
+  margin-top: 2.5rem;
+  font-weight: 700;
+  width: 100%;
+  font-size: 1.2rem;
+  border-radius: 7px;
+  height: 3.5rem;
+  margin-bottom: 12px;
+}
+
+.error_message {
+  font-family: var(--primary-font);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--error-message-color);
+  margin-top: -0.975rem;
+}
