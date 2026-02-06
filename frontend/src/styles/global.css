@@ -7,6 +7,10 @@
   --primary-color: #9684ed;
   --secondary-color: #3c384a;
   --dark-grey: #282828;
+
+  --task-completed: #27ff6f;
+  --task-inProgress: #ff9f40;
+  --task-pending: #5be6ff;
   --error-message-color: #db4a4a;
 }
 
