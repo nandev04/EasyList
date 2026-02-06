@@ -1,0 +1,26 @@
+.task_container {
+  width: 100%;
+  height: auto;
+}
+
+.wrapper_card {
+  align-content: center;
+  box-sizing: border-box;
+  width: 65%;
+  border-radius: 12px;
+  height: 100%;
+  padding: 1rem 1.5rem;
+  background-color: var(--task-completed);
+}
+
+.task_title {
+  font-family: var(--primary-font);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  margin-bottom: 8px;
+}
+
+.task_description {
+  font-family: var(--primary-font);
+  font-size: clamp(0.975rem, 1.45vw, 1rem);
+}
