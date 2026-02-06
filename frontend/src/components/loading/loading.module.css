@@ -37,7 +37,7 @@
   transform: translateX(-50%);
   font-family: var(--primary-font);
   font-weight: 600;
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-size: clamp(1rem, 2vw, 1.5rem);
   color: var(--secondary-color);
 }
 
