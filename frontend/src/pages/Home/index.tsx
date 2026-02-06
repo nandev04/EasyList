@@ -1,6 +1,6 @@
+import CreateTaskBtn from "../../components/createTaskBtn/createTaskBtn";
 import { useUserStore } from "../../store/userSession.store";
 import styles from "./home.module.css";
-import { IoIosArrowDown } from "react-icons/io";
 
 const Home = () => {
   const { user } = useUserStore();
@@ -8,20 +8,26 @@ const Home = () => {
   return (
     <>
       <header className={styles.header}>
-        <div className={styles.user_container}>
-          <p className={styles.username}>{user?.username}</p>
+        <div className={styles.header_container}>
           <img
             className={styles.user_photo}
             src={"/assets/user-image.jpg"}
             alt="Foto de perfil do usuário"
           />
-          <button className={styles.btn}>
-            <IoIosArrowDown fill={"white"} size={30} />
-          </button>
         </div>
       </header>
       <main className={styles.main}>
-        <div className={styles.container_add}></div>
+        <h1 className={styles.welcome_title}>
+          <span>Olá</span>, {user?.firstName}!
+        </h1>
+        <section className={styles.tasks_section}>
+          <div className={styles.container_section}>
+            <CreateTaskBtn />
+            <div>
+              <h1>teste</h1>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );
