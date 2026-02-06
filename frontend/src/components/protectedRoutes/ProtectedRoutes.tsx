@@ -23,7 +23,7 @@ const ProtectedRoutes = () => {
 
   if (loading && !showLoading) return null;
 
-  if (showLoading) return <Loading />;
+  if (true) return <Loading />;
 
   if (!loading && !user) return <Navigate to="/login" replace />;
 
