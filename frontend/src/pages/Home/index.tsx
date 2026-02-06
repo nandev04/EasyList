@@ -1,5 +1,6 @@
 import CreateTaskBtn from "../../components/createTaskBtn/CreateTaskBtn";
-import TaskCard from "../../components/taskCard/TaskCard";
+import ContainerTask from "../../components/taskCard/ContainerTask";
+import TaskCard from "../../components/taskCard/ContainerTask";
 import { useUserStore } from "../../store/userSession.store";
 import styles from "./home.module.css";
 
@@ -24,9 +25,9 @@ const Home = () => {
         <section className={styles.tasks_section}>
           <div className={styles.container_section}>
             <CreateTaskBtn />
-            <TaskCard />
-            <TaskCard />
-            <TaskCard />
+            <ContainerTask />
+            <ContainerTask />
+            <ContainerTask />
           </div>
         </section>
       </main>
