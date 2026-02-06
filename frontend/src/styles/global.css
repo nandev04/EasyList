@@ -4,8 +4,9 @@
 /* VARIÁVEIS */
 :root {
   --primary-font: "Montserrat", serif;
-  --primary-color: #8b7cbe;
+  --primary-color: #9684ed;
   --secondary-color: #3c384a;
+  --error-message-color: #db4a4a;
 }
 
 /* CSS RESET */
@@ -20,6 +21,24 @@ ul {
   padding: 0;
   margin: 0;
   text-decoration: none;
+}
+
+/* neutraliza o autofill do Chrome */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fff;
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0 1000px transparent inset;
+}
+
+input {
+  background: transparent;
+  color: #fff;
+  width: 100%;
+  border: none;
+  outline: none;
 }
 
 * {
