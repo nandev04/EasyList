@@ -1,0 +1,16 @@
+.button {
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: var(--primary-color);
+  width: min(56px, 60vw);
+  height: min(56px, 60vw);
+  border-radius: 25%;
+}
+
+.button > svg {
+  width: 95%;
+  height: 95%;
+  color: var(--dark-grey);
+  stroke-width: 1.1;
+}
