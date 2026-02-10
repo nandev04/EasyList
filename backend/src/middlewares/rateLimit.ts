@@ -30,10 +30,10 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
     const value = await redisClient.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 300);
+      await redisClient.expire(key, 180);
     }
 
-    if (value > 100) {
+    if (value > 1000) {
       return res.status(429).json({ message: default_message });
     }
 
@@ -110,10 +110,10 @@ const getTasks = async (req: Request, res: Response, next: NextFunction) => {
     const value = await redisClient.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 300);
+      await redisClient.expire(key, 180);
     }
 
-    if (value > 100) {
+    if (value > 1000) {
       return res.status(429).json({ message: default_message });
     }
 
