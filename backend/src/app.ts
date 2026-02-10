@@ -13,7 +13,12 @@ import userRoutes from './modules/user/users.routes.js';
 const app = express();
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(cors);
+  app.use(
+    cors({
+      origin: 'http://localhost:5173',
+      credentials: true
+    })
+  );
 }
 
 app.set('trust proxy', true);
