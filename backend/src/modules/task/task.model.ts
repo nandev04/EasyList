@@ -5,7 +5,7 @@ import { updateTaskSchemaBodyType } from '../task/task.schema.js';
 const getTasks = async (userId: number) => {
   const tasks = await prisma.task.findMany({
     where: { userId },
-    select: { title: true, description: true, status: true }
+    select: { title: true, description: true, status: true, createdAt: true, updatedAt: true }
   });
   return tasks;
 };
