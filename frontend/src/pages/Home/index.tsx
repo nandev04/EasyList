@@ -1,11 +1,24 @@
+import { useQuery } from "@tanstack/react-query";
 import CreateTaskBtn from "../../components/createTaskBtn/CreateTaskBtn";
 import ContainerTask from "../../components/taskCard/ContainerTask";
-import TaskCard from "../../components/taskCard/ContainerTask";
 import { useUserStore } from "../../store/userSession.store";
 import styles from "./home.module.css";
+import { getTasks } from "../../services/task.service";
+import useDelayLoading from "../../hooks/useDelayLoading";
+import LoadingTask from "../../components/loadingTask/LoadingTask";
 
 const Home = () => {
   const { user } = useUserStore();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: getTasks,
+    enabled: !!user,
+  });
+  const { showLoading } = useDelayLoading(isLoading, 300);
+
+  if (isLoading && !showLoading) return null;
+  if (isLoading) return <LoadingTask />;
 
   return (
     <>
@@ -25,9 +38,13 @@ const Home = () => {
         <section className={styles.tasks_section}>
           <div className={styles.container_section}>
             <CreateTaskBtn />
-            <ContainerTask />
-            <ContainerTask />
-            <ContainerTask />
+            {data?.map((task) => (
+              <ContainerTask
+                key={task.id}
+                title={task.title}
+                description={task.description}
+              />
+            ))}
           </div>
         </section>
       </main>
