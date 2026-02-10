@@ -1,5 +1,7 @@
 .button {
   border: none;
+  align-items: center;
+  justify-items: center;
   cursor: pointer;
   box-sizing: border-box;
   background-color: var(--primary-color);
@@ -9,8 +11,8 @@
 }
 
 .button > svg {
+  width: 1rem;
   width: 95%;
   height: 95%;
   color: var(--dark-grey);
-  stroke-width: 1.1;
 }
