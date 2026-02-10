@@ -1,17 +1,18 @@
 import React from "react";
 import styles from "./containerTask.module.css";
 
-const ContainerTask = () => {
+const ContainerTask = ({
+  title,
+  description,
+}: {
+  title: string;
+  description: string | null;
+}) => {
   return (
     <div className={styles.task_container}>
       <div className={styles.wrapper_card}>
-        <h3 className={styles.task_title}>Title</h3>
-        <p className={styles.task_description}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam alias
-          ex nulla cumque minus officiis assumenda odit culpa saepe voluptatibus
-          dolores repellendus molestiae sunt, laboriosam architecto molestias
-          deleniti esse labore.
-        </p>
+        <h3 className={styles.task_title}>{title}</h3>
+        <p className={styles.task_description}>{description}</p>
       </div>
     </div>
   );
