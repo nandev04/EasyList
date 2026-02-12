@@ -9,4 +9,5 @@ export const taskSchema = z.object({
     .trim()
     .min(1, "O título deve ter pelo menos 1 caractere"),
   description: z.string().trim().optional(),
+  status: z.enum(["PENDING", "IN_PROGRESS", "COMPLETED"]),
 });

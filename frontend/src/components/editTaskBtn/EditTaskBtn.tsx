@@ -1,7 +1,7 @@
 import styles from "./editTaskBtn.module.css";
 import { MdEdit } from "react-icons/md";
 
-const EditTaskBtn = () => {
+const EditTaskBtn = ({}) => {
   return (
     <div className={styles.wrapper_button}>
       <button className={styles.button}>
