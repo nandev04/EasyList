@@ -30,7 +30,7 @@ const ContainerTask = ({
       </div>
       <div className={styles.container_btn}>
         <EditTaskBtn />
-        <DeleteTaskBtn />
+        <DeleteTaskBtn taskId={taskId} />
       </div>
     </div>
   );

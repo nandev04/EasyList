@@ -11,3 +11,8 @@ export async function createTask(data: taskSchemaType) {
   const response = await privateApi.post("/tasks", data);
   return response;
 }
+
+export async function deleteTask(taskId: number) {
+  const response = await privateApi.delete(`/tasks/${taskId}`);
+  return response;
+}
