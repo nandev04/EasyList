@@ -3,8 +3,8 @@
   cursor: pointer;
   box-sizing: border-box;
   background-color: var(--primary-color);
-  width: min(56px, 60vw);
-  height: min(56px, 60vh);
+  width: min(50px, 60vw);
+  height: min(50px, 60vh);
   border-radius: 25%;
 }
 

@@ -41,8 +41,9 @@ const Home = () => {
             {data?.map((task) => (
               <ContainerTask
                 key={task.id}
-                status={task.status}
+                taskId={task.id}
                 title={task.title}
+                status={task.status}
                 description={task.description}
               />
             ))}

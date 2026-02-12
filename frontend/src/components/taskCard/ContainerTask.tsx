@@ -4,6 +4,7 @@ import EditTaskBtn from "../editTaskBtn/EditTaskBtn";
 import DeleteTaskBtn from "../deleteTaskBtn/DeleteTaskBtn";
 
 const ContainerTask = ({
+  taskId,
   title,
   description,
   status,
@@ -11,6 +12,7 @@ const ContainerTask = ({
   title: string;
   description: string | null;
   status: StatusTask;
+  taskId: number;
 }) => {
   const statusColorMap: Record<StatusTask, string> = {
     [StatusTask.COMPLETED]: "var(--task-completed)",

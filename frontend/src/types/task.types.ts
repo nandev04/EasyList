@@ -4,6 +4,11 @@ export enum StatusTask {
   PENDING = "PENDING",
 }
 
+type OptionsStatusTask = {
+  name: string;
+  value: keyof typeof StatusTask;
+};
+
 type GetTaskResponse = {
   id: number;
   title: string;
@@ -18,4 +23,4 @@ type CreateTaskPayload = {
   description: string;
   status: StatusTask;
 };
-export type { GetTaskResponse, CreateTaskPayload };
+export type { GetTaskResponse, CreateTaskPayload, OptionsStatusTask };
