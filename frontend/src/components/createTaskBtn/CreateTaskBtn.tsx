@@ -1,9 +1,4 @@
-import {
-  Description,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
+import { Dialog, DialogPanel } from "@headlessui/react";
 import { useState } from "react";
 import style from "./CreateTaskBtn.module.css";
 import { RiAddFill } from "react-icons/ri";
@@ -54,11 +49,21 @@ const CreateTaskBtn = () => {
                   placeholder="Título"
                   {...register("title")}
                 />
+                {errors.title && (
+                  <span className={style.error_message}>
+                    {errors.title.message}
+                  </span>
+                )}
                 <textarea
                   className={style.description_input}
                   placeholder="Descrição"
                   {...register("description")}
                 />
+                {errors.description && (
+                  <span className={style.error_message}>
+                    {errors.description.message}
+                  </span>
+                )}
 
                 <div className={style.actions}>
                   <button type="submit" className={style.createTask}>
