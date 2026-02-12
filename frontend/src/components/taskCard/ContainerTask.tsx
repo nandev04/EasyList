@@ -1,5 +1,5 @@
 import styles from "./containerTask.module.css";
-import { StatusTask } from "../../dto/task/task.dto";
+import { StatusTask } from "../../types/task.types";
 import EditTaskBtn from "../editTaskBtn/EditTaskBtn";
 import DeleteTaskBtn from "../deleteTaskBtn/DeleteTaskBtn";
 

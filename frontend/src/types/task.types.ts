@@ -4,7 +4,7 @@ export enum StatusTask {
   PENDING = "PENDING",
 }
 
-type TaskDTO = {
+type GetTaskResponse = {
   id: number;
   title: string;
   description: string | null;
@@ -13,4 +13,9 @@ type TaskDTO = {
   updatedAt: Date;
 };
 
-export type { TaskDTO };
+type CreateTaskPayload = {
+  title: string;
+  description: string;
+  status: StatusTask;
+};
+export type { GetTaskResponse, CreateTaskPayload };

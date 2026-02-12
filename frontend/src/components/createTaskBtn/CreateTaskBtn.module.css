@@ -111,6 +111,9 @@
 }
 
 .createTask {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--primary-font);
   padding: 0.9rem 1rem;
   font-size: 0.9rem;
@@ -120,6 +123,7 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  min-width: 100px;
 }
 
 .button_close {
