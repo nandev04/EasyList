@@ -1,4 +1,4 @@
-.button {
+.button_create {
   border: none;
   cursor: pointer;
   box-sizing: border-box;
@@ -8,7 +8,7 @@
   border-radius: 25%;
 }
 
-.button > svg {
+.button_create > svg {
   width: 95%;
   height: 95%;
   color: var(--dark-grey);
@@ -33,13 +33,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .panel {
+  position: relative;
   box-sizing: border-box;
-  max-height: 80vh;
-  overflow-y: auto;
   width: 100%;
   max-width: 60rem;
   background: #ffffff;
@@ -48,7 +47,12 @@
   padding: 3rem;
 }
 
-.panel > form {
+.panel_content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.panel_content > form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -116,4 +120,26 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.button_close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(50%, -50%);
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: var(--primary-color);
+  width: min(45px, 60vw);
+  height: min(45px, 60vh);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.button_close > svg {
+  color: white;
+  height: 100%;
+  width: 100%;
+  stroke-width: 15;
 }

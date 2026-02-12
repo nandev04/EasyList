@@ -7,6 +7,7 @@ import {
 import { useState } from "react";
 import style from "./CreateTaskBtn.module.css";
 import { RiAddFill } from "react-icons/ri";
+import { IoCloseSharp } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema, taskSchemaType } from "../../schemas/taskSchema";
@@ -33,7 +34,7 @@ const CreateTaskBtn = () => {
   return (
     <>
       <div className={style.wrapper_button}>
-        <button className={style.button} onClick={() => setIsOpen(true)}>
+        <button className={style.button_create} onClick={() => setIsOpen(true)}>
           <RiAddFill />
         </button>
       </div>
@@ -45,25 +46,33 @@ const CreateTaskBtn = () => {
         <div className={style.overlay} />
         <div className={style.container}>
           <DialogPanel className={style.panel}>
-            <form onSubmit={handleSubmit(envia)}>
-              <input
-                type="text"
-                className={style.title_input}
-                placeholder="Título"
-                {...register("title")}
-              />
-              <textarea
-                className={style.description_input}
-                placeholder="Descrição"
-                {...register("description")}
-              />
+            <div className={style.panel_content}>
+              <form onSubmit={handleSubmit(envia)}>
+                <input
+                  type="text"
+                  className={style.title_input}
+                  placeholder="Título"
+                  {...register("title")}
+                />
+                <textarea
+                  className={style.description_input}
+                  placeholder="Descrição"
+                  {...register("description")}
+                />
 
-              <div className={style.actions}>
-                <button type="submit" className={style.createTask}>
-                  Criar Tarefa
-                </button>
-              </div>
-            </form>
+                <div className={style.actions}>
+                  <button type="submit" className={style.createTask}>
+                    Criar Tarefa
+                  </button>
+                </div>
+              </form>
+              <button
+                className={style.button_close}
+                onClick={() => setIsOpen(false)}
+              >
+                <IoCloseSharp />
+              </button>
+            </div>
           </DialogPanel>
         </div>
       </Dialog>
