@@ -38,6 +38,14 @@ const Home = () => {
         <section className={styles.tasks_section}>
           <div className={styles.container_section}>
             <CreateTaskBtn />
+            {data?.length === 0 && (
+              <div className={styles.container_guidance}>
+                <p className={styles.newTask_guidance}>
+                  Clique no <span className={styles.more_guidance}>+</span> e
+                  crie sua próxima tarefa!
+                </p>
+              </div>
+            )}
             {data?.map((task) => (
               <ContainerTask
                 key={task.id}
