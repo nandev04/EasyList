@@ -6,16 +6,11 @@ import useDelayLoading from "../../hooks/useDelayLoading";
 import { deleteTask } from "../../services/task.service";
 import { queryClient } from "../../lib/reactQuery";
 
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  Description,
-} from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 
 const DeleteTaskBtn = ({ taskId }: { taskId: number }) => {
   const [loading, setLoading] = useState(false);
-  const { showLoading } = useDelayLoading(loading, 150);
+  const { showLoading } = useDelayLoading(loading, 100);
   const [isOpen, setIsOpen] = useState(false);
 
   async function onDeleteTask() {
@@ -35,7 +30,7 @@ const DeleteTaskBtn = ({ taskId }: { taskId: number }) => {
     <>
       <div className={styles.wrapper_button}>
         <button className={styles.button} onClick={() => setIsOpen(true)}>
-          {showLoading ? <LoadingCircleSpinner /> : <BiSolidTrash />}
+          <BiSolidTrash />
         </button>
       </div>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
@@ -46,7 +41,7 @@ const DeleteTaskBtn = ({ taskId }: { taskId: number }) => {
             </DialogTitle>
             <div className={styles.actions}>
               <button className={styles.button_delete} onClick={onDeleteTask}>
-                Deletar
+                {showLoading ? <LoadingCircleSpinner /> : "Deletar"}
               </button>
               <button
                 className={`${styles.button_cancel} ${styles.cancel}`}
