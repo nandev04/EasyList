@@ -29,7 +29,7 @@ const ContainerTask = ({
         <p className={styles.task_description}>{description}</p>
       </div>
       <div className={styles.container_btn}>
-        <EditTaskBtn />
+        <EditTaskBtn taskId={taskId} />
         <DeleteTaskBtn taskId={taskId} />
       </div>
     </div>

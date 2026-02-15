@@ -23,4 +23,12 @@ type CreateTaskPayload = {
   description: string;
   status: StatusTask;
 };
-export type { GetTaskResponse, CreateTaskPayload, OptionsStatusTask };
+
+type EditTaskPayload = CreateTaskPayload;
+
+export type {
+  GetTaskResponse,
+  CreateTaskPayload,
+  OptionsStatusTask,
+  EditTaskPayload,
+};
