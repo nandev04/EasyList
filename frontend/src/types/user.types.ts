@@ -4,8 +4,9 @@ type UserDTO = {
   verified: boolean;
   createdAt: Date;
   updatedAt: Date;
-  avatarUrl: string | null;
+  avatarKey: string | null;
   firstName: string;
+  avatarUrl: string;
 };
 
 export default UserDTO;
