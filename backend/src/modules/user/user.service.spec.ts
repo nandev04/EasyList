@@ -22,7 +22,7 @@ describe('get user flow', () => {
       verified: true,
       createdAt: new Date(),
       updatedAt: new Date(),
-      avatarUrl: 'avatar/url/test'
+      avatarKey: 'avatar/url/test'
     };
 
     vi.mocked(Model_User.getUser).mockResolvedValue(returnGetUser);
