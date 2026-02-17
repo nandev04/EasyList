@@ -24,7 +24,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:createUser:${req.ip}`;
+  const key = `rate:getUser:${req.ip}`;
 
   try {
     const value = await redisClient.incr(key);
@@ -94,6 +94,26 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (value > 8) {
+      return res.status(429).json({ message: default_message });
+    }
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getAvatar = async (req: Request, res: Response, next: NextFunction) => {
+  const key = `rate:getAvatar:${req.ip}`;
+
+  try {
+    const value = await redisClient.incr(key);
+
+    if (value === 1) {
+      await redisClient.expire(key, 180);
+    }
+
+    if (value > 1000) {
       return res.status(429).json({ message: default_message });
     }
 
@@ -189,6 +209,7 @@ export {
   createUser,
   editUser,
   deleteUser,
+  getAvatar,
   getTasks,
   createtask,
   editTask,

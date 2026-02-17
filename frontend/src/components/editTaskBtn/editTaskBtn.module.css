@@ -1,27 +1,21 @@
-.button_create {
+.button {
   border: none;
   cursor: pointer;
   box-sizing: border-box;
   background-color: var(--primary-color);
-  width: min(56px, 60vw);
-  height: min(56px, 60vh);
+  width: min(50px, 60vw);
+  height: min(50px, 60vh);
   border-radius: 25%;
 }
 
-.button_create:hover {
+.button:hover {
   background-color: var(--primary-color-hover);
 }
 
-.button_create > svg {
+.button > svg {
   width: 95%;
   height: 95%;
   color: var(--dark-grey);
-  stroke-width: 1.1;
-}
-
-.root {
-  position: relative;
-  z-index: 50;
 }
 
 .overlay {
@@ -114,7 +108,7 @@
   margin-top: 1rem;
 }
 
-.createTask {
+.editTask {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,7 +116,7 @@
   padding: 0.9rem 1rem;
   font-size: 0.9rem;
   margin-left: auto;
-  background: var(--primary-color);
+  background-color: var(--primary-color);
   color: #ffffff;
   border: none;
   border-radius: 6px;
@@ -130,7 +124,7 @@
   min-width: 100px;
 }
 
-.createTask:hover {
+.editTask:hover {
   background-color: var(--primary-color-hover);
 }
 

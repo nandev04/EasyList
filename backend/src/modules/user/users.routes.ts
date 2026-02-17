@@ -36,4 +36,6 @@ userRoutes.post(
   Controller.uploadAvatar
 );
 
+userRoutes.get('/avatar', Rate_Limit.getAvatar, authenticate, requireAuth, Controller.getAvatar);
+
 export default userRoutes;

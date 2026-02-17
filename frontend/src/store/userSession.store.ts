@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import UserDTO from "../dto/user/user.dto";
+import UserDTO from "../types/user.types";
 import { loadUser } from "../services/user.service";
 
 type UserStoreType = {
