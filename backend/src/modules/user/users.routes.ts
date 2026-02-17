@@ -31,6 +31,7 @@ userRoutes.delete('/user', Rate_Limit.deleteUser, requireAuth, Controller.delete
 
 userRoutes.post(
   '/avatar/upload',
+  authenticate,
   requireAuth,
   Validate_Avatar.uploadAvatar.single('avatar'),
   Controller.uploadAvatar
