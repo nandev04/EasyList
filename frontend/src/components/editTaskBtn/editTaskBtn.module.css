@@ -8,6 +8,10 @@
   border-radius: 25%;
 }
 
+.button:hover {
+  background-color: var(--primary-color-hover);
+}
+
 .button > svg {
   width: 95%;
   height: 95%;
@@ -17,67 +21,192 @@
 .overlay {
   position: fixed;
   inset: 0;
-  display: flex;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.container {
+  position: fixed;
+  inset: 0;
   width: 100vw;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 50;
+  padding: 2rem;
 }
 
 .panel {
-  width: 100%;
-  max-width: 40rem;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 40px 48px;
+  position: relative;
   box-sizing: border-box;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 60rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 3rem;
+}
+
+.panel_content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.panel_content > form {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
+}
+
+.title {
+  font-family: var(--primary-font);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.title_input {
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.9rem 1rem;
+  border-radius: 6px;
+  color: var(--dark-grey);
+  font-size: 0.965rem;
+  font-family: var(--primary-font);
+}
+
+.title_input::placeholder {
+  font-style: italic;
+}
+
+.description_input {
+  outline: none;
+  min-height: 180px;
+  resize: none;
+  width: 100%;
+  border: none;
+  white-space: normal;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.9rem 1rem;
+  border-radius: 6px;
+  font-size: 0.965rem;
+  color: var(--dark-grey);
+  font-family: var(--primary-font);
+}
+
+.description_input::placeholder {
+  font-style: italic;
+}
+
+.des .text {
+  color: #374151;
+  line-height: 1.5;
 }
 
 .actions {
   display: flex;
-  gap: 16px;
-  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-.title_dialog {
-  font-size: 1.4rem;
+.editTask {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--primary-font);
-  color: var(--dark-grey);
-  font-weight: 600;
-}
-
-.button_cancel {
-  font-family: var(--primary-font);
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  background-color: #e5e5e5;
-  color: var(--dark-grey);
-}
-
-.button_cancel:hover {
-  background-color: #d4d4d4;
-}
-
-.button_edit {
-  font-family: var(--primary-font);
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
+  padding: 0.9rem 1rem;
+  font-size: 0.9rem;
+  margin-left: auto;
   background-color: var(--primary-color);
-  color: white;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 100px;
 }
 
-.button_edit:hover {
+.editTask:hover {
   background-color: var(--primary-color-hover);
+}
+
+.button_close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(50%, -50%);
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: var(--primary-color);
+  width: min(45px, 60vw);
+  height: min(45px, 60vh);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.button_close:hover {
+  background-color: var(--primary-color-hover);
+}
+
+.button_close > svg {
+  color: white;
+  height: 100%;
+  width: 100%;
+  stroke-width: 15;
+}
+
+.error_message {
+  font-family: var(--primary-font);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--error-message-color);
+  margin-top: -0.576rem;
+}
+
+.group {
+  font-family: var(--primary-font);
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.radio[data-checked] {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0;
+}
+
+.radio[data-checked] .indicator {
+  opacity: 1;
+}
+
+.label {
+  cursor: pointer;
+  user-select: none;
 }

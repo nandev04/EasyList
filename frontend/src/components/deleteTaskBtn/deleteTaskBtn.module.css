@@ -10,6 +10,10 @@
   border-radius: 25%;
 }
 
+.button:hover {
+  background-color: var(--primary-color-hover);
+}
+
 .button > svg {
   width: 1rem;
   width: 95%;

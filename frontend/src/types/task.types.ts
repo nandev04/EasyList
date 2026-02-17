@@ -12,7 +12,7 @@ type OptionsStatusTask = {
 type GetTaskResponse = {
   id: number;
   title: string;
-  description: string | null;
+  description: string | undefined;
   status: StatusTask;
   createdAt: Date;
   updatedAt: Date;
@@ -20,11 +20,15 @@ type GetTaskResponse = {
 
 type CreateTaskPayload = {
   title: string;
-  description: string;
+  description?: string;
   status: StatusTask;
 };
 
-type EditTaskPayload = CreateTaskPayload;
+type EditTaskPayload = {
+  title?: string;
+  description?: string;
+  status?: StatusTask;
+};
 
 export type {
   GetTaskResponse,
