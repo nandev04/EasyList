@@ -1,5 +1,5 @@
 import { taskSchemaType } from "../schemas/taskSchema";
-import { GetTaskResponse } from "../types/task.types";
+import { EditTaskPayload, GetTaskResponse } from "../types/task.types";
 import { privateApi } from "./privateApi";
 
 export async function getTasks(): Promise<GetTaskResponse[]> {
@@ -9,6 +9,17 @@ export async function getTasks(): Promise<GetTaskResponse[]> {
 
 export async function createTask(data: taskSchemaType) {
   const response = await privateApi.post("/tasks", data);
+  return response;
+}
+
+export async function editTask({
+  taskId,
+  data,
+}: {
+  taskId: number;
+  data: EditTaskPayload;
+}) {
+  const response = await privateApi.patch(`/tasks/${taskId}`, data);
   return response;
 }
 

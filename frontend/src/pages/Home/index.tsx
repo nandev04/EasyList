@@ -10,7 +10,7 @@ import LoadingTask from "../../components/loadingTask/LoadingTask";
 const Home = () => {
   const { user } = useUserStore();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, dataUpdatedAt } = useQuery({
     queryKey: ["tasks"],
     queryFn: getTasks,
     enabled: !!user,
@@ -49,6 +49,7 @@ const Home = () => {
             {data?.map((task) => (
               <ContainerTask
                 key={task.id}
+                updateAt={dataUpdatedAt}
                 taskId={task.id}
                 title={task.title}
                 status={task.status}

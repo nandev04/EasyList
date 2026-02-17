@@ -1,24 +1,69 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./editTaskBtn.module.css";
 import { MdEdit } from "react-icons/md";
 import useDelayLoading from "../../hooks/useDelayLoading";
 import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { EditTaskPayload } from "../../types/task.types";
+import {
+  Dialog,
+  DialogPanel,
+  Field,
+  Label,
+  Radio,
+  RadioGroup,
+} from "@headlessui/react";
+import { EditTaskPayload, OptionsStatusTask } from "../../types/task.types";
+import { Controller, useForm } from "react-hook-form";
+import { IoCloseSharp } from "react-icons/io5";
+import { useEditTask } from "../../hooks/taskMutation";
 
-const EditTaskBtn = ({ taskId }: { taskId: number }) => {
-  // Preciso construir o modal para editTask junto com sua lógica, apenas copiei o modal do DeleteTaskBtn
-
-  const [loading, setLoading] = useState(false);
-  const { showLoading } = useDelayLoading(loading, 150);
+const EditTaskBtn = ({
+  data,
+  taskId,
+}: {
+  data: EditTaskPayload;
+  taskId: number;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { mutate, isPending, isError } = useEditTask();
 
-  async function onEditTask() {
-    try {
-      setLoading(true);
-    } finally {
-      setLoading(false);
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm<EditTaskPayload>({
+    defaultValues: {
+      title: data.title,
+      description: data.description,
+      status: data.status,
+    },
+    mode: "onSubmit",
+  });
+  const { showLoading } = useDelayLoading(isPending, 150);
+
+  const options: OptionsStatusTask[] = [
+    { name: "Pendente", value: "PENDING" },
+    { name: "Em progresso", value: "IN_PROGRESS" },
+    { name: "Concluído", value: "COMPLETED" },
+  ];
+
+  useEffect(() => {
+    if (isOpen && data) {
+      reset({ ...data });
     }
+  }, [isOpen && data]);
+
+  async function onSubmit(data: EditTaskPayload): Promise<void> {
+    mutate(
+      { taskId, data },
+      {
+        onSuccess: () => {
+          (setIsOpen(false), reset());
+        },
+        onError: (err) => console.log(err),
+      },
+    );
   }
 
   return (
@@ -28,21 +73,85 @@ const EditTaskBtn = ({ taskId }: { taskId: number }) => {
           <MdEdit />
         </button>
       </div>
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-        <div className={styles.overlay}>
+      <Dialog
+        open={isOpen}
+        onClose={() => {
+          (reset(), setIsOpen(false));
+        }}
+        className={styles.root}
+      >
+        <div className={styles.overlay} />
+        <div className={styles.container}>
           <DialogPanel className={styles.panel}>
-            <DialogTitle className={styles.title_dialog}>
-              Tem certeza que deseja deletar essa tarefa?
-            </DialogTitle>
-            <div className={styles.actions}>
-              <button className={styles.button_edit} onClick={onEditTask}>
-                {showLoading ? <LoadingCircleSpinner /> : "Editar Tarefa"}
-              </button>
+            <div className={styles.panel_content}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <input
+                  type="text"
+                  className={styles.title_input}
+                  placeholder="Título"
+                  {...register("title")}
+                />
+                {errors.title && (
+                  <span className={styles.error_message}>
+                    {errors.title.message}
+                  </span>
+                )}
+                <textarea
+                  className={styles.description_input}
+                  placeholder="Descrição"
+                  {...register("description")}
+                />
+                {errors.description && (
+                  <span className={styles.error_message}>
+                    {errors.description.message}
+                  </span>
+                )}
+                {isError && (
+                  <span className={styles.error_message}>
+                    Ocorreu um erro ao editar tarefa
+                  </span>
+                )}
+
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      value={field.value}
+                      onChange={field.onChange}
+                      aria-label="Server size"
+                      className={styles.group}
+                    >
+                      {options.map((option) => (
+                        <Field key={option.value} className={styles.field}>
+                          <Radio value={option.value} className={styles.radio}>
+                            <span className={styles.indicator} />
+                          </Radio>
+
+                          <Label className={styles.label}>{option.name}</Label>
+                        </Field>
+                      ))}
+                    </RadioGroup>
+                  )}
+                />
+
+                <div className={styles.actions}>
+                  <button
+                    disabled={isPending}
+                    type="submit"
+                    className={styles.editTask}
+                  >
+                    {showLoading ? <LoadingCircleSpinner /> : "Editar tarefa"}
+                  </button>
+                </div>
+              </form>
               <button
-                className={`${styles.button_cancel} ${styles.cancel}`}
-                onClick={() => setIsOpen(false)}
+                className={styles.button_close}
+                onClick={() => {
+                  (reset(), setIsOpen(false));
+                }}
               >
-                Cancelar
+                <IoCloseSharp />
               </button>
             </div>
           </DialogPanel>

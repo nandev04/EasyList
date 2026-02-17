@@ -8,6 +8,10 @@
   border-radius: 25%;
 }
 
+.button_create:hover {
+  background-color: var(--primary-color-hover);
+}
+
 .button_create > svg {
   width: 95%;
   height: 95%;
@@ -126,6 +130,10 @@
   min-width: 100px;
 }
 
+.createTask:hover {
+  background-color: var(--primary-color-hover);
+}
+
 .button_close {
   position: absolute;
   right: 0;
@@ -139,6 +147,10 @@
   height: min(45px, 60vh);
   border-radius: 50%;
   padding: 8px;
+}
+
+.button_close:hover {
+  background-color: var(--primary-color-hover);
 }
 
 .button_close > svg {

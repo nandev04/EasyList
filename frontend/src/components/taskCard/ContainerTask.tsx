@@ -1,5 +1,5 @@
 import styles from "./containerTask.module.css";
-import { StatusTask } from "../../types/task.types";
+import { CreateTaskPayload, StatusTask } from "../../types/task.types";
 import EditTaskBtn from "../editTaskBtn/EditTaskBtn";
 import DeleteTaskBtn from "../deleteTaskBtn/DeleteTaskBtn";
 
@@ -8,12 +8,7 @@ const ContainerTask = ({
   title,
   description,
   status,
-}: {
-  title: string;
-  description: string | null;
-  status: StatusTask;
-  taskId: number;
-}) => {
+}: CreateTaskPayload & { taskId: number; updateAt: number }) => {
   const statusColorMap: Record<StatusTask, string> = {
     [StatusTask.COMPLETED]: "var(--task-completed)",
     [StatusTask.IN_PROGRESS]: "var(--task-inProgress)",
@@ -29,7 +24,7 @@ const ContainerTask = ({
         <p className={styles.task_description}>{description}</p>
       </div>
       <div className={styles.container_btn}>
-        <EditTaskBtn taskId={taskId} />
+        {<EditTaskBtn data={{ title, description, status }} taskId={taskId} />}
         <DeleteTaskBtn taskId={taskId} />
       </div>
     </div>

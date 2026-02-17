@@ -7,14 +7,12 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema, taskSchemaType } from "../../schemas/taskSchema";
 import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
-import { createTask } from "../../services/task.service";
-import { queryClient } from "../../lib/reactQuery";
 import useDelayLoading from "../../hooks/useDelayLoading";
 import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 import { OptionsStatusTask } from "../../types/task.types";
+import { useCreateTask } from "../../hooks/taskMutation";
 const CreateTaskBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [loadingCreateTask, setLoadingCreateTask] = useState(false);
   const {
     register,
     handleSubmit,
@@ -28,7 +26,8 @@ const CreateTaskBtn = () => {
     resolver: zodResolver(taskSchema),
     mode: "onSubmit",
   });
-  const { showLoading } = useDelayLoading(loadingCreateTask, 150);
+  const { mutate, isPending, isError } = useCreateTask();
+  const { showLoading } = useDelayLoading(isPending, 150);
 
   const options: OptionsStatusTask[] = [
     { name: "Pendente", value: "PENDING" },
@@ -37,17 +36,12 @@ const CreateTaskBtn = () => {
   ];
 
   async function onSubmit(data: taskSchemaType): Promise<void> {
-    try {
-      setLoadingCreateTask(true);
-      await createTask(data);
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      reset();
-      setIsOpen(false);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoadingCreateTask(false);
-    }
+    mutate(data, {
+      onSuccess: () => {
+        (setIsOpen(false), reset());
+      },
+      onError: (err) => console.log(err),
+    });
   }
 
   return (
@@ -93,6 +87,11 @@ const CreateTaskBtn = () => {
                     {errors.description.message}
                   </span>
                 )}
+                {isError && (
+                  <span className={styles.error_message}>
+                    Ocorreu um erro ao criar tarefa
+                  </span>
+                )}
 
                 <Controller
                   name="status"
@@ -119,7 +118,7 @@ const CreateTaskBtn = () => {
 
                 <div className={styles.actions}>
                   <button
-                    disabled={loadingCreateTask}
+                    disabled={isPending}
                     type="submit"
                     className={styles.createTask}
                   >
