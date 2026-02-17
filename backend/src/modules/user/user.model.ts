@@ -11,7 +11,7 @@ const getUser = async (id: number) => {
     select: {
       username: true,
       email: true,
-      avatarUrl: true,
+      avatarKey: true,
       createdAt: true,
       updatedAt: true,
       verified: true
@@ -55,10 +55,10 @@ const deleteUser = async (id: number) => {
   });
 };
 
-const insertAvatar = async (id: number, avatarUrl: string) => {
+const insertAvatar = async (id: number, avatarKey: string) => {
   return await prisma.user.update({
     where: { id },
-    data: { avatarUrl }
+    data: { avatarKey }
   });
 };
 

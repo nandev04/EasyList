@@ -1,4 +1,7 @@
 .task_container {
+  display: flex;
+  gap: 40px;
+  align-items: center;
   width: 100%;
   height: auto;
 }
@@ -10,7 +13,6 @@
   border-radius: 12px;
   height: 100%;
   padding: 1rem 1.5rem;
-  background-color: var(--task-completed);
 }
 
 .task_title {
@@ -23,4 +25,9 @@
 .task_description {
   font-family: var(--primary-font);
   font-size: clamp(0.975rem, 1.45vw, 1rem);
+}
+
+.container_btn {
+  display: flex;
+  gap: 20px;
 }

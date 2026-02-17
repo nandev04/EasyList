@@ -1,32 +1,45 @@
-import { Dialog, DialogPanel } from "@headlessui/react";
-import { useState } from "react";
-import styles from "./CreateTaskBtn.module.css";
-import { RiAddFill } from "react-icons/ri";
-import { IoCloseSharp } from "react-icons/io5";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { taskSchema, taskSchemaType } from "../../schemas/taskSchema";
-import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
+import { useEffect, useState } from "react";
+import styles from "./editTaskBtn.module.css";
+import { MdEdit } from "react-icons/md";
 import useDelayLoading from "../../hooks/useDelayLoading";
-import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
-import { OptionsStatusTask } from "../../types/task.types";
-import { useCreateTask } from "../../hooks/taskMutation";
-const CreateTaskBtn = () => {
+import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
+import {
+  Dialog,
+  DialogPanel,
+  Field,
+  Label,
+  Radio,
+  RadioGroup,
+} from "@headlessui/react";
+import { EditTaskPayload, OptionsStatusTask } from "../../types/task.types";
+import { Controller, useForm } from "react-hook-form";
+import { IoCloseSharp } from "react-icons/io5";
+import { useEditTask } from "../../hooks/taskMutation";
+
+const EditTaskBtn = ({
+  data,
+  taskId,
+}: {
+  data: EditTaskPayload;
+  taskId: number;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { mutate, isPending, isError } = useEditTask();
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
     reset,
-  } = useForm<taskSchemaType>({
+  } = useForm<EditTaskPayload>({
     defaultValues: {
-      status: "PENDING",
+      title: data.title,
+      description: data.description,
+      status: data.status,
     },
-    resolver: zodResolver(taskSchema),
     mode: "onSubmit",
   });
-  const { mutate, isPending, isError } = useCreateTask();
   const { showLoading } = useDelayLoading(isPending, 150);
 
   const options: OptionsStatusTask[] = [
@@ -35,23 +48,29 @@ const CreateTaskBtn = () => {
     { name: "Concluído", value: "COMPLETED" },
   ];
 
-  async function onSubmit(data: taskSchemaType): Promise<void> {
-    mutate(data, {
-      onSuccess: () => {
-        (setIsOpen(false), reset());
+  useEffect(() => {
+    if (isOpen && data) {
+      reset({ ...data });
+    }
+  }, [isOpen && data]);
+
+  async function onSubmit(data: EditTaskPayload): Promise<void> {
+    mutate(
+      { taskId, data },
+      {
+        onSuccess: () => {
+          (setIsOpen(false), reset());
+        },
+        onError: (err) => console.log(err),
       },
-      onError: (err) => console.log(err),
-    });
+    );
   }
 
   return (
     <>
       <div className={styles.wrapper_button}>
-        <button
-          className={styles.button_create}
-          onClick={() => setIsOpen(true)}
-        >
-          <RiAddFill />
+        <button className={styles.button} onClick={() => setIsOpen(true)}>
+          <MdEdit />
         </button>
       </div>
       <Dialog
@@ -89,7 +108,7 @@ const CreateTaskBtn = () => {
                 )}
                 {isError && (
                   <span className={styles.error_message}>
-                    Ocorreu um erro ao criar tarefa
+                    Ocorreu um erro ao editar tarefa
                   </span>
                 )}
 
@@ -120,9 +139,9 @@ const CreateTaskBtn = () => {
                   <button
                     disabled={isPending}
                     type="submit"
-                    className={styles.createTask}
+                    className={styles.editTask}
                   >
-                    {showLoading ? <LoadingCircleSpinner /> : "Criar tarefa"}
+                    {showLoading ? <LoadingCircleSpinner /> : "Editar tarefa"}
                   </button>
                 </div>
               </form>
@@ -142,4 +161,4 @@ const CreateTaskBtn = () => {
   );
 };
 
-export default CreateTaskBtn;
+export default EditTaskBtn;
