@@ -55,8 +55,14 @@ const verifyTokensLogin = async ({
 }: verifyTokensLoginType): Promise<VerifyTokensTypeResult> => {
   if (accessToken) {
     try {
+      let refreshTokenSearched;
       const payloadAccess = await utilJwtVerifyAccess(accessToken);
-      return payloadAccess;
+      if (refreshToken && !deviceId) {
+        // Verifico DEVICEUUID pelo refreshToken
+        const hashRefreshToken = transformForHash(refreshToken);
+        refreshTokenSearched = await Model_Token.verifyRefreshToken(hashRefreshToken);
+      }
+      return { ...payloadAccess, deviceUUID: refreshTokenSearched?.device.deviceUUID };
     } catch (err) {
       if (!(err instanceof jwt.TokenExpiredError))
         throw new AppError('Token de acesso inválido', 401);
