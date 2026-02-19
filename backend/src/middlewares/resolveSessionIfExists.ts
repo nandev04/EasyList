@@ -6,7 +6,6 @@ const resolveSessionIfExists = async (req: Request, res: Response, next: NextFun
   try {
     const result = await resolveSession(req.signedCookies);
 
-    console.log(result);
     if (result?.userId) {
       req.userId = result.userId;
       applyAuthCookies(res, result);
