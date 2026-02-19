@@ -5,6 +5,7 @@ import {
   forgotPasswordBodyType,
   RefreshTokenUserCookieType,
   resetPasswordBodyType,
+  signedCookieSchemaType,
   verifyUserQuerySchemaType
 } from './auth.schema.js';
 import { AppError } from '../../shared/utils/error.js';
@@ -24,10 +25,10 @@ const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
 
 const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { token } = <RefreshTokenUserCookieType>req.validated!.cookies;
-    if (!token) throw new AppError('Cookie refreshToken não encontrado', 400);
-    res.status(200).json({ token });
-    const newAccessToken = await Service_Auth.refreshToken(token);
+    const { refreshToken } = <signedCookieSchemaType>req.validated!.signedCookies;
+    if (!refreshToken) throw new AppError('Cookie refreshToken não encontrado', 400);
+    res.status(200).json({ refreshToken });
+    const newAccessToken = await Service_Auth.refreshToken(refreshToken);
     return newAccessToken;
   } catch (err) {
     next(err);
@@ -59,7 +60,7 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
     res.clearCookie('accessToken', cookieUser);
     res.clearCookie('refreshToken', cookieUser);
 
-    return res.status(204).json();
+    return res.sendStatus(204);
   } catch (err) {
     next(err);
   }
@@ -70,10 +71,27 @@ const verifyCode = async (req: Request, res: Response, next: NextFunction) => {
     const { code, email } = req.body;
 
     const tokenReset = await Service_Auth.verifyCodeService(code, email);
-    return res.status(400).json(tokenReset);
+    return res.status(200).json(tokenReset);
   } catch (err) {
     next(err);
   }
 };
 
-export { verifyEmail, forgotPassword, verifyCode, refreshToken, resetPassword };
+const logout = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { refreshToken } = <signedCookieSchemaType>req.validated!.signedCookies;
+
+    await Service_Auth.logout(refreshToken);
+
+    res.clearCookie('deviceId', cookieUser);
+    res.clearCookie('accessToken', cookieUser);
+    res.clearCookie('refreshToken', cookieUser);
+
+    return res.sendStatus(204);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+export { verifyEmail, forgotPassword, verifyCode, refreshToken, resetPassword, logout };
