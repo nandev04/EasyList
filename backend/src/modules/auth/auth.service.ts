@@ -65,7 +65,7 @@ const verifyTokensLogin = async ({
 
   if (!refreshToken && deviceId) {
     const { deviceUUID, userId, id } = await Service_Device.verifyTokenDevice(deviceId);
-    await Model_Token.revokeRefreshToken(id);
+    await Model_Token.revokeRefreshTokenFromDeviceId(id);
     const newRefreshTokenRaw = await Service_Token.createRefreshTokenFromDeviceUUID(userId, id);
     const newAccessToken = generateAccessToken(userId);
     return {
@@ -153,6 +153,15 @@ const verifyCodeService = async (code: string, email: string) => {
   return tokenResetPassword;
 };
 
+const logout = async (refreshToken: string) => {
+  const hashRefreshToken = transformForHash(refreshToken);
+  const tokenData = await Model_Token.verifyRefreshToken(hashRefreshToken);
+  console.log(tokenData);
+  if (!tokenData) throw new AppError('Token Inválido', 401);
+
+  await Model_Token.revokeRefreshToken(tokenData.id);
+};
+
 export {
   emailVerificationAccount,
   verifyTokenEmailAccount,
@@ -160,5 +169,6 @@ export {
   refreshToken,
   forgotPasswordService,
   resetPassword,
-  verifyCodeService
+  verifyCodeService,
+  logout
 };

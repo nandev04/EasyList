@@ -5,6 +5,7 @@ import {
   loginUserBodySchema,
   refreshTokenUserCookieSchema,
   resetPasswordBodySchema,
+  signedCookiesSchema,
   verifyCodeBodySchema,
   verifyUserQuerySchema
 } from './auth.schema.js';
@@ -58,6 +59,13 @@ authRoutes.post(
   resolveSessionIfExists,
   validate({ body: loginUserBodySchema }),
   Controller_Login.loginUser
+);
+
+authRoutes.post(
+  '/logout',
+  authenticate,
+  validate({ signedCookies: signedCookiesSchema }),
+  Controller_Auth.logout
 );
 
 export default authRoutes;
