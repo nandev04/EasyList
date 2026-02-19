@@ -14,6 +14,7 @@ import * as Controller_Login from './login.controller.js';
 import { authenticate } from '../../middlewares/authenticate.js';
 import * as Rate_Limit from '../../middlewares/rateLimit.js';
 import resolveSessionIfExists from '../../middlewares/resolveSessionIfExists.js';
+import requireAuth from '../../middlewares/requireAuth.js';
 
 const authRoutes = express.Router();
 
