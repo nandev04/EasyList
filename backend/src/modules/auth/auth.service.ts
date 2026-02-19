@@ -58,7 +58,6 @@ const verifyTokensLogin = async ({
       let refreshTokenSearched;
       const payloadAccess = await utilJwtVerifyAccess(accessToken);
       if (refreshToken && !deviceId) {
-        // Verifico DEVICEUUID pelo refreshToken
         const hashRefreshToken = transformForHash(refreshToken);
         refreshTokenSearched = await Model_Token.verifyRefreshToken(hashRefreshToken);
       }
