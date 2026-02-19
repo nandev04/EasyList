@@ -5,7 +5,7 @@ interface verifyTokensLoginType {
 }
 
 interface VerifyTokensTypeResult {
-  deviceUUID?: string;
+  deviceUUID?: string | undefined;
   userId: number;
   newAccessToken?: string;
   newRefreshTokenRaw?: string;

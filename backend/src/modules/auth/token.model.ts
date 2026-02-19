@@ -30,10 +30,10 @@ const createTokenUUID = async (id: number, token: string) => {
   return createToken;
 };
 
-const verifyRefreshToken = async (refreshToken: string) => {
+const verifyRefreshToken = async (hashRefreshToken: string) => {
   return await prisma.refreshToken.findUnique({
     where: {
-      token: refreshToken
+      token: hashRefreshToken
     },
     select: { id: true, token: true, expiresAt: true, userId: true, device: true }
   });
