@@ -6,6 +6,7 @@ import styles from "./home.module.css";
 import { getTasks } from "../../services/task.service";
 import useDelayLoading from "../../hooks/useDelayLoading";
 import LoadingTask from "../../components/loadingTask/LoadingTask";
+import DropdownHeader from "../../components/dropdownHeader/DropdownHeader";
 
 const Home = () => {
   const { user } = useUserStore();
@@ -23,13 +24,7 @@ const Home = () => {
   return (
     <>
       <header className={styles.header}>
-        <div className={styles.header_container}>
-          <img
-            className={styles.user_photo}
-            src={"/assets/user-image.jpg"}
-            alt="Foto de perfil do usuário"
-          />
-        </div>
+        <DropdownHeader />
       </header>
       <main className={styles.main}>
         <h1 className={styles.welcome_title}>

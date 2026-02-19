@@ -52,7 +52,7 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     res.clearCookie('refreshToken', cookieUser);
     res.clearCookie('accessToken', cookieUser);
 
-    return res.status(204).json();
+    return res.sendStatus(204);
   } catch (err) {
     next(err);
   }

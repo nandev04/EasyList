@@ -23,7 +23,7 @@ const createTask = async (req: Request, res: Response, next: NextFunction) => {
 
     const { title, description, status } = req.validated!.body as CreateTaskSchemaType;
     const createdTask = await Service.createTask({ title, description, status, userId });
-    res.status(204).json(createdTask);
+    res.status(200).json(createdTask);
   } catch (err) {
     next(err);
   }
@@ -49,7 +49,7 @@ const removeTask = async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.userId!;
     await Service.removeTask(id, userId);
 
-    return res.status(204).json();
+    return res.status(204);
   } catch (err) {
     next(err);
   }

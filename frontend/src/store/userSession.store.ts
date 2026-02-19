@@ -13,10 +13,9 @@ type UserStoreType = {
 export const useUserStore = create<UserStoreType>((set) => ({
   user: null,
   loading: true,
+  // MONTAR ENDPOINT DE LOGOUT PARA LIMPAR COOKIE E SETAR USER DA STORE PARA NULL
   logout: () => set({ user: null }),
-  setUser: (user: UserDTO | null) => {
-    set({ user });
-  },
+  setUser: (user: UserDTO | null) => set({ user }),
   loadUser: async () => {
     try {
       set({ loading: true });
