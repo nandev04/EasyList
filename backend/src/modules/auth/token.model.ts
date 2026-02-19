@@ -35,7 +35,7 @@ const verifyRefreshToken = async (refreshToken: string) => {
     where: {
       token: refreshToken
     },
-    select: { token: true, expiresAt: true, userId: true, device: true }
+    select: { id: true, token: true, expiresAt: true, userId: true, device: true }
   });
 };
 
@@ -54,7 +54,14 @@ const markTokenAsUsed = async (tokenId: number) => {
   });
 };
 
-const revokeRefreshToken = async (deviceId: number): Promise<void> => {
+const revokeRefreshToken = async (id: number): Promise<void> => {
+  await prisma.refreshToken.update({
+    where: { id },
+    data: { revokedAt: new Date() }
+  });
+};
+
+const revokeRefreshTokenFromDeviceId = async (deviceId: number): Promise<void> => {
   await prisma.refreshToken.updateMany({
     where: { deviceId },
     data: { revokedAt: new Date() }
@@ -65,6 +72,7 @@ export {
   createRefreshToken,
   verifyRefreshToken,
   revokeRefreshToken,
+  revokeRefreshTokenFromDeviceId,
   createTokenUUID,
   validateTokenResetPassword,
   markTokenAsUsed

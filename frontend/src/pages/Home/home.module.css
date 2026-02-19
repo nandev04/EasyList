@@ -6,25 +6,11 @@
   padding-bottom: 1rem;
 }
 
-.header_container {
-  display: flex;
-  max-width: 800px;
-  justify-self: end;
-  gap: 1rem;
-  height: 100%;
-}
-
 .username {
   align-self: center;
   font-family: var(--primary-font);
   color: white;
   font-weight: 3300;
-}
-
-.user_photo {
-  max-height: 80%;
-  height: auto;
-  border-radius: 50%;
 }
 
 .btn {
@@ -39,7 +25,7 @@
 }
 
 .main {
-  max-width: 1500px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 32px 2rem;
   padding-top: 0;
