@@ -1,18 +1,17 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/login";
-import { setupInterceptors } from "./services/privateApi";
+import { setupInterceptors } from "./services/api";
 import ProtectedRoutes from "./components/protectedRoutes/ProtectedRoutes";
 import { useUserStore } from "./store/userSession.store";
 import { useEffect } from "react";
 
 function MainRoutes() {
-  setupInterceptors();
-
-  const { loadUser } = useUserStore();
+  const loadUser = useUserStore((state) => state.loadUser);
 
   useEffect(() => {
     loadUser();
+    setupInterceptors();
   }, []);
 
   return (
