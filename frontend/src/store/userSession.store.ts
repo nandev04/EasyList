@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import UserDTO from "../types/user.types";
-import { loadUser } from "../services/user.service";
+import { loadUser, logoutUser } from "../services/user.service";
 
 type UserStoreType = {
   user: UserDTO | null;
@@ -10,11 +10,20 @@ type UserStoreType = {
   loadUser: () => void;
 };
 
-export const useUserStore = create<UserStoreType>((set) => ({
+export const useUserStore = create<UserStoreType>()((set) => ({
   user: null,
   loading: true,
-  // MONTAR ENDPOINT DE LOGOUT PARA LIMPAR COOKIE E SETAR USER DA STORE PARA NULL
-  logout: () => set({ user: null }),
+  logout: async () => {
+    try {
+      set({ loading: true });
+      await logoutUser();
+      set({ user: null });
+    } catch {
+      set({ user: null });
+    } finally {
+      set({ loading: false });
+    }
+  },
   setUser: (user: UserDTO | null) => set({ user }),
   loadUser: async () => {
     try {

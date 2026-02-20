@@ -6,8 +6,13 @@ export const privateApi = axios.create({
   withCredentials: true,
 });
 
+export const publicApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
+});
+
 export function setupInterceptors() {
-  const { logout } = useUserStore();
+  const logout = useUserStore.getState().logout;
   privateApi.interceptors.response.use(
     (res) => res,
     (err) => {

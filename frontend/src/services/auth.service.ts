@@ -1,7 +1,7 @@
 import UserDTO from "../types/user.types";
 import { loginSchemaType } from "../schemas/loginSchema";
-import apiPublic from "./publicApi";
+import { publicApi } from "./api";
 
 export async function loginUser(data: loginSchemaType): Promise<void> {
-  await apiPublic.post<UserDTO>("/login", data);
+  await publicApi.post<UserDTO>("/login", data);
 }
