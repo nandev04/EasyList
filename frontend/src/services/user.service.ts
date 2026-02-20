@@ -1,5 +1,5 @@
 import UserDTO from "../types/user.types";
-import { privateApi } from "./privateApi";
+import { privateApi } from "./api";
 
 export async function loadUser() {
   const user = await privateApi.get<UserDTO>("/user");
@@ -9,4 +9,9 @@ export async function loadUser() {
     ...avatarUrl.data,
     firstName: user.data.username.split(" ")[0],
   };
+}
+
+export async function logoutUser() {
+  const response = await privateApi.post("/logout");
+  return response;
 }

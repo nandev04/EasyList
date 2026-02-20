@@ -9,7 +9,7 @@ import LoadingTask from "../../components/loadingTask/LoadingTask";
 import DropdownHeader from "../../components/dropdownHeader/DropdownHeader";
 
 const Home = () => {
-  const { user } = useUserStore();
+  const user = useUserStore((state) => state.user);
 
   const { data, isLoading, dataUpdatedAt } = useQuery({
     queryKey: ["tasks"],
