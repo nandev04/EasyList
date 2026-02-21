@@ -64,9 +64,9 @@ const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => 
 
     if (!req.file) return res.status(400).json({ message: 'Imagem não enviada' });
 
-    const signedUrl = await Service.uploadAvatar(userId, req.file);
+    const urlAvatar = await Service.uploadAvatar(userId, req.file);
 
-    res.status(200).json({ signedUrl: signedUrl });
+    res.status(200).json({ urlAvatar });
   } catch (err) {
     next(err);
   }
