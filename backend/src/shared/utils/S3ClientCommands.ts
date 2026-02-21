@@ -11,15 +11,4 @@ const putAvatarS3 = async (key: string, processedImageBuffer: Buffer) => {
   });
 };
 
-const generateSignedUrl = async (key: string) => {
-  const command = new GetObjectCommand({
-    Bucket: process.env.S3_BUCKET_AVATARS,
-    Key: key
-  });
-
-  const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 5 });
-
-  return signedUrl;
-};
-
-export { putAvatarS3, generateSignedUrl };
+export { putAvatarS3 };
