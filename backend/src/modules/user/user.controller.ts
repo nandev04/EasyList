@@ -58,17 +58,6 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getAvatar = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userId = req.userId!;
-    const signedUrl = await Service.getAvatar(userId);
-
-    res.status(200).json({ avatarUrl: signedUrl });
-  } catch (err) {
-    next(err);
-  }
-};
-
 const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!;
@@ -83,4 +72,4 @@ const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-export { getUser, createUser, updateUser, deleteUser, getAvatar, uploadAvatar };
+export { getUser, createUser, updateUser, deleteUser, uploadAvatar };
