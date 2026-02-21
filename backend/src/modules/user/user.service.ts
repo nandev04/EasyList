@@ -55,14 +55,4 @@ const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
   return signedUrl;
 };
 
-const getAvatar = async (userId: number) => {
-  const user = await Model_User.getUser(userId);
-
-  if (!user) throw new AppError('Usuário não encontrado', 404);
-  if (user?.avatarKey === null) return null;
-
-  const signedUrl = await generateSignedUrl(user.avatarKey);
-  return signedUrl;
-};
-
-export { getUser, createUser, updateUser, deleteUser, uploadAvatar, getAvatar };
+export { getUser, createUser, updateUser, deleteUser, uploadAvatar };
