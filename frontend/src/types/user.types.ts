@@ -6,7 +6,6 @@ type UserDTO = {
   updatedAt: Date;
   avatarKey: string | null;
   firstName: string;
-  avatarUrl: string;
 };
 
 export default UserDTO;

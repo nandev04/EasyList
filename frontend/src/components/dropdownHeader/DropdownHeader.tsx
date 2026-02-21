@@ -7,6 +7,7 @@ import LogoutBtn from "../logoutBtn/LogoutBtn";
 const DropdownHeader = () => {
   const { user } = useUserStore();
   const [open, setOpen] = useState(false);
+  const S3_URL_AVATARS = import.meta.env.VITE_S3_URL_AVATARS;
 
   return (
     <div className={styles.header_container}>
@@ -19,10 +20,11 @@ const DropdownHeader = () => {
         >
           <img
             src={
-              user?.avatarUrl
-                ? user?.avatarUrl
-                : "../../public/assets/user-image.jpg"
+              user?.avatarKey
+                ? S3_URL_AVATARS + user?.avatarKey
+                : "/assets/user-image.jpg"
             }
+            onError={(e) => (e.currentTarget.src = "/assets/user-image.jpg")}
             alt="User avatar"
             className={styles.avatar}
           />
