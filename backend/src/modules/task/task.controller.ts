@@ -49,7 +49,7 @@ const removeTask = async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.userId!;
     await Service.removeTask(id, userId);
 
-    return res.status(204);
+    return res.sendStatus(204);
   } catch (err) {
     next(err);
   }
