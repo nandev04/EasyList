@@ -17,7 +17,7 @@
 }
 
 .triggerWrapper {
-  padding: 0 0 20px 0;
+  padding: 0 0 30px 10px;
   position: relative;
   display: inline-block;
 }
@@ -58,6 +58,29 @@
 
 .container_items {
   display: flex;
+  gap: 5px;
+  flex-direction: column;
   justify-content: end;
   width: 100%;
+}
+
+.container_items > button {
+  display: flex;
+  justify-content: end;
+  gap: 8px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  align-items: center;
+  padding: 2px;
+}
+
+.container_items > button {
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--primary-font);
+}
+
+.container_items > button:hover {
+  background-color: #f2f2f2;
 }

@@ -47,6 +47,11 @@ input {
   outline: none;
 }
 
+button {
+  border: none;
+  background: none;
+}
+
 * {
   box-sizing: border-box;
 }

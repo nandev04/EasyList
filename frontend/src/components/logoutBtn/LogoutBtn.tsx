@@ -1,12 +1,11 @@
-import styles from "./logou.module.css";
 import { useUserStore } from "../../store/userSession.store";
-
+import { FiLogOut } from "react-icons/fi";
 const LogoutBtn = () => {
   const logout = useUserStore((state) => state.logout);
 
   return (
-    <button onClick={logout} className={styles.item}>
-      Sair
+    <button onClick={logout}>
+      <span>Sair</span> <FiLogOut strokeWidth={2} />
     </button>
   );
 };

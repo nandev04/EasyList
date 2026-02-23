@@ -3,9 +3,10 @@ import styles from "./dropdownHeader.module.css";
 import { useState } from "react";
 import { useUserStore } from "../../store/userSession.store";
 import LogoutBtn from "../logoutBtn/LogoutBtn";
+import ProfileBtn from "../profileBtn/ProfileBtn";
 
 const DropdownHeader = () => {
-  const { user } = useUserStore();
+  const user = useUserStore((s) => s.user);
   const [open, setOpen] = useState(false);
   const S3_URL_AVATARS = import.meta.env.VITE_S3_URL_AVATARS;
 
@@ -35,6 +36,7 @@ const DropdownHeader = () => {
 
               <MenuSeparator className={styles.separator} />
               <div className={styles.container_items}>
+                <ProfileBtn />
                 <LogoutBtn />
               </div>
             </PopoverPanel>

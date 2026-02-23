@@ -1,0 +1,17 @@
+.container_avatar {
+  max-width: clamp(1rem, 16vw, 80px);
+}
+
+.avatar_image {
+  width: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.username {
+  font-family: var(--primary-font);
+  font-size: clamp(1rem, 7vw, 2rem);
+  color: var(--dark-grey);
+  white-space: nowrap;
+  font-weight: 800;
+}
