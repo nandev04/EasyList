@@ -12,8 +12,6 @@ const ProfileOverview = () => {
   const [openUpdateAvatarDialog, setOpenUpdateAvatarDialog] = useState(false);
   const S3_URL_AVATARS = false;
 
-  console.log(openUpdateAvatarDialog);
-
   return (
     <>
       <div className={styles.container_avatar}>
@@ -69,8 +67,7 @@ const ProfileOverview = () => {
       >
         <div className={styles.overlay_update}>
           <DialogPanel className={styles.panel_update}>
-            <DialogTitle>Atualizar Avatar</DialogTitle>
-            <UploadAvatar />
+            <UploadAvatar setStateDialog={setOpenUpdateAvatarDialog} />
           </DialogPanel>
         </div>
       </Dialog>

@@ -116,14 +116,19 @@
   z-index: 50;
 }
 
+.overlay_update * {
+  font-family: var(--primary-font);
+}
+
 .panel_update {
   width: 100%;
   background-color: #ffff;
-  max-width: 35rem;
+  max-width: 52rem;
   border-radius: 8px;
   box-sizing: border-box;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding: 40px;
 }

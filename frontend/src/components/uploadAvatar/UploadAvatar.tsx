@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { FieldValue, FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
+import { BiImageAdd } from "react-icons/bi";
+import { IoMdCloseCircleOutline } from "react-icons/io";
 
-const UploadAvatar = () => {
+import styles from "./uploadAvatar.module.css";
+
+// CONFIGURAR PREVIEW DE FOTO(LAYOUT), IMPLEMENTAR VALIDAÇÃO COM ZOD DE INPUT, IMPLEMENTAR LÓGICA DE PATCH AVATAR
+
+const UploadAvatar = ({
+  setStateDialog,
+}: {
+  setStateDialog: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const {
     register,
     reset,
@@ -13,6 +23,7 @@ const UploadAvatar = () => {
   const image = watch("image");
 
   const [preview, setPreview] = useState<string | null>(null);
+  const [visibleDeleteIcon, setVisibleDeleteIcon] = useState(false);
 
   useEffect(() => {
     if (!image || image.length === 0) {
@@ -25,8 +36,14 @@ const UploadAvatar = () => {
 
     setPreview(URL_IMAGE);
 
-    return () => URL.revokeObjectURL(file);
+    return () => {
+      revokeImage(URL_IMAGE);
+    };
   }, [image]);
+
+  function revokeImage(urlImage: string) {
+    return URL.revokeObjectURL(urlImage);
+  }
 
   async function onSubmit(data: FieldValues) {
     console.log(data.image);
@@ -37,17 +54,67 @@ const UploadAvatar = () => {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          type="file"
-          accept="image/*"
-          {...register("image", { required: true })}
-        />
+        {preview ? (
+          <>
+            <div className={styles.container_preview}>
+              <div
+                className={styles.wrapper_preview}
+                onMouseEnter={() => setVisibleDeleteIcon(true)}
+                onMouseLeave={() => setVisibleDeleteIcon(false)}
+              >
+                <img
+                  className={styles.avatar_preview}
+                  src={preview}
+                  alt="Prévia do avatar"
+                />
+                {visibleDeleteIcon && (
+                  <div className={styles.container_deleteIcon}>
+                    <IoMdCloseCircleOutline
+                      className={styles.delete_icon}
+                      onClick={() => {
+                        revokeImage(preview);
+                        setPreview(null);
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={styles.container_field}>
+              <label className={styles.label_upload}>
+                <BiImageAdd />
+                <input
+                  className={styles.input_upload}
+                  type="file"
+                  accept="image/*"
+                  {...register("image", { required: true })}
+                />
+              </label>
+            </div>
+          </>
+        )}
 
-        {preview && <img src={preview} />}
-        <button type="submit" disabled={!image?.length}>
-          Enviar!
-        </button>
-        <button type="submit">Cancelar</button>
+        <div className={styles.actions}>
+          <button
+            className={styles.cancel_btn}
+            type="button"
+            onClick={() => {
+              (reset(), setStateDialog(false));
+            }}
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            disabled={!image?.length}
+            className={styles.submit_btn}
+          >
+            Enviar
+          </button>
+        </div>
       </form>
     </div>
   );
