@@ -55,7 +55,7 @@ const deleteUser = async (id: number) => {
   });
 };
 
-const insertAvatar = async (id: number, avatarKey: string) => {
+const updateAvatar = async (id: number, avatarKey: string) => {
   return await prisma.user.update({
     where: { id },
     data: { avatarKey }
@@ -89,5 +89,5 @@ export {
   deleteUser,
   verifyUser,
   findByEmail,
-  insertAvatar
+  updateAvatar
 };

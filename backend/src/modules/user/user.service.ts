@@ -1,12 +1,12 @@
 import { CreateUserBodySchemaType, updateUserSchemaBodyType } from './user.schema.js';
 import * as Model_User from './user.model.js';
 import { AppError } from '../../shared/utils/error.js';
-import { createHashPassword } from '../../shared/utils/crypto.js';
+import { createHashPassword, tokenUUID } from '../../shared/utils/crypto.js';
 import dotenv from 'dotenv';
 import * as Service_Auth from '../auth/auth.service.js';
 import processAvatarImage from '../../shared/utils/processAvatarImage.js';
 import s3 from '../../lib/s3.js';
-import { putAvatarS3 } from '../../shared/utils/S3ClientCommands.js';
+import { deleteAvatarS3, putAvatarS3 } from '../../shared/utils/S3ClientCommands.js';
 
 dotenv.config();
 
@@ -40,17 +40,25 @@ const deleteUser = async (id: number) => {
 };
 
 const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
-  const key = `/avatars/users/${userId}/avatar.webp`;
+  const uuid = tokenUUID();
+
+  const newKey = `/avatars/${userId}/${uuid}.webp`;
 
   const processedImageBuffer = await processAvatarImage(file.buffer);
 
-  const putCommand = await putAvatarS3(key, processedImageBuffer);
+  const putCommand = await putAvatarS3(newKey, processedImageBuffer);
 
   await s3.send(putCommand);
 
-  await Model_User.insertAvatar(userId, key);
+  await Model_User.updateAvatar(userId, newKey);
 
-  return process.env.S3_URL_AVATARS + key;
+  const { avatarKey: oldKey } = (await Model_User.getUser(userId)) as { avatarKey: string };
+
+  const deleteCommand = await deleteAvatarS3(oldKey);
+
+  await s3.send(deleteCommand);
+
+  return process.env.S3_URL_AVATARS + newKey;
 };
 
 export { getUser, createUser, updateUser, deleteUser, uploadAvatar };
