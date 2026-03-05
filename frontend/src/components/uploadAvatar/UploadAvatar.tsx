@@ -4,6 +4,8 @@ import { BiImageAdd } from "react-icons/bi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 
 import styles from "./uploadAvatar.module.css";
+import { updateAvatar } from "../../services/user.service";
+import { useUserStore } from "../../store/userSession.store";
 
 // CONFIGURAR PREVIEW DE FOTO(LAYOUT), IMPLEMENTAR VALIDAÇÃO COM ZOD DE INPUT, IMPLEMENTAR LÓGICA DE PATCH AVATAR
 
@@ -24,6 +26,9 @@ const UploadAvatar = ({
 
   const [preview, setPreview] = useState<string | null>(null);
   const [visibleDeleteIcon, setVisibleDeleteIcon] = useState(false);
+
+  const user = useUserStore((s) => s.user);
+  const setUser = useUserStore((s) => s.setUser);
 
   useEffect(() => {
     if (!image || image.length === 0) {
@@ -46,9 +51,21 @@ const UploadAvatar = ({
   }
 
   async function onSubmit(data: FieldValues) {
-    console.log(data.image);
-    if (errors) console.log(errors);
-    reset();
+    try {
+      const formData = new FormData();
+      console.log(data.image);
+      if (errors) console.log(errors);
+
+      const file = data.image[0];
+
+      formData.append("avatar", file);
+
+      await updateAvatar(formData);
+
+      reset();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -68,14 +85,14 @@ const UploadAvatar = ({
                   alt="Prévia do avatar"
                 />
                 {visibleDeleteIcon && (
-                  <div className={styles.container_deleteIcon}>
-                    <IoMdCloseCircleOutline
-                      className={styles.delete_icon}
-                      onClick={() => {
-                        revokeImage(preview);
-                        setPreview(null);
-                      }}
-                    />
+                  <div
+                    className={styles.container_deleteIcon}
+                    onClick={() => {
+                      revokeImage(preview);
+                      setPreview(null);
+                    }}
+                  >
+                    <IoMdCloseCircleOutline className={styles.delete_icon} />
                   </div>
                 )}
               </div>

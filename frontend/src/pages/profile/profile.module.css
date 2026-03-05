@@ -34,13 +34,32 @@
   background-color: #eaeaea;
 }
 
-.section_overview {
+.overview_section {
   display: flex;
   width: 100%;
   align-items: center;
   gap: 1.5rem;
-  margin-top: 60px;
+  margin: 60px 0;
   padding-left: 40px;
+}
+
+.personal_section {
+}
+
+.container_subtitle {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.subtitle {
+  display: inline-block;
+  font-family: var(--primary-font);
+  font-weight: 600;
+  font-style: italic;
+  font-size: clamp(0.7rem, 4.5vw, 1.4rem);
+  color: var(--dark-grey);
+  white-space: nowrap;
 }
 
 @media (max-width: 800px) {
