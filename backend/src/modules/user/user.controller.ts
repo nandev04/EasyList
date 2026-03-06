@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import * as Service from './user.service.js';
 
 import dotenv from 'dotenv';
-import { CreateUserBodySchemaType, updateUserSchemaBodyType } from './user.schema.js';
+import {
+  CreateUserBodySchemaType,
+  updateEmailUserSchemaBodyType,
+  updateUserSchemaBodyType
+} from './user.schema.js';
 import cookieUser from '../../shared/constants/cookieUser.js';
 
 dotenv.config();
@@ -41,6 +45,8 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
+
+const verifyOTPCodeUpdateEmail = async (req: Request, res: Response, next: NextFunction) => {};
 
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {

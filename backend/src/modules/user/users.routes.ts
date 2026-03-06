@@ -22,6 +22,7 @@ userRoutes.post(
 userRoutes.patch(
   '/user/',
   Rate_Limit.editUser,
+  authenticate,
   requireAuth,
   validate({ body: updateUserSchemaBody }),
   Controller.updateUser

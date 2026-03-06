@@ -161,7 +161,6 @@ const verifyCodeService = async (code: string, email: string) => {
 const logout = async (refreshToken: string) => {
   const hashRefreshToken = transformForHash(refreshToken);
   const tokenData = await Model_Token.verifyRefreshToken(hashRefreshToken);
-  console.log(tokenData);
   if (!tokenData) throw new AppError('Token Inválido', 401);
 
   await Model_Token.revokeRefreshToken(tokenData.id);

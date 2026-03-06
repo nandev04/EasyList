@@ -22,6 +22,7 @@ model User {
   PasswordResetCode  PasswordResetOTP[]
   PasswordResetToken PasswordResetToken[]
   devices            Device[]
+  EmailResetCode     UpdateEmailOTP[]
 }
 
 model Device {
@@ -39,7 +40,7 @@ model Task {
   title       String
   description String?
   status      String   @default("PENDING")
-  createdAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   userId Int
@@ -79,4 +80,17 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UpdateEmailOTP {
+  id        Int      @id @default(autoincrement())
+  tokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  new_email String
+  userId    Int
+  used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt, id])
 }

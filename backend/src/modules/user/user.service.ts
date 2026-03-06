@@ -1,12 +1,14 @@
 import { CreateUserBodySchemaType, updateUserSchemaBodyType } from './user.schema.js';
 import * as Model_User from './user.model.js';
 import { AppError } from '../../shared/utils/error.js';
-import { createHashPassword, tokenUUID } from '../../shared/utils/crypto.js';
+import { createHashPassword, tokenUUID, transformForHash } from '../../shared/utils/crypto.js';
+import * as mailService from '../../shared/services/mail.service.js';
 import dotenv from 'dotenv';
 import * as Service_Auth from '../auth/auth.service.js';
 import processAvatarImage from '../../shared/utils/processAvatarImage.js';
 import s3 from '../../lib/s3.js';
 import { deleteAvatarS3, putAvatarS3 } from '../../shared/utils/S3ClientCommands.js';
+import generateCode from '../../shared/utils/generateCode.js';
 
 dotenv.config();
 
@@ -32,8 +34,25 @@ const createUser = async ({ username, password, email }: CreateUserBodySchemaTyp
 };
 
 const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
-  return await Model_User.updateUser({ id, data });
+  const { email, ...safeData } = data;
+  if (email) {
+    const code = generateCode();
+    const tokenHash = transformForHash(code);
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    await Model_User.createEmailCodeOTP({
+      userId: id,
+      tokenHash,
+      new_email: email,
+      expiresAt
+    });
+    mailService.sendOTPEmail(email, code);
+  }
+
+  return await Model_User.updateUser({ id, data: safeData });
 };
+
+const verifyOTPCodeUpdateEmail = async (id: number, email: string) => {};
 
 const deleteUser = async (id: number) => {
   return await Model_User.deleteUser(id);
@@ -61,4 +80,4 @@ const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
   return process.env.S3_URL_AVATARS + newKey;
 };
 
-export { getUser, createUser, updateUser, deleteUser, uploadAvatar };
+export { getUser, createUser, updateUser, verifyOTPCodeUpdateEmail, deleteUser, uploadAvatar };

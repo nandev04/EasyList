@@ -40,6 +40,15 @@ const updateUser = async ({ id, data }: { id: number; data: updateUserSchemaBody
   return editedUser;
 };
 
+const createEmailCodeOTP = async (data: {
+  tokenHash: string;
+  expiresAt: Date;
+  new_email: string;
+  userId: number;
+}) => {
+  await prisma.updateEmailOTP.create({ data });
+};
+
 const changePassword = async (id: number, newPassword: string) => {
   const updatedUser = await prisma.user.update({
     where: { id },
@@ -85,6 +94,7 @@ export {
   getUser,
   createUser,
   updateUser,
+  createEmailCodeOTP,
   changePassword,
   deleteUser,
   verifyUser,

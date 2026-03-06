@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 type CreateUserBodySchemaType = z.infer<typeof createUserBodySchema>;
 type updateUserSchemaBodyType = z.infer<typeof updateUserSchemaBody>;
+type updateEmailUserSchemaBodyType = z.infer<typeof updateEmailUserSchemaBody>;
 
 const createUserBodySchema = z.object({
   username: z
@@ -18,13 +19,18 @@ const updateUserSchemaBody = z
       .string()
       .min(3, 'O nome de usuário deve ter pelo menos 3 caracteres')
       .max(30, 'O nome de usuário deve ter no máximo 30 caracteres')
-      .optional()
+      .optional(),
+    email: z.email().optional()
   })
   .strict();
+
+const updateEmailUserSchemaBody = z.object({ email: z.email() });
 
 export {
   createUserBodySchema,
   CreateUserBodySchemaType,
   updateUserSchemaBody,
-  updateUserSchemaBodyType
+  updateUserSchemaBodyType,
+  updateEmailUserSchemaBody,
+  updateEmailUserSchemaBodyType
 };
