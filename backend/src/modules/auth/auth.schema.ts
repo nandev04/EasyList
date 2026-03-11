@@ -13,7 +13,7 @@ const refreshTokenUserCookieSchema = z.object({
 });
 
 const verifyCodeBodySchema = z.object({
-  code: z.string().min(1),
+  code: z.string().length(6, 'O código deve ter exatamente 6 caracteres'),
   email: z.email()
 });
 

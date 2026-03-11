@@ -6,6 +6,7 @@ import {
   RefreshTokenUserCookieType,
   resetPasswordBodyType,
   signedCookieSchemaType,
+  VerifyCodeBodySchemaType,
   verifyUserQuerySchemaType
 } from './auth.schema.js';
 import { AppError } from '../../shared/utils/error.js';
@@ -68,7 +69,7 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
 
 const verifyCode = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { code, email } = req.body;
+    const { code, email } = <VerifyCodeBodySchemaType>req.validated!.body;
 
     const tokenReset = await Service_Auth.verifyCodeService(code, email);
     return res.status(200).json(tokenReset);

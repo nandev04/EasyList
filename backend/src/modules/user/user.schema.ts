@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 type CreateUserBodySchemaType = z.infer<typeof createUserBodySchema>;
 type updateUserSchemaBodyType = z.infer<typeof updateUserSchemaBody>;
-type updateEmailUserSchemaBodyType = z.infer<typeof updateEmailUserSchemaBody>;
+type verifyOTPEmailChangeType = z.infer<typeof verifyOTPEmailChange>;
 
 const createUserBodySchema = z.object({
   username: z
@@ -24,13 +24,15 @@ const updateUserSchemaBody = z
   })
   .strict();
 
-const updateEmailUserSchemaBody = z.object({ email: z.email() });
+const verifyOTPEmailChange = z.object({
+  code: z.string().length(6, 'O código deve ter exatamente 6 caracteres')
+});
 
 export {
   createUserBodySchema,
   CreateUserBodySchemaType,
   updateUserSchemaBody,
   updateUserSchemaBodyType,
-  updateEmailUserSchemaBody,
-  updateEmailUserSchemaBodyType
+  verifyOTPEmailChange,
+  verifyOTPEmailChangeType
 };

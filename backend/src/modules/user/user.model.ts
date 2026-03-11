@@ -71,6 +71,20 @@ const updateAvatar = async (id: number, avatarKey: string) => {
   });
 };
 
+const verifyOTPCodeUpdateEmail = async (userId: number, tokenHash: string) => {
+  return await prisma.updateEmailOTP.findFirst({
+    where: { tokenHash, userId },
+    select: { id: true, expiresAt: true, used: true, new_email: true }
+  });
+};
+
+const markCodeAsUsed = async (id: number) => {
+  return await prisma.updateEmailOTP.update({
+    where: { id },
+    data: { used: true }
+  });
+};
+
 const verifyUser = async (id: number) => {
   const verifiedUser = await prisma.user.update({
     where: { id },
@@ -97,6 +111,8 @@ export {
   createEmailCodeOTP,
   changePassword,
   deleteUser,
+  verifyOTPCodeUpdateEmail,
+  markCodeAsUsed,
   verifyUser,
   findByEmail,
   updateAvatar

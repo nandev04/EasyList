@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import sendgridTransport from 'nodemailer-sendgrid';
+import emailMask from '../utils/emailMask.js';
 
 const getTransporter = async () => {
   if (process.env.NODE_ENV === 'production') {
@@ -129,4 +130,59 @@ const sendOTPEmail = async (to: string, code: string) => {
   }
 };
 
-export { sendVerificationMail, sendForgotPasswordEmail, sendOTPEmail };
+const emailChangeNotice = async (oldEmail: string, newEmail: string, changeDate: string) => {
+  const template = `<div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
+  <div style="max-width: 500px; margin: auto; background: #ffffff; padding: 30px; border-radius: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+    
+    <h2 style="margin-bottom: 10px;">E-mail alterado com sucesso</h2>
+
+    <p style="color: #555;">
+      O e-mail associado à sua conta foi alterado com sucesso.
+    </p>
+
+    <p style="color: #555;">
+      Alteração realizada:
+    </p>
+
+    <p style="font-weight: bold; font-size: 16px; margin-bottom: 20px;">
+      ${oldEmail} → ${emailMask(newEmail)}
+    </p>
+
+    <p style="color: #555;">
+      Data da alteração:
+    </p>
+
+    <p style="font-weight: bold; font-size: 14px; margin-bottom: 20px;">
+      ${changeDate}
+    </p>
+
+    <p style="color: #555;">
+      A partir de agora, o novo e-mail será utilizado para acessar sua conta e receber notificações.
+    </p>
+
+    <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
+
+    <p style="font-size: 12px; color: #888;">
+      Se você não realizou essa alteração, recomendamos que altere sua senha imediatamente
+      e entre em contato com o suporte.
+    </p>
+
+  </div>
+</div>`;
+
+  const transporter = await getTransporter();
+
+  const info = await transporter.sendMail({
+    from: 'no-reply@minhaempresa.com',
+    to: oldEmail,
+    subject: 'Seu código de confirmação',
+    html: template
+  });
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Mensagem enviada: %s', info.messageId);
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  }
+};
+
+export { sendVerificationMail, sendForgotPasswordEmail, sendOTPEmail, emailChangeNotice };

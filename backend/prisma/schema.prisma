@@ -92,5 +92,5 @@ model UpdateEmailOTP {
   used      Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId, expiresAt, id])
+  @@index([userId, tokenHash])
 }

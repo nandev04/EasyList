@@ -49,10 +49,31 @@ const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
     mailService.sendOTPEmail(email, code);
   }
 
-  return await Model_User.updateUser({ id, data: safeData });
+  if (safeData) {
+    return await Model_User.updateUser({ id, data: safeData });
+  }
 };
 
-const verifyOTPCodeUpdateEmail = async (id: number, email: string) => {};
+const verifyOTPAndUpdateEmail = async (userId: number, code: string) => {
+  const hashCode = transformForHash(code);
+  const codeFound = await Model_User.verifyOTPCodeUpdateEmail(userId, hashCode);
+
+  const dateNow = new Date();
+  if (!codeFound) throw new AppError('Código não encontrado', 404);
+  if (codeFound.expiresAt < dateNow) throw new AppError('Código expirado', 400);
+  if (codeFound.used) throw new AppError('Código utilizado', 400);
+
+  const user = await Model_User.getUser(userId);
+
+  if (!user) throw new AppError('Usuário não encontrado', 404);
+
+  const oldEmail = user.email;
+
+  await Model_User.updateUser({ id: userId, data: { email: codeFound.new_email } });
+  await Model_User.markCodeAsUsed(codeFound.id);
+
+  mailService.emailChangeNotice(oldEmail, codeFound.new_email, dateNow.toLocaleDateString());
+};
 
 const deleteUser = async (id: number) => {
   return await Model_User.deleteUser(id);
@@ -80,4 +101,4 @@ const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
   return process.env.S3_URL_AVATARS + newKey;
 };
 
-export { getUser, createUser, updateUser, verifyOTPCodeUpdateEmail, deleteUser, uploadAvatar };
+export { getUser, createUser, updateUser, verifyOTPAndUpdateEmail, deleteUser, uploadAvatar };
