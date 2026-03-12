@@ -20,6 +20,9 @@ importers:
       axios:
         specifier: ^1.13.4
         version: 1.13.4
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       framer-motion:
         specifier: ^12.31.0
         version: 12.31.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)

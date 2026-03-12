@@ -40,6 +40,15 @@ const updateUser = async ({ id, data }: { id: number; data: updateUserSchemaBody
   return editedUser;
 };
 
+const createEmailCodeOTP = async (data: {
+  tokenHash: string;
+  expiresAt: Date;
+  new_email: string;
+  userId: number;
+}) => {
+  await prisma.updateEmailOTP.create({ data });
+};
+
 const changePassword = async (id: number, newPassword: string) => {
   const updatedUser = await prisma.user.update({
     where: { id },
@@ -55,10 +64,24 @@ const deleteUser = async (id: number) => {
   });
 };
 
-const insertAvatar = async (id: number, avatarKey: string) => {
+const updateAvatar = async (id: number, avatarKey: string) => {
   return await prisma.user.update({
     where: { id },
     data: { avatarKey }
+  });
+};
+
+const verifyOTPCodeUpdateEmail = async (userId: number, tokenHash: string) => {
+  return await prisma.updateEmailOTP.findFirst({
+    where: { tokenHash, userId },
+    select: { id: true, expiresAt: true, used: true, new_email: true }
+  });
+};
+
+const markCodeAsUsed = async (id: number) => {
+  return await prisma.updateEmailOTP.update({
+    where: { id },
+    data: { used: true }
   });
 };
 
@@ -85,9 +108,12 @@ export {
   getUser,
   createUser,
   updateUser,
+  createEmailCodeOTP,
   changePassword,
   deleteUser,
+  verifyOTPCodeUpdateEmail,
+  markCodeAsUsed,
   verifyUser,
   findByEmail,
-  insertAvatar
+  updateAvatar
 };

@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import * as Service from './user.service.js';
 
 import dotenv from 'dotenv';
-import { CreateUserBodySchemaType, updateUserSchemaBodyType } from './user.schema.js';
+import {
+  CreateUserBodySchemaType,
+  updateUserSchemaBodyType,
+  verifyOTPEmailChangeType
+} from './user.schema.js';
 import cookieUser from '../../shared/constants/cookieUser.js';
 
 dotenv.config();
@@ -34,9 +38,20 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!;
-    const data = req.validated!.body as updateUserSchemaBodyType;
+    const data = <updateUserSchemaBodyType>req.validated!.body;
     const editedUser = await Service.updateUser(userId, data);
     return res.status(200).json(editedUser);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const verifyOTPAndUpdateEmail = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.userId!;
+    const { code } = <verifyOTPEmailChangeType>req.validated!.body;
+    await Service.verifyOTPAndUpdateEmail(userId, code);
+    return res.status(200).json({ message: 'Email atualizado com sucesso' });
   } catch (err) {
     next(err);
   }
@@ -72,4 +87,4 @@ const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-export { getUser, createUser, updateUser, deleteUser, uploadAvatar };
+export { getUser, createUser, updateUser, verifyOTPAndUpdateEmail, deleteUser, uploadAvatar };

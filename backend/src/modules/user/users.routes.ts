@@ -1,7 +1,7 @@
 import express from 'express';
 import * as Controller from './user.controller.js';
 import validate from '../../middlewares/validateData.js';
-import { createUserBodySchema } from './user.schema.js';
+import { createUserBodySchema, verifyOTPEmailChange } from './user.schema.js';
 import { updateUserSchemaBody } from './user.schema.js';
 import requireAuth from '../../middlewares/requireAuth.js';
 import * as Rate_Limit from '../../middlewares/rateLimit.js';
@@ -22,9 +22,19 @@ userRoutes.post(
 userRoutes.patch(
   '/user/',
   Rate_Limit.editUser,
+  authenticate,
   requireAuth,
   validate({ body: updateUserSchemaBody }),
   Controller.updateUser
+);
+
+userRoutes.post(
+  '/email-change/verify',
+  Rate_Limit.editUser,
+  authenticate,
+  requireAuth,
+  validate({ body: verifyOTPEmailChange }),
+  Controller.verifyOTPAndUpdateEmail
 );
 
 userRoutes.delete('/user', Rate_Limit.deleteUser, requireAuth, Controller.deleteUser);

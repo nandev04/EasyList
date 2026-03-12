@@ -22,6 +22,7 @@ model User {
   PasswordResetCode  PasswordResetOTP[]
   PasswordResetToken PasswordResetToken[]
   devices            Device[]
+  EmailResetCode     UpdateEmailOTP[]
 }
 
 model Device {
@@ -32,6 +33,8 @@ model Device {
 
   refreshToken RefreshToken[]
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
 }
 
 model Task {
@@ -39,7 +42,7 @@ model Task {
   title       String
   description String?
   status      String   @default("PENDING")
-  createdAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   userId Int
@@ -56,6 +59,8 @@ model RefreshToken {
   revokedAt DateTime?
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   device    Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
 }
 
 model PasswordResetOTP {
@@ -67,7 +72,7 @@ model PasswordResetOTP {
   used      Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId, expiresAt, id])
+  @@index([userId, used,expiresAt, id])
 }
 
 model PasswordResetToken {
@@ -79,4 +84,17 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UpdateEmailOTP {
+  id        Int      @id @default(autoincrement())
+  tokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  new_email String
+  userId    Int
+  used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, tokenHash, expiresAt, used])
 }

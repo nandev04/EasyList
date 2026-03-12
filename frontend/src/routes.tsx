@@ -5,6 +5,7 @@ import { setupInterceptors } from "./services/api";
 import ProtectedRoutes from "./components/protectedRoutes/ProtectedRoutes";
 import { useUserStore } from "./store/userSession.store";
 import { useEffect } from "react";
+import Profile from "./pages/profile";
 
 function MainRoutes() {
   const loadUser = useUserStore((state) => state.loadUser);
@@ -18,6 +19,7 @@ function MainRoutes() {
     <Routes>
       <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="/login" element={<Login />} />
     </Routes>
