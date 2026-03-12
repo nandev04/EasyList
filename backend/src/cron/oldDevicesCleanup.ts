@@ -1,7 +1,7 @@
 import cron from 'node-cron';
 import prisma from '../lib/prisma.js';
 
-export const cleanupOldDevices = () => {
+const oldDevicesCleanup = () => {
   cron.schedule('0 3 * * *', async () => {
     console.log('[CRON] Iniciando limpeza de dispositivos antigos...');
 
@@ -21,3 +21,5 @@ export const cleanupOldDevices = () => {
     }
   });
 };
+
+export default oldDevicesCleanup;

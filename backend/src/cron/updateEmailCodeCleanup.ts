@@ -1,14 +1,14 @@
 import cron from 'node-cron';
 import prisma from '../lib/prisma.js';
 
-const resetPasswordCodeCleanup = () => {
+const updateEmailCodeCleanup = () => {
   cron.schedule('0 3 * * *', async () => {
-    console.log('[CRON] Iniciando limpeza de códigos de reset de senha expirados...');
+    console.log('[CRON] Iniciando limpeza de códigos OTP de atualização de email...');
 
     const now = new Date();
 
     try {
-      const result = await prisma.passwordResetOTP.deleteMany({
+      const result = await prisma.updateEmailOTP.deleteMany({
         where: { OR: [{ used: true }, { expiresAt: { lt: now } }] }
       });
 
@@ -19,4 +19,4 @@ const resetPasswordCodeCleanup = () => {
   });
 };
 
-export default resetPasswordCodeCleanup;
+export default updateEmailCodeCleanup;
