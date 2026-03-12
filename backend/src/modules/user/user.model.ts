@@ -9,6 +9,8 @@ const getUser = async (id: number) => {
       id: id
     },
     select: {
+      firstname: true,
+      lastname: true,
       username: true,
       email: true,
       avatarKey: true,
@@ -20,15 +22,25 @@ const getUser = async (id: number) => {
   return user;
 };
 
-const createUser = async ({ username, hashPassword, email }: CreateUserType) => {
+const createUser = async (data: CreateUserType) => {
   const createdUser = await prisma.user.create({
     data: {
-      username: username,
-      password: hashPassword,
-      email: email
+      firstname: data.firstname,
+      lastname: data.lastname,
+      username: data.username,
+      email: data.email,
+      password: data.hashPassword
+    },
+    select: {
+      id: true,
+      username: true,
+      firstname: true,
+      lastname: true,
+      avatarKey: true,
+      email: true
     }
   });
-  return { id: createdUser.id, username: createdUser.username, email: createdUser.email };
+  return createdUser;
 };
 
 const updateUser = async ({ id, data }: { id: number; data: updateUserSchemaBodyType }) => {

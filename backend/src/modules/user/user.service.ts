@@ -17,11 +17,23 @@ const getUser = async (id: number) => {
   return user;
 };
 
-const createUser = async ({ username, password, email }: CreateUserBodySchemaType) => {
+const createUser = async ({
+  firstname,
+  lastname,
+  username,
+  password,
+  email
+}: CreateUserBodySchemaType) => {
   try {
     const hashPassword = await createHashPassword(password);
 
-    const createdUser = await Model_User.createUser({ username, hashPassword, email });
+    const createdUser = await Model_User.createUser({
+      firstname,
+      lastname,
+      username,
+      hashPassword,
+      email
+    });
 
     await Service_Auth.emailVerificationAccount(createdUser.id, createdUser.email);
 

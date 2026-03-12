@@ -23,9 +23,11 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { username, password, email } = <CreateUserBodySchemaType>req.validated!.body;
+    const { firstname, lastname, username, password, email } = <CreateUserBodySchemaType>(
+      req.validated!.body
+    );
 
-    await Service.createUser({ username, password, email });
+    await Service.createUser({ firstname, lastname, username, password, email });
 
     return res.status(201).json({
       message: 'Usuário criado com sucesso, verifique sua caixa de entrada para verificar sua conta'
