@@ -8,7 +8,7 @@ import { useUserStore } from "../../store/userSession.store";
 
 const loginForm = () => {
   const navigate = useNavigate();
-  const { loadUser } = useUserStore();
+  const loadUser = useUserStore((s) => s.loadUser);
   const {
     register,
     handleSubmit,

@@ -7,7 +7,7 @@
 .container_allElements {
   display: flex;
   flex-direction: column;
-  max-width: 60%;
+  max-width: 70%;
 }
 
 .container_inputs {
@@ -28,11 +28,12 @@
 
 .input {
   width: 100%;
+  color: #3d3d3d;
+  -webkit-text-fill-color: #3d3d3d;
   background-color: #f8f8f8;
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 12px 15px;
   border-radius: 7px;
-  color: #3d3d3d;
   font-family: var(--primary-font);
   font-size: 1rem;
   margin-top: 4px;
@@ -42,6 +43,7 @@
   border: none;
   background-color: #f2f2f2;
   color: rgba(0, 0, 0, 0.2);
+  -webkit-text-fill-color: currentColor;
 }
 
 .email_warning {
@@ -59,6 +61,15 @@
 .email_warning svg {
   height: 100%;
   align-self: center;
+}
+
+.error_message {
+  font-family: var(--primary-font);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--error-message-color);
+  margin-top: -0.576rem;
 }
 
 .edit_btn {
@@ -119,9 +130,12 @@
   background-color: #d2ccf2;
 }
 
+.container_username {
+  grid-column: 1/-1;
+}
+
 .container_email {
   grid-column: 1/-1;
-  flex-basis: 100%;
 }
 
 /* DIALOG */
