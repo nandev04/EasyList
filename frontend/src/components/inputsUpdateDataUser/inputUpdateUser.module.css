@@ -160,9 +160,33 @@
   padding: 40px 48px;
   box-sizing: border-box;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+}
+
+.title {
+  font-family: var(--primary-font);
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  margin-bottom: 0.7rem;
+}
+
+.description {
+  font-family: var(--primary-font);
+  font-size: 0.85rem;
+}
+
+.container_inputOtp {
+  margin-top: 40px;
+}
+
+.submit {
+  margin-top: 20px;
+  cursor: pointer;
+  font-family: var(--primary-font);
+  color: #ffff;
+  font-weight: 600;
+  padding: 7px;
+  border-radius: 7px;
+  background-color: var(--primary-color);
 }
 
 @media (max-width: 676px) {
