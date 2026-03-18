@@ -1,11 +1,17 @@
 type UserDTO = {
-  email: string;
+  firstname: string;
+  lastname: string;
   username: string;
+  email: string;
   verified: boolean;
   createdAt: Date;
   updatedAt: Date;
   avatarKey: string | null;
-  firstName: string;
 };
 
-export default UserDTO;
+type updateUserServiceType = {
+  username?: string;
+  email?: string;
+};
+
+export type { UserDTO, updateUserServiceType };

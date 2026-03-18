@@ -1,4 +1,4 @@
-import UserDTO from "../types/user.types";
+import { updateUserServiceType, UserDTO } from "../types/user.types";
 import { privateApi } from "./api";
 
 export async function loadUser() {
@@ -16,5 +16,10 @@ export async function logoutUser() {
 
 export async function updateAvatar(formData: FormData) {
   const response = await privateApi.post("/avatar/upload", formData);
+  return response;
+}
+
+export async function updateUser(data: updateUserServiceType) {
+  const response = await privateApi.patch("/user", data);
   return response;
 }

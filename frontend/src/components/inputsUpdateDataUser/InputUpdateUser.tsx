@@ -1,112 +1,135 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import styles from "./inputUpdateUser.module.css";
 import { useUserStore } from "../../store/userSession.store";
 import { MdEdit } from "react-icons/md";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { GoAlert } from "react-icons/go";
+import {
+  updateUserSchema,
+  updateUserSchemaType,
+} from "../../schemas/updateUserSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as Service from "../../services/user.service";
+import {
+  emailOtpSchema,
+  emailOtpSchemaType,
+} from "../../schemas/EmailOtp.schema";
+import OtpForm from "../OtpComponent/OtpForm";
+import { OTPInput } from "input-otp";
 
 const InputUpdateUser = () => {
   const user = useUserStore((s) => s.user);
+
+  const formConfig = {
+    firstname: {
+      label: "Nome",
+      type: "text",
+    },
+    lastname: { label: "Sobrenome", type: "text" },
+    email: {
+      label: "Email",
+      type: "email",
+    },
+    username: {
+      label: "Username",
+      type: "text",
+    },
+  } satisfies Record<
+    keyof updateUserSchemaType,
+    { label: string; type: string }
+  >;
+
   const [isEditing, setIsEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { dirtyFields, isDirty },
-  } = useForm({
+  const updateUserForm = useForm<updateUserSchemaType>({
     defaultValues: {
-      name: user?.firstName,
-      lastname: user?.username,
+      firstname: user?.firstname,
+      lastname: user?.lastname,
+      username: user?.username,
       email: user?.email,
     },
+    resolver: zodResolver(updateUserSchema),
+    mode: "onSubmit",
   });
-  const email = watch("email");
+  const email = updateUserForm.watch("email");
 
-  type DataForm = {
-    name?: string;
-    lastname?: string;
-    email?: string;
-  };
+  const otpForm = useForm<emailOtpSchemaType>({
+    resolver: zodResolver(emailOtpSchema),
+    mode: "onSubmit",
+  });
 
-  async function onSubmit(data: DataForm) {
-    const changedData: Partial<DataForm> = {};
-    for (const key in dirtyFields) {
-      changedData[key as keyof DataForm] = data[key as keyof DataForm];
+  async function onSubmitUpdate(data: updateUserSchemaType) {
+    const changedData: Partial<updateUserSchemaType> = {};
+    for (const key in updateUserForm.formState.dirtyFields) {
+      changedData[key as keyof updateUserSchemaType] =
+        data[key as keyof updateUserSchemaType];
     }
+
+    // const r = await Service.updateUser(changedData);
 
     if (changedData.email) {
       setIsOpen(true);
     }
 
-    console.log(changedData);
     setIsEditing(false);
   }
 
   return (
     <>
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className={styles.form}
+        onSubmit={updateUserForm.handleSubmit(onSubmitUpdate)}
+      >
         <div className={styles.container_allElements}>
           <div className={styles.container_inputs}>
-            <div className={styles.container_name}>
-              <label className={styles.label} htmlFor="name">
-                Nome
-              </label>
-              <input
-                id="name"
-                {...register("name")}
-                autoComplete="name"
-                className={styles.input}
-                disabled={!isEditing}
-              />
-            </div>
-            <div className={styles.container_lastname}>
-              <label className={styles.label} htmlFor="lastname">
-                Sobrenome
-              </label>
-              <input
-                id="lastname"
-                {...register("lastname")}
-                autoComplete="family-name"
-                className={styles.input}
-                disabled={!isEditing}
-              />
-            </div>
-            <div className={styles.container_email}>
-              <label className={styles.label} htmlFor="email">
-                Email
-              </label>
-              <input
-                id="email"
-                {...register("email")}
-                autoComplete="email"
-                className={styles.input}
-                disabled={!isEditing}
-              />
-              {email !== user?.email && (
-                <span className={styles.email_warning}>
-                  <GoAlert />
-                  Será necessário confirmar este email
-                </span>
-              )}
-            </div>
+            {Object.entries(formConfig).map(([key, config]) => (
+              <div key={key}>
+                <label className={styles.label} htmlFor={key}>
+                  {config.label}
+                </label>
+                <input
+                  type={config.type}
+                  id={key}
+                  autoComplete={key}
+                  className={styles.input}
+                  disabled={!isEditing}
+                  {...updateUserForm.register(
+                    key as keyof updateUserSchemaType,
+                  )}
+                />
+                {key === "email" && email && email !== user?.email && (
+                  <span className={styles.email_warning}>
+                    <GoAlert />
+                    Será necessário confirmar este email
+                  </span>
+                )}
+                {updateUserForm.formState.errors && (
+                  <span className={styles.error_message}>
+                    {
+                      updateUserForm.formState.errors[
+                        key as keyof updateUserSchemaType
+                      ]?.message
+                    }
+                  </span>
+                )}
+              </div>
+            ))}
           </div>
           {isEditing && (
             <div className={styles.actions_container}>
               <button
                 type="submit"
                 className={styles.submit_btn}
-                disabled={!isDirty}
+                disabled={!updateUserForm.formState.isDirty}
               >
                 Atualizar dados
               </button>
               <button
                 className={styles.cancel_btn}
                 onClick={() => {
-                  (reset(), setIsEditing(false));
+                  (updateUserForm.reset(), setIsEditing(false));
                 }}
               >
                 Cancelar alterações
@@ -127,7 +150,55 @@ const InputUpdateUser = () => {
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
         <div className={styles.overlay}>
           <DialogPanel className={styles.panel}>
-            <DialogTitle>ISSO AQUI</DialogTitle>
+            <DialogTitle className={styles.title}>
+              Insira o código único
+            </DialogTitle>
+            <p className={styles.description}>
+              Enviamos um código de 6 dígitos para o e-mail informado. Use-o
+              para confirmar a alteração.
+            </p>
+
+            <div className={styles.container_inputOtp}>
+              <form
+                onSubmit={otpForm.handleSubmit((data) => {
+                  console.log(data);
+                })}
+              >
+                <Controller
+                  name="code"
+                  control={otpForm.control}
+                  render={({ field }) => (
+                    <OTPInput
+                      name="code"
+                      maxLength={6}
+                      value={field.value}
+                      onChange={field.onChange}
+                      render={({ slots }) => <OtpForm slots={slots} />}
+                    />
+                  )}
+                />
+                {otpForm.formState.errors.code && (
+                  <span
+                    style={{ display: "block", margin: "7px 0" }}
+                    className={styles.error_message}
+                  >
+                    {otpForm.formState.errors.code.message}
+                  </span>
+                )}
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <button
+                    className={styles.submit}
+                    onClick={() => otpForm.reset()}
+                  >
+                    Cancelar
+                  </button>
+                  <button className={styles.submit} type="submit">
+                    Enviar código
+                    {/* PRECISO FINALIZAR DIALOG */}
+                  </button>
+                </div>
+              </form>
+            </div>
           </DialogPanel>
         </div>
       </Dialog>
