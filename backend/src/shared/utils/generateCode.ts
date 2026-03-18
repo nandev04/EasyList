@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 const generateCode = (length = 6) => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const chars = '0123456789';
   const bytes = crypto.randomBytes(length);
   let code = '';
 
