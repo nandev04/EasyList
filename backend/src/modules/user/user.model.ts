@@ -46,10 +46,8 @@ const createUser = async (data: CreateUserType) => {
 const updateUser = async ({ id, data }: { id: number; data: updateUserSchemaBodyType }) => {
   const editedUser = await prisma.user.update({
     where: { id },
-    data: { ...data },
-    select: { id: true, username: true, updatedAt: true }
+    data: { ...data }
   });
-  return editedUser;
 };
 
 const createEmailCodeOTP = async (data: {
@@ -85,8 +83,14 @@ const updateAvatar = async (id: number, avatarKey: string) => {
 
 const verifyOTPCodeUpdateEmail = async (userId: number, tokenHash: string) => {
   return await prisma.updateEmailOTP.findFirst({
-    where: { tokenHash, userId },
-    select: { id: true, expiresAt: true, used: true, new_email: true }
+    where: { userId, tokenHash },
+    select: {
+      id: true,
+      expiresAt: true,
+      used: true,
+      new_email: true,
+      user: { select: { email: true } }
+    }
   });
 };
 

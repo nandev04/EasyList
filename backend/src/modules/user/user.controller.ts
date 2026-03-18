@@ -40,9 +40,16 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!;
+    console.log(userId);
     const data = <updateUserSchemaBodyType>req.validated!.body;
-    const editedUser = await Service.updateUser(userId, data);
-    return res.status(200).json(editedUser);
+    const updatedData = await Service.updateUser(userId, data);
+    return res.status(200).json({
+      success: true,
+      message: 'Dados atualizados com sucesso',
+      data: {
+        updatedData
+      }
+    });
   } catch (err) {
     next(err);
   }
@@ -52,8 +59,14 @@ const verifyOTPAndUpdateEmail = async (req: Request, res: Response, next: NextFu
   try {
     const userId = req.userId!;
     const { code } = <verifyOTPEmailChangeType>req.validated!.body;
-    await Service.verifyOTPAndUpdateEmail(userId, code);
-    return res.status(200).json({ message: 'Email atualizado com sucesso' });
+    const newEmail = await Service.verifyOTPAndUpdateEmail(userId, code);
+    return res.status(200).json({
+      success: true,
+      message: 'Email atualizado com sucesso',
+      data: {
+        newEmail
+      }
+    });
   } catch (err) {
     next(err);
   }

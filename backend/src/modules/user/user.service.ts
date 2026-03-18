@@ -61,9 +61,9 @@ const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
     mailService.sendOTPEmail(email, code);
   }
 
-  if (safeData) {
-    return await Model_User.updateUser({ id, data: safeData });
-  }
+  await Model_User.updateUser({ id, data: safeData });
+
+  return safeData;
 };
 
 const verifyOTPAndUpdateEmail = async (userId: number, code: string) => {
@@ -75,16 +75,14 @@ const verifyOTPAndUpdateEmail = async (userId: number, code: string) => {
   if (codeFound.expiresAt < dateNow) throw new AppError('Código expirado', 400);
   if (codeFound.used) throw new AppError('Código utilizado', 400);
 
-  const user = await Model_User.getUser(userId);
-
-  if (!user) throw new AppError('Usuário não encontrado', 404);
-
-  const oldEmail = user.email;
+  const oldEmail = codeFound.user.email;
 
   await Model_User.updateUser({ id: userId, data: { email: codeFound.new_email } });
   await Model_User.markCodeAsUsed(codeFound.id);
 
   mailService.emailChangeNotice(oldEmail, codeFound.new_email, dateNow.toLocaleDateString());
+
+  return codeFound.new_email;
 };
 
 const deleteUser = async (id: number) => {
