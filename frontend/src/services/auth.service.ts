@@ -1,4 +1,4 @@
-import UserDTO from "../types/user.types";
+import { UserDTO } from "../types/user.types.ts";
 import { loginSchemaType } from "../schemas/loginSchema";
 import { publicApi } from "./api";
 

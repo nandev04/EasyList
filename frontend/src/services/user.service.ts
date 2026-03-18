@@ -1,3 +1,4 @@
+import { emailOtpSchemaType } from "../schemas/EmailOtp.schema";
 import { updateUserServiceType, UserDTO } from "../types/user.types";
 import { privateApi } from "./api";
 
@@ -21,5 +22,10 @@ export async function updateAvatar(formData: FormData) {
 
 export async function updateUser(data: updateUserServiceType) {
   const response = await privateApi.patch("/user", data);
+  return response;
+}
+
+export async function verifyOtpEmailUpdate(data: emailOtpSchemaType) {
+  const response = await privateApi.post("/email-change/verify", data);
   return response;
 }

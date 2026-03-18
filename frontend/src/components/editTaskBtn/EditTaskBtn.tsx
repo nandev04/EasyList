@@ -14,7 +14,7 @@ import {
 import { EditTaskPayload, OptionsStatusTask } from "../../types/task.types";
 import { Controller, useForm } from "react-hook-form";
 import { IoCloseSharp } from "react-icons/io5";
-import { useEditTask } from "../../hooks/taskMutation";
+import { useEditTask } from "../../hooks/useTaskMutation";
 
 const EditTaskBtn = ({
   data,

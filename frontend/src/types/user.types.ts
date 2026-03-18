@@ -9,9 +9,16 @@ type UserDTO = {
   avatarKey: string | null;
 };
 
+type UpdateUserType = {
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+};
+
 type updateUserServiceType = {
   username?: string;
   email?: string;
 };
 
-export type { UserDTO, updateUserServiceType };
+export type { UserDTO, UpdateUserType, updateUserServiceType };

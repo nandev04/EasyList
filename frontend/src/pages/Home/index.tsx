@@ -28,7 +28,7 @@ const Home = () => {
       </header>
       <main className={styles.main}>
         <h1 className={styles.welcome_title}>
-          <span>Olá</span>, {user?.firstName}!
+          <span>Olá</span>, {user?.username}!
         </h1>
         <section className={styles.tasks_section}>
           <div className={styles.container_section}>
