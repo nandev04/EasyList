@@ -18,6 +18,7 @@ import {
 import { OTPInput } from "input-otp";
 import OtpSlots from "../OtpComponent/OtpSlots";
 import { IoCloseSharp } from "react-icons/io5";
+import ResendOtpCodeBtn from "../resendOtpCode/ResendOtpCodeBtn";
 
 const InputUpdateUser = () => {
   const user = useUserStore((s) => s.user);
@@ -43,7 +44,7 @@ const InputUpdateUser = () => {
   >;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [openOtpDialog, setIsOpenOtpDialog] = useState(false);
+  const [openOtpDialog, setIsOpenOtpDialog] = useState(true);
 
   const updateUserForm = useForm<updateUserSchemaType>({
     defaultValues: {
@@ -74,12 +75,15 @@ const InputUpdateUser = () => {
 
     await Service.updateUser(changedData);
 
-    const { email, ...restData } = changedData;
+    const { email: emailData, ...restData } = changedData;
 
-    if (email) setIsOpenOtpDialog(true);
+    if (emailData) setIsOpenOtpDialog(true);
 
     updateUser(restData);
-    updateUserForm.reset({ ...restData });
+    updateUserForm.reset({
+      ...updateUserForm.getValues(),
+      ...restData,
+    });
     setIsEditing(false);
   }
 
@@ -209,10 +213,11 @@ const InputUpdateUser = () => {
                     <button className={styles.submit_otp} type="submit">
                       Enviar código
                     </button>
-                    <p className={styles.resend_description}>
-                      Não recebeu o código?{" "}
-                      <button className={styles.resend_btn}>Reenviar</button>
-                    </p>
+                    <ResendOtpCodeBtn
+                      callback={() => Service.updateUser({ email })}
+                    >
+                      Reenviar
+                    </ResendOtpCodeBtn>
                   </div>
                 </form>
               </div>

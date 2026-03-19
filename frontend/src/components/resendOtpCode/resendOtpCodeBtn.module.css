@@ -1,0 +1,14 @@
+.resend_description {
+  text-align: center;
+  font-family: var(--primary-font);
+  font-size: 0.755rem;
+}
+
+.resend_btn {
+  color: var(--primary-color-hover);
+  text-decoration: underline;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--primary-font);
+  font-size: 0.755rem;
+}

@@ -10,15 +10,10 @@ type UserDTO = {
 };
 
 type UpdateUserType = {
-  firstname: string;
-  lastname: string;
-  username: string;
-  email: string;
-};
-
-type updateUserServiceType = {
+  firstname?: string;
+  lastname?: string;
   username?: string;
   email?: string;
 };
 
-export type { UserDTO, UpdateUserType, updateUserServiceType };
+export type { UserDTO, UpdateUserType };
