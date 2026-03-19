@@ -11,11 +11,17 @@ import {
   utilJwtVerifyAccess,
   utilJwtVerifyEmail
 } from '../../shared/utils/TokenUtils.js';
-import { transformForHash, tokenUUID, createHashPassword } from '../../shared/utils/crypto.js';
+import {
+  transformForHash,
+  tokenUUID,
+  createHashPassword,
+  compareHash
+} from '../../shared/utils/crypto.js';
 import generateCode from '../../shared/utils/generateCode.js';
 import * as Service_Device from '../device/device.service.js';
 import * as Service_Token from './token.service.js';
 import { VerifyTokensTypeResult, verifyTokensLoginType } from './auth.types.js';
+import { userAuthSelect, userPublicSelect } from '../user/user.select.js';
 
 dotenv.config();
 
@@ -109,6 +115,16 @@ const refreshToken = async (token: string) => {
   }
 };
 
+const changePassword = async (userId: number, currentPassword: string, newPassword: string) => {
+  const user = await Model_User.getUser(userId, userAuthSelect);
+  if (!user) throw new AppError('Usuário não encontrado', 404);
+  const isValid = await compareHash(currentPassword, user?.password);
+  if (!isValid) throw new AppError('Credenciais inválidas', 400);
+
+  const hashNewPassword = await createHashPassword(newPassword);
+  await Model_User.changePassword(user.id, hashNewPassword);
+};
+
 const forgotPasswordService = async (email: string): Promise<void> => {
   const user = await Model_User.findByEmail(email);
   if (!user) throw new AppError('Usuário não encontrado', 404);
@@ -171,6 +187,7 @@ export {
   verifyTokenEmailAccount,
   verifyTokensLogin,
   refreshToken,
+  changePassword,
   forgotPasswordService,
   resetPassword,
   verifyCodeService,

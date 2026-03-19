@@ -3,6 +3,7 @@ import { z } from 'zod';
 type VerifyCodeBodySchemaType = z.infer<typeof verifyCodeBodySchema>;
 type verifyUserQuerySchemaType = z.infer<typeof verifyUserQuerySchema>;
 type resetPasswordBodyType = z.infer<typeof resetPasswordBodySchema>;
+type changePasswordBodyType = z.infer<typeof changePasswordBodySchema>;
 type forgotPasswordBodyType = z.infer<typeof forgotPasswordBodySchema>;
 type RefreshTokenUserCookieType = z.infer<typeof refreshTokenUserCookieSchema>;
 type loginUserBodySchemaType = z.infer<typeof loginUserBodySchema>;
@@ -22,8 +23,13 @@ const verifyUserQuerySchema = z.object({
 });
 
 const resetPasswordBodySchema = z.object({
-  newPassword: z.string().min(6).max(100),
+  newPassword: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres').max(100),
   tokenResetPassword: z.uuid()
+});
+
+const changePasswordBodySchema = z.object({
+  currentPassword: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres').max(100),
+  newPassword: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres').max(100)
 });
 
 const forgotPasswordBodySchema = z.object({
@@ -48,6 +54,8 @@ export {
   verifyUserQuerySchemaType,
   resetPasswordBodySchema,
   resetPasswordBodyType,
+  changePasswordBodySchema,
+  changePasswordBodyType,
   forgotPasswordBodySchema,
   forgotPasswordBodyType,
   refreshTokenUserCookieSchema,

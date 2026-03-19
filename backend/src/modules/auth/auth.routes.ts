@@ -1,6 +1,7 @@
 import express from 'express';
 import validate from '../../middlewares/validateData.js';
 import {
+  changePasswordBodySchema,
   forgotPasswordBodySchema,
   loginUserBodySchema,
   refreshTokenUserCookieSchema,
@@ -28,8 +29,17 @@ authRoutes.get(
 authRoutes.post(
   '/refresh-token',
   Rate_Limit.auth,
-  validate({ cookies: refreshTokenUserCookieSchema }),
+  validate({ signedCookies: refreshTokenUserCookieSchema }),
   Controller_Auth.refreshToken
+);
+
+authRoutes.patch(
+  '/auth/change-password',
+  Rate_Limit.auth,
+  authenticate,
+  requireAuth,
+  validate({ body: changePasswordBodySchema }),
+  Controller_Auth.changePassword
 );
 
 // recovery password
