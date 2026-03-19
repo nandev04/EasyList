@@ -7,6 +7,7 @@ type UserStoreType = {
   loading: boolean;
   logout: () => void;
   setUser: (user: UserDTO) => void;
+  updateUser: (user: Partial<UserDTO>) => void;
   loadUser: () => void;
 };
 
@@ -25,6 +26,10 @@ export const useUserStore = create<UserStoreType>()((set) => ({
     }
   },
   setUser: (user: UserDTO | null) => set({ user }),
+  updateUser: (user) =>
+    set((state) => ({
+      user: state.user ? { ...state.user, ...user } : null,
+    })),
   loadUser: async () => {
     try {
       set({ loading: true });

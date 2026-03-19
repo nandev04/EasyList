@@ -15,11 +15,14 @@ import {
   emailOtpSchema,
   emailOtpSchemaType,
 } from "../../schemas/EmailOtp.schema";
-import OtpForm from "../OtpComponent/OtpForm";
 import { OTPInput } from "input-otp";
+import OtpSlots from "../OtpComponent/OtpSlots";
+import { IoCloseSharp } from "react-icons/io5";
+import ResendOtpCodeBtn from "../resendOtpCode/ResendOtpCodeBtn";
 
 const InputUpdateUser = () => {
   const user = useUserStore((s) => s.user);
+  const updateUser = useUserStore((s) => s.updateUser);
 
   const formConfig = {
     firstname: {
@@ -41,7 +44,7 @@ const InputUpdateUser = () => {
   >;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [openOtpDialog, setIsOpenOtpDialog] = useState(true);
 
   const updateUserForm = useForm<updateUserSchemaType>({
     defaultValues: {
@@ -56,6 +59,9 @@ const InputUpdateUser = () => {
   const email = updateUserForm.watch("email");
 
   const otpForm = useForm<emailOtpSchemaType>({
+    defaultValues: {
+      code: "",
+    },
     resolver: zodResolver(emailOtpSchema),
     mode: "onSubmit",
   });
@@ -67,13 +73,34 @@ const InputUpdateUser = () => {
         data[key as keyof updateUserSchemaType];
     }
 
-    // const r = await Service.updateUser(changedData);
+    await Service.updateUser(changedData);
 
-    if (changedData.email) {
-      setIsOpen(true);
-    }
+    const { email: emailData, ...restData } = changedData;
 
+    if (emailData) setIsOpenOtpDialog(true);
+
+    updateUser(restData);
+    updateUserForm.reset({
+      ...updateUserForm.getValues(),
+      ...restData,
+    });
     setIsEditing(false);
+  }
+
+  async function onSubmitOtp(data: emailOtpSchemaType) {
+    try {
+      const { data: responseData } = await Service.verifyOtpEmailUpdate(data);
+      updateUser({ email: responseData.data.newEmail });
+
+      updateUserForm.reset({
+        ...updateUserForm.getValues(),
+        email: responseData.data.newEmail,
+      });
+      otpForm.reset();
+      setIsOpenOtpDialog(false);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -118,7 +145,7 @@ const InputUpdateUser = () => {
             ))}
           </div>
           {isEditing && (
-            <div className={styles.actions_container}>
+            <div className={styles.actionsUpdateUser_container}>
               <button
                 type="submit"
                 className={styles.submit_btn}
@@ -147,59 +174,65 @@ const InputUpdateUser = () => {
           )}
         </div>
       </form>
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+      <Dialog open={openOtpDialog} onClose={() => setIsOpenOtpDialog(false)}>
         <div className={styles.overlay}>
-          <DialogPanel className={styles.panel}>
-            <DialogTitle className={styles.title}>
-              Insira o código único
-            </DialogTitle>
-            <p className={styles.description}>
-              Enviamos um código de 6 dígitos para o e-mail informado. Use-o
-              para confirmar a alteração.
-            </p>
+          <div className={styles.container}>
+            <DialogPanel className={styles.panel}>
+              <DialogTitle className={styles.title}>
+                Insira o código único
+              </DialogTitle>
+              <p className={styles.description}>
+                Enviamos um código de 6 dígitos para o e-mail informado. Use-o
+                para confirmar a alteração.
+              </p>
 
-            <div className={styles.container_inputOtp}>
-              <form
-                onSubmit={otpForm.handleSubmit((data) => {
-                  console.log(data);
-                })}
-              >
-                <Controller
-                  name="code"
-                  control={otpForm.control}
-                  render={({ field }) => (
-                    <OTPInput
-                      name="code"
-                      maxLength={6}
-                      value={field.value}
-                      onChange={field.onChange}
-                      render={({ slots }) => <OtpForm slots={slots} />}
-                    />
+              <div className={styles.container_inputOtp}>
+                <form onSubmit={otpForm.handleSubmit(onSubmitOtp)}>
+                  <Controller
+                    name="code"
+                    control={otpForm.control}
+                    render={({ field }) => (
+                      <OTPInput
+                        name="code"
+                        maxLength={6}
+                        value={field.value}
+                        onChange={field.onChange}
+                        render={({ slots }) => <OtpSlots slots={slots} />}
+                      />
+                    )}
+                  />
+                  {otpForm.formState.errors.code && (
+                    <span
+                      style={{ display: "block", margin: "7px 0" }}
+                      className={styles.error_message}
+                    >
+                      {otpForm.formState.errors.code.message}
+                    </span>
                   )}
-                />
-                {otpForm.formState.errors.code && (
-                  <span
-                    style={{ display: "block", margin: "7px 0" }}
-                    className={styles.error_message}
-                  >
-                    {otpForm.formState.errors.code.message}
-                  </span>
-                )}
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <button
-                    className={styles.submit}
-                    onClick={() => otpForm.reset()}
-                  >
-                    Cancelar
-                  </button>
-                  <button className={styles.submit} type="submit">
-                    Enviar código
-                    {/* PRECISO FINALIZAR DIALOG */}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </DialogPanel>
+                  <div className={styles.actionsOTP_container}>
+                    <button className={styles.submit_otp} type="submit">
+                      Enviar código
+                    </button>
+                    <ResendOtpCodeBtn
+                      callback={() => Service.updateUser({ email })}
+                    >
+                      Reenviar
+                    </ResendOtpCodeBtn>
+                  </div>
+                </form>
+              </div>
+              <button
+                className={styles.button_close}
+                onClick={() => {
+                  (otpForm.reset(),
+                    updateUserForm.reset({ email: user?.email }),
+                    setIsOpenOtpDialog(false));
+                }}
+              >
+                <IoCloseSharp />
+              </button>
+            </DialogPanel>
+          </div>
         </div>
       </Dialog>
     </>

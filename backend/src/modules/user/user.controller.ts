@@ -47,7 +47,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
       success: true,
       message: 'Dados atualizados com sucesso',
       data: {
-        updatedData
+        ...updatedData
       }
     });
   } catch (err) {

@@ -9,31 +9,22 @@ import processAvatarImage from '../../shared/utils/processAvatarImage.js';
 import s3 from '../../lib/s3.js';
 import { deleteAvatarS3, putAvatarS3 } from '../../shared/utils/S3ClientCommands.js';
 import generateCode from '../../shared/utils/generateCode.js';
+import { userCreateSelect, userPublicSelect } from './user.select.js';
 
 dotenv.config();
 
 const getUser = async (id: number) => {
-  const user = await Model_User.getUser(id);
+  const user = await Model_User.getUser(id, userPublicSelect);
   return user;
 };
 
-const createUser = async ({
-  firstname,
-  lastname,
-  username,
-  password,
-  email
-}: CreateUserBodySchemaType) => {
+const createUser = async (data: CreateUserBodySchemaType) => {
   try {
+    const { password, ...safeData } = data;
     const hashPassword = await createHashPassword(password);
 
-    const createdUser = await Model_User.createUser({
-      firstname,
-      lastname,
-      username,
-      hashPassword,
-      email
-    });
+    const newData = { hashPassword, ...safeData };
+    const createdUser = await Model_User.createUser(newData, userCreateSelect);
 
     await Service_Auth.emailVerificationAccount(createdUser.id, createdUser.email);
 
@@ -102,7 +93,9 @@ const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
 
   await Model_User.updateAvatar(userId, newKey);
 
-  const { avatarKey: oldKey } = (await Model_User.getUser(userId)) as { avatarKey: string };
+  const { avatarKey: oldKey } = (await Model_User.getUser(userId, userPublicSelect)) as {
+    avatarKey: string;
+  };
 
   const deleteCommand = await deleteAvatarS3(oldKey);
 
