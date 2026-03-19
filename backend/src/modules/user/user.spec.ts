@@ -6,8 +6,13 @@ import { AppError } from '../../shared/utils/error';
 import { createHashPassword } from '../../shared/utils/crypto';
 import * as Service_Auth from '../auth/auth.service';
 import * as Model_User from './user.model';
-import { createUser, getUser } from './user.service';
+import * as Service_User from './user.service';
+import { userCreateSelect, userPublicSelect } from './user.select';
+import { Prisma } from '@prisma/client/default';
 
+type ReturnGetUserType = Prisma.UserGetPayload<{
+  select: typeof userPublicSelect;
+}>;
 describe('get user flow', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -17,19 +22,22 @@ describe('get user flow', () => {
     const userId = 123;
 
     const returnGetUser = {
+      id: 9,
       email: 'email@test.com',
+      firstname: 'testeFn',
+      lastname: 'testeLn',
       username: 'usernameTest',
       verified: true,
       createdAt: new Date(),
       updatedAt: new Date(),
       avatarKey: 'avatar/url/test'
-    };
+    } satisfies ReturnGetUserType;
 
     vi.mocked(Model_User.getUser).mockResolvedValue(returnGetUser);
 
-    await getUser(userId);
+    await Service_User.getUser(userId);
 
-    expect(Model_User.getUser).toHaveBeenCalledWith(userId);
+    expect(Model_User.getUser).toHaveBeenCalledWith(userId, userPublicSelect);
     expect(Model_User.getUser).toHaveBeenCalledTimes(1);
   });
 });
@@ -39,23 +47,39 @@ describe('Create user flow', () => {
     vi.clearAllMocks();
   });
 
-  const { username, password, email } = {
+  const testInput = {
+    firstname: 'NomeTeste',
+    lastname: 'SobrenomeTeste',
     username: 'Teste',
     password: 'password_teste',
     email: 'teste@gmail.com'
   };
   const hashPassword = 'hashed_password';
-  const result = { id: 777, username: 'teste', email: 'teste@gmail.com' };
+  const result = {
+    id: 777,
+    firstname: 'testeFn',
+    lastname: 'testeLn',
+    username: 'teste',
+    email: 'teste@gmail.com',
+    avatarKey: 'avtkey'
+  };
 
   test('Should create a user and request email verification.', async () => {
     vi.mocked(createHashPassword).mockResolvedValue(hashPassword);
     vi.mocked(Model_User.createUser).mockResolvedValue(result);
     vi.mocked(Service_Auth.emailVerificationAccount).mockResolvedValue(undefined);
 
-    const createdUser = await createUser({ username, password, email });
+    const { password, ...safeInput } = testInput;
 
-    expect(createHashPassword).toHaveBeenCalledWith(password);
-    expect(Model_User.createUser).toHaveBeenCalledWith({ username, hashPassword, email });
+    const newInput = {
+      hashPassword,
+      ...safeInput
+    };
+    const createdUser = await Service_User.createUser(testInput);
+
+    expect(createHashPassword).toHaveBeenCalledWith(testInput.password);
+
+    expect(Model_User.createUser).toHaveBeenCalledWith(newInput, userCreateSelect);
     expect(Service_Auth.emailVerificationAccount).toHaveBeenCalledWith(
       createdUser.id,
       createdUser.email
@@ -69,7 +93,7 @@ describe('Create user flow', () => {
     const error = new AppError('Senha inválida', 400);
     vi.mocked(createHashPassword).mockRejectedValue(error);
 
-    await expect(createUser({ username, password, email })).rejects.toBe(error);
+    await expect(Service_User.createUser(testInput)).rejects.toBe(error);
   });
 
   test('Should throw an AppError with status 500 for generic errors.', async () => {
@@ -77,7 +101,7 @@ describe('Create user flow', () => {
     vi.mocked(Model_User.createUser).mockResolvedValue(result);
     vi.mocked(Service_Auth.emailVerificationAccount).mockRejectedValue(new Error('Erro interno'));
 
-    await expect(createUser({ username, password, email })).rejects.toMatchObject({
+    await expect(Service_User.createUser(testInput)).rejects.toMatchObject({
       message: 'Erro interno',
       statusCode: 500
     });

@@ -14,7 +14,7 @@ const getUser = async <T extends Prisma.UserSelect>(id: number, select: T) => {
   return user;
 };
 
-const createUser = async (data: CreateUserType) => {
+const createUser = async <T extends Prisma.UserSelect>(data: CreateUserType, select: T) => {
   const createdUser = await prisma.user.create({
     data: {
       firstname: data.firstname,
@@ -23,14 +23,7 @@ const createUser = async (data: CreateUserType) => {
       email: data.email,
       password: data.hashPassword
     },
-    select: {
-      id: true,
-      username: true,
-      firstname: true,
-      lastname: true,
-      avatarKey: true,
-      email: true
-    }
+    select
   });
   return createdUser;
 };

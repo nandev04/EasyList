@@ -9,7 +9,7 @@ import processAvatarImage from '../../shared/utils/processAvatarImage.js';
 import s3 from '../../lib/s3.js';
 import { deleteAvatarS3, putAvatarS3 } from '../../shared/utils/S3ClientCommands.js';
 import generateCode from '../../shared/utils/generateCode.js';
-import { userPublicSelect } from './user.select.js';
+import { userCreateSelect, userPublicSelect } from './user.select.js';
 
 dotenv.config();
 
@@ -18,23 +18,13 @@ const getUser = async (id: number) => {
   return user;
 };
 
-const createUser = async ({
-  firstname,
-  lastname,
-  username,
-  password,
-  email
-}: CreateUserBodySchemaType) => {
+const createUser = async (data: CreateUserBodySchemaType) => {
   try {
+    const { password, ...safeData } = data;
     const hashPassword = await createHashPassword(password);
 
-    const createdUser = await Model_User.createUser({
-      firstname,
-      lastname,
-      username,
-      hashPassword,
-      email
-    });
+    const newData = { hashPassword, ...safeData };
+    const createdUser = await Model_User.createUser(newData, userCreateSelect);
 
     await Service_Auth.emailVerificationAccount(createdUser.id, createdUser.email);
 

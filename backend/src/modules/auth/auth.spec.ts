@@ -163,6 +163,7 @@ describe('verifyTokensLogin', () => {
     const accessToken = 'tokenAccess';
     const deviceUUID = 'device-uuid-test';
     const verifyRefreshTokenResolved = {
+      id: 10,
       userId: 2,
       token: 'tokenHashTest',
       expiresAt: new Date(Date.now() + 10000),

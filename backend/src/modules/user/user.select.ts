@@ -17,10 +17,11 @@ export const userAuthSelect = {
   password: true
 } satisfies Prisma.UserSelect;
 
-export const userFullSelect = {
+export const userCreateSelect = {
   id: true,
   firstname: true,
   lastname: true,
   username: true,
-  email: true
+  email: true,
+  avatarKey: true
 } satisfies Prisma.UserSelect;
