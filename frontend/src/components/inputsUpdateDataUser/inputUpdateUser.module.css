@@ -74,7 +74,6 @@
 
 .edit_btn {
   cursor: pointer;
-  margin-left: auto;
   width: min(40px, 60vw);
   height: min(40px, 60vh);
   grid-row: 1;
@@ -112,7 +111,7 @@
 .cancel_btn {
   cursor: pointer;
   font-family: var(--primary-font);
-  background-color: #e5e5e5;
+  background-color: var(--cancel-color);
   color: var(--dark-grey);
   font-weight: 600;
   padding: 10px 20px;
@@ -121,7 +120,7 @@
 
 .cancel_btn:hover {
   color: #171717;
-  background-color: #d4d4d4;
+  background-color: var(--cancel-color-hover);
 }
 
 .submit_btn:disabled {

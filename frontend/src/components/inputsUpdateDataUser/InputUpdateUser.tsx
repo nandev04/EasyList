@@ -19,133 +19,99 @@ import { OTPInput } from "input-otp";
 import OtpSlots from "../OtpComponent/OtpSlots";
 import { IoCloseSharp } from "react-icons/io5";
 import ResendOtpCodeBtn from "../resendOtpCode/ResendOtpCodeBtn";
+import DialogChangePassword from "../DialogChangePassword/DialogChangePassword";
+import CloseDialogBtn from "../closeDialogBtn/CloseDialogBtn";
 
 const InputUpdateUser = () => {
   const user = useUserStore((s) => s.user);
-  const updateUser = useUserStore((s) => s.updateUser);
-
-  const formConfig = {
-    firstname: {
-      label: "Nome",
-      type: "text",
-    },
-    lastname: { label: "Sobrenome", type: "text" },
-    email: {
-      label: "Email",
-      type: "email",
-    },
-    username: {
-      label: "Username",
-      type: "text",
-    },
-  } satisfies Record<
-    keyof updateUserSchemaType,
-    { label: string; type: string }
-  >;
-
   const [isEditing, setIsEditing] = useState(false);
   const [openOtpDialog, setIsOpenOtpDialog] = useState(false);
+  const [openPasswordDialog, setIsOpenPasswordDialog] = useState(false);
 
-  const updateUserForm = useForm<updateUserSchemaType>({
+  const otpForm = useForm();
+  const updateUserForm = useForm({
     defaultValues: {
-      firstname: user?.firstname,
-      lastname: user?.lastname,
-      username: user?.username,
+      name: user?.firstname,
+      lastname: user?.username,
       email: user?.email,
     },
-    resolver: zodResolver(updateUserSchema),
-    mode: "onSubmit",
   });
   const email = updateUserForm.watch("email");
 
-  const otpForm = useForm<emailOtpSchemaType>({
-    defaultValues: {
-      code: "",
-    },
-    resolver: zodResolver(emailOtpSchema),
-    mode: "onSubmit",
-  });
+  type DataForm = {
+    name?: string;
+    lastname?: string;
+    email?: string;
+  };
 
-  async function onSubmitUpdate(data: updateUserSchemaType) {
-    const changedData: Partial<updateUserSchemaType> = {};
+  async function sendRequestUpdate(data: DataForm) {
+    const changedData: Partial<DataForm> = {};
     for (const key in updateUserForm.formState.dirtyFields) {
-      changedData[key as keyof updateUserSchemaType] =
-        data[key as keyof updateUserSchemaType];
+      changedData[key as keyof DataForm] = data[key as keyof DataForm];
     }
 
-    await Service.updateUser(changedData);
+    if (changedData.email) {
+      setIsOpenOtpDialog(true);
+    }
 
-    const { email: emailData, ...restData } = changedData;
-
-    if (emailData) setIsOpenOtpDialog(true);
-
-    updateUser(restData);
-    updateUserForm.reset({
-      ...updateUserForm.getValues(),
-      ...restData,
-    });
     setIsEditing(false);
   }
 
-  async function onSubmitOtp(data: emailOtpSchemaType) {
-    try {
-      const { data: responseData } = await Service.verifyOtpEmailUpdate(data);
-      updateUser({ email: responseData.data.newEmail });
-
-      updateUserForm.reset({
-        ...updateUserForm.getValues(),
-        email: responseData.data.newEmail,
-      });
-      otpForm.reset();
-      setIsOpenOtpDialog(false);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  function onSubmitOtp() {}
 
   return (
     <>
       <form
         className={styles.form}
-        onSubmit={updateUserForm.handleSubmit(onSubmitUpdate)}
+        onSubmit={updateUserForm.handleSubmit(sendRequestUpdate)}
       >
         <div className={styles.container_allElements}>
           <div className={styles.container_inputs}>
-            {Object.entries(formConfig).map(([key, config]) => (
-              <div key={key}>
-                <label className={styles.label} htmlFor={key}>
-                  {config.label}
-                </label>
-                <input
-                  type={config.type}
-                  id={key}
-                  autoComplete={key}
-                  className={styles.input}
-                  disabled={!isEditing}
-                  {...updateUserForm.register(
-                    key as keyof updateUserSchemaType,
-                  )}
-                />
-                {key === "email" && email && email !== user?.email && (
-                  <span className={styles.email_warning}>
-                    <GoAlert />
-                    Será necessário confirmar este email
-                  </span>
-                )}
-                {updateUserForm.formState.errors && (
-                  <span className={styles.error_message}>
-                    {
-                      updateUserForm.formState.errors[
-                        key as keyof updateUserSchemaType
-                      ]?.message
-                    }
-                  </span>
-                )}
-              </div>
-            ))}
+            <div className={styles.container_name}>
+              <label className={styles.label} htmlFor="name">
+                Nome
+              </label>
+              <input
+                id="name"
+                {...updateUserForm.register("name")}
+                autoComplete="name"
+                className={styles.input}
+                disabled={!isEditing}
+              />
+            </div>
+            <div className={styles.container_lastname}>
+              <label className={styles.label} htmlFor="lastname">
+                Sobrenome
+              </label>
+              <input
+                id="lastname"
+                {...updateUserForm.register("lastname")}
+                autoComplete="family-name"
+                className={styles.input}
+                disabled={!isEditing}
+              />
+            </div>
+            <div className={styles.container_email}>
+              <label className={styles.label} htmlFor="email">
+                Email
+              </label>
+              <input
+                id="email"
+                {...updateUserForm.register("email")}
+                autoComplete="email"
+                className={styles.input}
+                disabled={!isEditing}
+              />
+              {email !== user?.email && (
+                <span className={styles.email_warning}>
+                  <GoAlert />
+                  Será necessário confirmar este email
+                </span>
+              )}
+            </div>
           </div>
           {isEditing && (
-            <div className={styles.actionsUpdateUser_container}>
+            <div className={styles.actions_container}>
               <button
                 type="submit"
                 className={styles.submit_btn}
@@ -164,20 +130,28 @@ const InputUpdateUser = () => {
             </div>
           )}
           {!isEditing && (
-            <button
-              className={styles.edit_btn}
-              disabled={isEditing}
-              onClick={() => setIsEditing(true)}
-            >
-              <MdEdit />
-            </button>
+            <div className={styles.container_actionsEdit}>
+              <button
+                onClick={() => setIsOpenPasswordDialog(true)}
+                className={styles.changePasswordBtn}
+              >
+                Alterar senha
+              </button>
+              <button
+                className={styles.edit_btn}
+                disabled={isEditing}
+                onClick={() => setIsEditing(true)}
+              >
+                <MdEdit />
+              </button>
+            </div>
           )}
         </div>
       </form>
       <Dialog open={openOtpDialog} onClose={() => setIsOpenOtpDialog(false)}>
-        <div className={styles.overlay}>
-          <div className={styles.container}>
-            <DialogPanel className={styles.panel}>
+        <div className="overlay">
+          <div className="container">
+            <DialogPanel className="panel">
               <DialogTitle className={styles.title}>
                 Insira o código único
               </DialogTitle>
@@ -205,9 +179,7 @@ const InputUpdateUser = () => {
                     <span
                       style={{ display: "block", margin: "7px 0" }}
                       className={styles.error_message}
-                    >
-                      {otpForm.formState.errors.code.message}
-                    </span>
+                    ></span>
                   )}
                   <div className={styles.actionsOTP_container}>
                     <button className={styles.submit_otp} type="submit">
@@ -221,20 +193,18 @@ const InputUpdateUser = () => {
                   </div>
                 </form>
               </div>
-              <button
-                className={styles.button_close}
-                onClick={() => {
-                  (otpForm.reset(),
-                    updateUserForm.reset({ email: user?.email }),
-                    setIsOpenOtpDialog(false));
-                }}
-              >
-                <IoCloseSharp />
-              </button>
+              <CloseDialogBtn
+                resetForm={updateUserForm.reset}
+                setIsOpenDialog={setIsOpenOtpDialog}
+              />
             </DialogPanel>
           </div>
         </div>
       </Dialog>
+      <DialogChangePassword
+        openDialog={openPasswordDialog}
+        setOpenDialog={setIsOpenPasswordDialog}
+      />
     </>
   );
 };

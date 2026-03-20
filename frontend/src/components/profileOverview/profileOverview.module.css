@@ -116,7 +116,7 @@
   z-index: 50;
 }
 
-.overlay_update * {
+:global(.overlay) * {
   font-family: var(--primary-font);
 }
 

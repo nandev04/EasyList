@@ -24,33 +24,6 @@
   z-index: 50;
 }
 
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.container {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-}
-
-.panel {
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 60rem;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 3rem;
-}
-
 .panel_content {
   max-height: 80vh;
   overflow-y: auto;
@@ -132,32 +105,6 @@
 
 .createTask:hover {
   background-color: var(--primary-color-hover);
-}
-
-.button_close {
-  position: absolute;
-  right: 0;
-  top: 0;
-  transform: translate(50%, -50%);
-  border: none;
-  cursor: pointer;
-  box-sizing: border-box;
-  background-color: var(--primary-color);
-  width: min(45px, 60vw);
-  height: min(45px, 60vh);
-  border-radius: 50%;
-  padding: 8px;
-}
-
-.button_close:hover {
-  background-color: var(--primary-color-hover);
-}
-
-.button_close > svg {
-  color: white;
-  height: 100%;
-  width: 100%;
-  stroke-width: 15;
 }
 
 .error_message {
