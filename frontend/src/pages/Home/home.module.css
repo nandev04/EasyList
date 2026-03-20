@@ -55,6 +55,43 @@
   max-width: 1000px;
 }
 
+.actions_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter_buttons_container {
+  display: flex;
+  gap: 20px;
+}
+
+.filter_button {
+  cursor: pointer;
+  font-family: var(--primary-font);
+  font-size: 1rem;
+  background-color: #e7e7e7;
+  font-weight: 800;
+  padding: 10px 20px;
+  border-radius: 7px;
+}
+
+.filter_button:hover {
+  background-color: #c8c8c8;
+}
+
+.pending_button {
+  background-color: var(--task-pending);
+}
+
+.in_progress_button {
+  background-color: var(--task-inProgress);
+}
+
+.completed_button {
+  background-color: var(--task-completed);
+}
+
 .container_guidance {
   display: flex;
   width: 100%;
