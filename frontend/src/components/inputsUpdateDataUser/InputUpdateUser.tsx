@@ -44,7 +44,7 @@ const InputUpdateUser = () => {
   >;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [openOtpDialog, setIsOpenOtpDialog] = useState(true);
+  const [openOtpDialog, setIsOpenOtpDialog] = useState(false);
 
   const updateUserForm = useForm<updateUserSchemaType>({
     defaultValues: {
