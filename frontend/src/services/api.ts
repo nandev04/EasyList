@@ -19,7 +19,9 @@ export function setupInterceptors() {
       if (err.response?.status === 401) {
         logout();
       }
-      return Promise.reject(err);
+
+      const message = err.response?.data?.message || "Erro inesperado";
+      return Promise.reject(new Error(message));
     },
   );
 }

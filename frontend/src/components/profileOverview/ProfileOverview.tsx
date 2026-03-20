@@ -65,7 +65,7 @@ const ProfileOverview = () => {
         open={openUpdateAvatarDialog}
         onClose={() => setOpenUpdateAvatarDialog(false)}
       >
-        <div className={styles.overlay_update}>
+        <div style={{ padding: "40px" }} className="overlay">
           <DialogPanel className={styles.panel_update}>
             <UploadAvatar setStateDialog={setOpenUpdateAvatarDialog} />
           </DialogPanel>

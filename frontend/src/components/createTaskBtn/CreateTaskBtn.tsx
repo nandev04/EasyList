@@ -2,7 +2,6 @@ import { Dialog, DialogPanel } from "@headlessui/react";
 import { useState } from "react";
 import styles from "./CreateTaskBtn.module.css";
 import { RiAddFill } from "react-icons/ri";
-import { IoCloseSharp } from "react-icons/io5";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema, taskSchemaType } from "../../schemas/taskSchema";
@@ -11,6 +10,7 @@ import useDelayLoading from "../../hooks/useDelayLoading";
 import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 import { OptionsStatusTask } from "../../types/task.types";
 import { useCreateTask } from "../../hooks/useTaskMutation";
+import CloseDialogBtn from "../closeDialogBtn/CloseDialogBtn";
 const CreateTaskBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -61,81 +61,80 @@ const CreateTaskBtn = () => {
         }}
         className={styles.root}
       >
-        <div className={styles.overlay} />
-        <div className={styles.container}>
-          <DialogPanel className={styles.panel}>
-            <div className={styles.panel_content}>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <input
-                  type="text"
-                  className={styles.title_input}
-                  placeholder="Título"
-                  {...register("title")}
-                />
-                {errors.title && (
-                  <span className={styles.error_message}>
-                    {errors.title.message}
-                  </span>
-                )}
-                <textarea
-                  className={styles.description_input}
-                  placeholder="Descrição"
-                  {...register("description")}
-                />
-                {errors.description && (
-                  <span className={styles.error_message}>
-                    {errors.description.message}
-                  </span>
-                )}
-                {isError && (
-                  <span className={styles.error_message}>
-                    Ocorreu um erro ao criar tarefa
-                  </span>
-                )}
-
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      value={field.value}
-                      onChange={field.onChange}
-                      aria-label="Server size"
-                      className={styles.group}
-                    >
-                      {options.map((option) => (
-                        <Field key={option.value} className={styles.field}>
-                          <Radio value={option.value} className={styles.radio}>
-                            <span className={styles.indicator} />
-                          </Radio>
-
-                          <Label className={styles.label}>{option.name}</Label>
-                        </Field>
-                      ))}
-                    </RadioGroup>
+        <div className="overlay">
+          <div className="container">
+            <DialogPanel className="panel">
+              <div className={styles.panel_content}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <input
+                    type="text"
+                    className={styles.title_input}
+                    placeholder="Título"
+                    {...register("title")}
+                  />
+                  {errors.title && (
+                    <span className={styles.error_message}>
+                      {errors.title.message}
+                    </span>
                   )}
-                />
+                  <textarea
+                    className={styles.description_input}
+                    placeholder="Descrição"
+                    {...register("description")}
+                  />
+                  {errors.description && (
+                    <span className={styles.error_message}>
+                      {errors.description.message}
+                    </span>
+                  )}
+                  {isError && (
+                    <span className={styles.error_message}>
+                      Ocorreu um erro ao criar tarefa
+                    </span>
+                  )}
 
-                <div className={styles.actions}>
-                  <button
-                    disabled={isPending}
-                    type="submit"
-                    className={styles.createTask}
-                  >
-                    {showLoading ? <LoadingCircleSpinner /> : "Criar tarefa"}
-                  </button>
-                </div>
-              </form>
-              <button
-                className={styles.button_close}
-                onClick={() => {
-                  (reset(), setIsOpen(false));
-                }}
-              >
-                <IoCloseSharp />
-              </button>
-            </div>
-          </DialogPanel>
+                  <Controller
+                    name="status"
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup
+                        value={field.value}
+                        onChange={field.onChange}
+                        aria-label="Server size"
+                        className={styles.group}
+                      >
+                        {options.map((option) => (
+                          <Field key={option.value} className={styles.field}>
+                            <Radio
+                              value={option.value}
+                              className={styles.radio}
+                            >
+                              <span className={styles.indicator} />
+                            </Radio>
+
+                            <Label className={styles.label}>
+                              {option.name}
+                            </Label>
+                          </Field>
+                        ))}
+                      </RadioGroup>
+                    )}
+                  />
+
+                  <div className={styles.actions}>
+                    <button
+                      disabled={isPending}
+                      type="submit"
+                      className={styles.createTask}
+                    >
+                      {showLoading ? <LoadingCircleSpinner /> : "Criar tarefa"}
+                    </button>
+                  </div>
+                </form>
+                <CloseDialogBtn resetForm={reset} setIsOpenDialog={setIsOpen} />
+              </div>
+            </DialogPanel>
+          </div>
         </div>
       </Dialog>
     </>

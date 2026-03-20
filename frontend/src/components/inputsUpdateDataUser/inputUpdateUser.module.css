@@ -11,7 +11,7 @@
 }
 
 .container_inputs {
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
   max-width: 100%;
   display: grid;
   column-gap: 50px;
@@ -63,6 +63,12 @@
   align-self: center;
 }
 
+.actions_container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.875rem;
+}
+
 .error_message {
   font-family: var(--primary-font);
   font-weight: 500;
@@ -74,7 +80,6 @@
 
 .edit_btn {
   cursor: pointer;
-  margin-left: auto;
   width: min(40px, 60vw);
   height: min(40px, 60vh);
   grid-row: 1;
@@ -90,8 +95,20 @@
 
 .actionsUpdateUser_container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 1.5rem;
+}
+
+.changePasswordBtn {
+  font-family: var(--primary-font);
+  font-style: italic;
+  font-weight: 600;
+  text-decoration: underline;
+  color: var(--primary-color);
+  cursor: pointer;
+  align-self: baseline;
+  margin-left: 7px;
+  margin-top: -5px;
 }
 
 .submit_btn {
@@ -112,7 +129,7 @@
 .cancel_btn {
   cursor: pointer;
   font-family: var(--primary-font);
-  background-color: #e5e5e5;
+  background-color: var(--cancel-color);
   color: var(--dark-grey);
   font-weight: 600;
   padding: 10px 20px;
@@ -121,7 +138,7 @@
 
 .cancel_btn:hover {
   color: #171717;
-  background-color: #d4d4d4;
+  background-color: var(--cancel-color-hover);
 }
 
 .submit_btn:disabled {
@@ -213,32 +230,6 @@
 
 .submit_otp:hover {
   background-color: var(--primary-color-hover);
-}
-
-.button_close {
-  position: absolute;
-  right: 0;
-  top: 0;
-  transform: translate(50%, -50%);
-  border: none;
-  cursor: pointer;
-  box-sizing: border-box;
-  background-color: var(--primary-color);
-  width: min(45px, 60vw);
-  height: min(45px, 60vh);
-  border-radius: 50%;
-  padding: 8px;
-}
-
-.button_close:hover {
-  background-color: var(--primary-color-hover);
-}
-
-.button_close > svg {
-  color: white;
-  height: 100%;
-  width: 100%;
-  stroke-width: 15;
 }
 
 @media (max-width: 676px) {

@@ -1,0 +1,25 @@
+.button_close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(50%, -50%);
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: var(--primary-color);
+  width: min(45px, 60vw);
+  height: min(45px, 60vh);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.button_close:hover {
+  background-color: var(--primary-color-hover);
+}
+
+.button_close > svg {
+  color: white;
+  height: 100%;
+  width: 100%;
+  stroke-width: 15;
+}

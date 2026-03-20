@@ -47,6 +47,7 @@
 }
 
 .actions {
+  margin-top: 30px;
   display: flex;
   gap: 16px;
   justify-content: flex-end;
@@ -66,12 +67,12 @@
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  background-color: #e5e5e5;
+  background-color: var(--cancel-color-hover);
   color: var(--dark-grey);
 }
 
 .button_cancel:hover {
-  background-color: #d4d4d4;
+  background-color: var(--cancel-color-hover);
 }
 
 .button_delete {

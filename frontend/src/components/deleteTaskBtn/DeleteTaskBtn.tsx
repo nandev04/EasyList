@@ -34,8 +34,8 @@ const DeleteTaskBtn = ({ taskId }: { taskId: number }) => {
         </button>
       </div>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-        <div className={styles.overlay}>
-          <DialogPanel className={styles.panel}>
+        <div className="overlay">
+          <DialogPanel className="panel">
             <DialogTitle className={styles.title_dialog}>
               Tem certeza que deseja deletar essa tarefa?
             </DialogTitle>

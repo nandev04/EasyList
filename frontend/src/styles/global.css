@@ -9,6 +9,9 @@
   --secondary-color: #3c384a;
   --dark-grey: #282828;
 
+  --cancel-color: #e5e5e5;
+  --cancel-color-hover: #d4d4d4;
+
   --task-completed: #27ff6f;
   --task-inProgress: #ff9f40;
   --task-pending: #5be6ff;
@@ -80,4 +83,37 @@ button {
 /* Quando passa o mouse sobre a barra */
 ::-webkit-scrollbar-thumb:hover {
   background: #645d7b;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 50;
+}
+
+.container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.panel {
+  position: relative;
+  width: 100%;
+  max-width: 40rem;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 40px 48px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
