@@ -10,6 +10,7 @@ import {
 } from "./change-password.schema";
 import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
 import * as Service from "../../services/auth.service";
+import useDelayLoading from "../../hooks/useDelayLoading";
 
 const DialogChangePassword = ({
   openDialog,
@@ -28,6 +29,8 @@ const DialogChangePassword = ({
   } = useForm({
     resolver: zodResolver(changePasswordSchema),
   });
+
+  const { showLoading } = useDelayLoading(isSubmitting, 150);
 
   async function sendRequest(data: changePasswordSchemaType) {
     try {
@@ -106,7 +109,7 @@ const DialogChangePassword = ({
                   Cancelar alteração
                 </button>
                 <button type="submit" className={styles.change_btn}>
-                  {isSubmitting ? <LoadingCircleSpinner /> : "Alterar senha"}
+                  {showLoading ? <LoadingCircleSpinner /> : "Alterar senha"}
                 </button>
               </div>
             </form>
