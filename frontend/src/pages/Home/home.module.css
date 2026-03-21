@@ -80,16 +80,13 @@
   background-color: #c8c8c8;
 }
 
-.pending_button {
-  background-color: var(--task-pending);
+.active {
+  color: white;
+  background-color: var(--primary-color);
 }
 
-.in_progress_button {
-  background-color: var(--task-inProgress);
-}
-
-.completed_button {
-  background-color: var(--task-completed);
+.active:hover {
+  background-color: var(--primary-color-hover);
 }
 
 .container_guidance {

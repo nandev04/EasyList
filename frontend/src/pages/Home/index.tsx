@@ -7,9 +7,8 @@ import { getTasks } from "../../services/task.service";
 import useDelayLoading from "../../hooks/useDelayLoading";
 import LoadingTask from "../../components/loadingTask/LoadingTask";
 import DropdownHeader from "../../components/dropdownHeader/DropdownHeader";
-import filterTask from "../../utils/filterTask";
 import { useState } from "react";
-import { GetTaskResponse, StatusTask } from "../../types/task.types";
+import { StatusTask } from "../../types/task.types";
 
 const Home = () => {
   const user = useUserStore((state) => state.user);
@@ -26,6 +25,7 @@ const Home = () => {
     [StatusTask.IN_PROGRESS]: "Em progresso",
     [StatusTask.COMPLETED]: "Concluído",
   };
+
   const filters = Object.values(StatusTask);
 
   if (isLoading && !showLoading) return null;
@@ -52,7 +52,7 @@ const Home = () => {
                 {(selectedStatus ? [selectedStatus] : filters).map((status) => (
                   <button
                     key={status}
-                    className={styles.filter_button}
+                    className={`${styles.filter_button} ${selectedStatus === status ? styles.active : ""}`}
                     onClick={() => {
                       setSelectedStatus((prev) =>
                         prev === status ? null : status,
