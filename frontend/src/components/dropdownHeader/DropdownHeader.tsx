@@ -7,7 +7,7 @@ import ProfileBtn from "../profileBtn/ProfileBtn";
 
 const DropdownHeader = () => {
   const user = useUserStore((s) => s.user);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const S3_URL_AVATARS = import.meta.env.VITE_S3_URL_AVATARS;
 
   return (
@@ -16,7 +16,7 @@ const DropdownHeader = () => {
         <div
           className={styles.triggerWrapper}
           onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
+          // onMouseLeave={() => setOpen(false)}
           onClick={() => setOpen(!open)}
         >
           <img
