@@ -9,6 +9,7 @@ import LoadingTask from "../../components/loadingTask/LoadingTask";
 import DropdownHeader from "../../components/dropdownHeader/DropdownHeader";
 import { useState } from "react";
 import { StatusTask } from "../../types/task.types";
+import DropdownFilter from "../../components/dropDownFilter/DropdownFilter";
 
 const Home = () => {
   const user = useUserStore((state) => state.user);
@@ -48,20 +49,32 @@ const Home = () => {
           <div className={styles.container_section}>
             <div className={styles.actions_container}>
               <CreateTaskBtn />
-              <div className={styles.filter_buttons_container}>
-                {(selectedStatus ? [selectedStatus] : filters).map((status) => (
-                  <button
-                    key={status}
-                    className={`${styles.filter_button} ${selectedStatus === status ? styles.active : ""}`}
-                    onClick={() => {
-                      setSelectedStatus((prev) =>
-                        prev === status ? null : status,
-                      );
-                    }}
-                  >
-                    {statusLabel[status]}
-                  </button>
-                ))}
+              <div className={styles.filter_container}>
+                <div className={styles.filter_buttons_container}>
+                  {(selectedStatus ? [selectedStatus] : filters).map(
+                    (status) => (
+                      <button
+                        key={status}
+                        className={`${styles.filter_button} ${selectedStatus === status ? styles.active : ""}`}
+                        onClick={() => {
+                          setSelectedStatus((prev) =>
+                            prev === status ? null : status,
+                          );
+                        }}
+                      >
+                        {statusLabel[status]}
+                      </button>
+                    ),
+                  )}
+                </div>
+                <div className={styles.dropdown_filter_container}>
+                  <DropdownFilter
+                    selectedStatus={selectedStatus}
+                    setSelectedStatus={setSelectedStatus}
+                    statusLabel={statusLabel}
+                    filter={filters}
+                  />
+                </div>
               </div>
             </div>
             {data?.length === 0 && (

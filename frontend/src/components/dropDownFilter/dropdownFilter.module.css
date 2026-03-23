@@ -1,0 +1,80 @@
+.button {
+  width: 100%;
+  height: 100%;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.button > svg {
+  color: var(--dark-grey);
+  width: 100%;
+  height: 100%;
+}
+
+.menu {
+  background-color: white;
+  border: 1px solid #d5d5d5;
+  border-radius: 12px;
+  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.group {
+  right: 0;
+  padding: 20px 15px;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.radio {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #d5d5d5;
+  border-radius: 7px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.radio[data-checked] {
+  background-color: var(--primary-color);
+  border: none;
+}
+
+.icon {
+  color: white;
+  width: 100%;
+  height: auto;
+  border-radius: 7px;
+  background-color: var(--primary-color);
+  visibility: hidden;
+}
+
+/* mostrar bolinha interna quando checked */
+.radio[data-checked] .icon {
+  visibility: visible;
+}
+
+.label {
+  font-family: var(--secondary-font);
+  font-weight: 500;
+  color: #383838;
+  font-size: 0.955rem;
+  cursor: pointer;
+}
+
+.menuItem {
+  padding: 8px 12px;
+  text-decoration: none;
+}
