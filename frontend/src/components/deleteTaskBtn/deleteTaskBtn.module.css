@@ -1,4 +1,7 @@
 .button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: none;
   align-items: center;
   justify-items: center;
@@ -16,8 +19,8 @@
 
 .button > svg {
   width: 1rem;
-  width: 95%;
-  height: 95%;
+  width: 80%;
+  height: 80%;
   color: var(--dark-grey);
 }
 
