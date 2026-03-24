@@ -6,16 +6,29 @@ import * as mailService from '../../shared/services/mail.service.js';
 import dotenv from 'dotenv';
 import * as Service_Auth from '../auth/auth.service.js';
 import processAvatarImage from '../../shared/utils/processAvatarImage.js';
-import s3 from '../../lib/s3.js';
-import { deleteAvatarS3, putAvatarS3 } from '../../shared/utils/S3ClientCommands.js';
+import {
+  deleteAvatarS3,
+  generateSignedUrl,
+  getAvatarS3,
+  putAvatarS3
+} from '../../shared/utils/S3ClientCommands.js';
 import generateCode from '../../shared/utils/generateCode.js';
 import { userCreateSelect, userPublicSelect } from './user.select.js';
+import s3Client from '../../lib/s3.js';
 
 dotenv.config();
 
 const getUser = async (id: number) => {
+  let signedUrl: string | null = null;
   const user = await Repository_User.getUser(id, userPublicSelect);
-  return user;
+  if (!user) throw new AppError('Usuário não encontrado', 404);
+  const { avatarKey, ...safeUser } = user;
+  if (user.avatarKey) {
+    const getCommand = await getAvatarS3(user.avatarKey);
+    signedUrl = await generateSignedUrl(getCommand);
+  }
+
+  return { safeUser, signedUrl };
 };
 
 const createUser = async (data: CreateUserBodySchemaType) => {
@@ -81,27 +94,29 @@ const deleteUser = async (id: number) => {
 };
 
 const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
-  const uuid = tokenUUID();
+  const timestamp = Date.now();
+  const uniqueName = `${timestamp}-${tokenUUID()}.webp`;
 
-  const newKey = `/avatars/${userId}/${uuid}.webp`;
+  const newPath = `avatars/${uniqueName}.webp`;
 
   const processedImageBuffer = await processAvatarImage(file.buffer);
 
-  const putCommand = await putAvatarS3(newKey, processedImageBuffer);
+  const putCommand = await putAvatarS3(newPath, processedImageBuffer);
+  await s3Client.send(putCommand);
 
-  await s3.send(putCommand);
+  const getCommand = await getAvatarS3(newPath);
+  const signedUrlGetAvatar = await generateSignedUrl(getCommand);
 
-  await Repository_User.updateAvatar(userId, newKey);
-
-  const { avatarKey: oldKey } = (await Repository_User.getUser(userId, userPublicSelect)) as {
+  const { avatarKey: oldPath } = (await Repository_User.getUser(userId, userPublicSelect)) as {
     avatarKey: string;
   };
+  await Repository_User.updateAvatar(userId, newPath);
 
-  const deleteCommand = await deleteAvatarS3(oldKey);
+  const deleteCommand = await deleteAvatarS3(oldPath);
 
-  await s3.send(deleteCommand);
+  await s3Client.send(deleteCommand);
 
-  return process.env.S3_URL_AVATARS + newKey;
+  return signedUrlGetAvatar;
 };
 
 export { getUser, createUser, updateUser, verifyOTPAndUpdateEmail, deleteUser, uploadAvatar };

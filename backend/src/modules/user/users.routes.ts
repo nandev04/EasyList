@@ -39,11 +39,16 @@ userRoutes.post(
 
 userRoutes.delete('/user', Rate_Limit.deleteUser, requireAuth, Controller.deleteUser);
 
-userRoutes.post(
+userRoutes.patch(
   '/avatar/upload',
   authenticate,
   requireAuth,
-  Validate_Avatar.uploadAvatar.single('avatar'),
+  (req, res, next) => {
+    Validate_Avatar.uploadAvatar.single('avatar')(req, res, (err) => {
+      if (err) next(err);
+      next();
+    });
+  },
   Controller.uploadAvatar
 );
 

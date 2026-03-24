@@ -15,7 +15,11 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.userId!;
     const data = await Service.getUser(id);
-    return res.status(200).json(data);
+    const response = {
+      ...(data.signedUrl && { signedUrlAvatar: data.signedUrl }),
+      user: data.safeUser
+    };
+    return res.status(200).json(response);
   } catch (err) {
     next(err);
   }
@@ -94,9 +98,9 @@ const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => 
 
     if (!req.file) return res.status(400).json({ message: 'Imagem não enviada' });
 
-    const urlAvatar = await Service.uploadAvatar(userId, req.file);
+    const signedUrl = await Service.uploadAvatar(userId, req.file);
 
-    res.status(200).json({ urlAvatar });
+    res.status(200).json({ signedUrl: signedUrl });
   } catch (err) {
     next(err);
   }
