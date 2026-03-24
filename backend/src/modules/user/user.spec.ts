@@ -1,6 +1,7 @@
 vi.mock('../../shared/utils/crypto');
 vi.mock('../auth/auth.service');
 vi.mock('./user.repository');
+vi.mock('../../shared/utils/S3ClientCommands');
 
 import { AppError } from '../../shared/utils/error';
 import { createHashPassword } from '../../shared/utils/crypto';
@@ -9,6 +10,7 @@ import * as Repository_User from './user.repository';
 import * as Service_User from './user.service';
 import { userCreateSelect, userPublicSelect } from './user.select';
 import { Prisma } from '@prisma/client/default';
+import { getAvatarS3, generateSignedUrl } from '../../shared/utils/S3ClientCommands';
 
 type ReturnGetUserType = Prisma.UserGetPayload<{
   select: typeof userPublicSelect;
@@ -36,6 +38,10 @@ describe('get user flow', () => {
     vi.mocked(Repository_User.getUser).mockResolvedValue(returnGetUser);
 
     await Service_User.getUser(userId);
+
+    expect(getAvatarS3).toHaveBeenCalledTimes(1);
+    expect(getAvatarS3).toHaveBeenCalledWith(returnGetUser.avatarKey);
+    expect(generateSignedUrl).toHaveBeenCalledTimes(1);
 
     expect(Repository_User.getUser).toHaveBeenCalledWith(userId, userPublicSelect);
     expect(Repository_User.getUser).toHaveBeenCalledTimes(1);
