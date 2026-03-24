@@ -1,6 +1,5 @@
 import { createTokensType } from './token.type.js';
 import prisma from '../../lib/prisma.js';
-import { AppError } from '../../shared/utils/error.js';
 
 const createRefreshToken = async ({
   hashRefreshToken,

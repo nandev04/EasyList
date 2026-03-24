@@ -1,9 +1,9 @@
 vi.mock('../../shared/utils/TokenUtils');
-vi.mock('../user/user.model');
+vi.mock('../user/user.repository');
 vi.mock('../device/device.service');
-vi.mock('../auth/token.model');
+vi.mock('../auth/token.repository');
 vi.mock('./token.service');
-vi.mock('./codeOTP.model');
+vi.mock('./codeOTP.repository');
 vi.mock('../../shared/utils/crypto', async () => {
   const actual = await vi.importActual<typeof import('../../shared/utils/crypto')>(
     '../../shared/utils/crypto'
@@ -33,14 +33,14 @@ import {
   verifyTokenEmailAccount,
   verifyTokensLogin
 } from './auth.service';
-import * as Model_User from '../user/user.model';
-import * as Model_Token from '../auth/token.model';
+import * as Repository_User from '../user/user.repository';
+import * as Repository_Token from './token.repository';
 import * as Service_Device from '../device/device.service';
 import { AppError } from '../../shared/utils/error';
 import * as Service_Token from './token.service';
 import * as hashUtils from '../../shared/utils/crypto';
 import generateCode from '../../shared/utils/generateCode';
-import * as Model_OTP from './codeOTP.model';
+import * as Repository_OTP from './codeOTP.repository';
 import * as mailService from '../../shared/services/mail.service';
 
 describe('emailVerificationAccount', () => {
@@ -73,7 +73,7 @@ describe('emailVerificationAccount', () => {
       throw jwtError;
     });
 
-    expect(emailVerificationAccount).rejects.toMatchObject({
+    await expect(emailVerificationAccount).rejects.toMatchObject({
       message: 'Token Inválido',
       statusCode: 401
     });
@@ -84,7 +84,7 @@ describe('emailVerificationAccount', () => {
       throw new Error('Falha inesperada');
     });
 
-    expect(emailVerificationAccount(userId, email)).rejects.toMatchObject({
+    await expect(emailVerificationAccount(userId, email)).rejects.toMatchObject({
       message: 'Falha inesperada',
       statusCode: 500
     });
@@ -93,17 +93,17 @@ describe('emailVerificationAccount', () => {
 
 describe('verifyTokenEmailAccount', async () => {
   test('Should successfully verify jwt token and call verifyUser function.', async () => {
-    const returnModelVerifyUser = {
+    const returnRepositoryVerifyUser = {
       verified: true,
       updatedAt: new Date()
     };
     vi.mocked(utilJwtVerifyEmail).mockResolvedValue({ userId: 7 });
-    vi.mocked(Model_User.verifyUser).mockResolvedValue(returnModelVerifyUser);
+    vi.mocked(Repository_User.verifyUser).mockResolvedValue(returnRepositoryVerifyUser);
 
     await verifyTokenEmailAccount('token-test');
     expect(utilJwtVerifyEmail).toBeCalledTimes(1);
-    expect(Model_User.verifyUser).toBeCalledWith(7);
-    expect(Model_User.verifyUser).toBeCalledTimes(1);
+    expect(Repository_User.verifyUser).toBeCalledWith(7);
+    expect(Repository_User.verifyUser).toBeCalledTimes(1);
   });
 });
 
@@ -113,7 +113,7 @@ describe('verifyTokensLogin', () => {
       new AppError('Token de acesso inválido', 401)
     );
 
-    expect(verifyTokensLogin({ accessToken: 'accessTokenTest' })).rejects.toMatchObject({
+    await expect(verifyTokensLogin({ accessToken: 'accessTokenTest' })).rejects.toMatchObject({
       message: 'Token de acesso inválido',
       statusCode: 401
     });
@@ -131,7 +131,7 @@ describe('verifyTokensLogin', () => {
     const newAccessToken = 'newAccessTokenFromDevice';
 
     vi.mocked(Service_Device.verifyTokenDevice).mockResolvedValue(verifyTokenDeviceResolved);
-    vi.mocked(Model_Token.revokeRefreshToken).mockResolvedValueOnce(undefined);
+    vi.mocked(Repository_Token.revokeRefreshToken).mockResolvedValueOnce(undefined);
     vi.mocked(Service_Token.createRefreshTokenFromDeviceUUID).mockResolvedValue(newRefreshToken);
     vi.mocked(generateAccessToken).mockReturnValue(newAccessToken);
 
@@ -152,7 +152,7 @@ describe('verifyTokensLogin', () => {
   test('Should throw an AppError if the refresh token is missing.', async () => {
     const error = new AppError('Token de atualização ausente', 401);
 
-    expect(verifyTokensLogin({})).rejects.toMatchObject({
+    await expect(verifyTokensLogin({})).rejects.toMatchObject({
       message: error.message,
       statusCode: error.statusCode
     });
@@ -176,12 +176,12 @@ describe('verifyTokensLogin', () => {
     };
 
     vi.mocked(hashUtils.transformForHash).mockReturnValue(hashRefreshToken);
-    vi.mocked(Model_Token.verifyRefreshToken).mockResolvedValue(verifyRefreshTokenResolved);
+    vi.mocked(Repository_Token.verifyRefreshToken).mockResolvedValue(verifyRefreshTokenResolved);
     vi.mocked(generateAccessToken).mockReturnValue(accessToken);
 
     const result = await verifyTokensLogin({ refreshToken: 'refreshTokenTest' });
 
-    expect(Model_Token.verifyRefreshToken).toBeCalledTimes(1);
+    expect(Repository_Token.verifyRefreshToken).toBeCalledTimes(1);
     expect(result).toEqual(resultVerifyTokensLogin);
   });
 });
@@ -191,13 +191,13 @@ describe('forgotPasswordService', () => {
   test('Should throw an AppError if the user is not found with message: Usuário não encontrado and statusCode 404', async () => {
     const error = new AppError('Usuário não encontrado', 404);
 
-    expect(forgotPasswordService(email)).rejects.toMatchObject({
+    await expect(forgotPasswordService(email)).rejects.toMatchObject({
       message: error.message,
       statusCode: error.statusCode
     });
   });
 
-  test('Should call createCodeOTP function of Model and call the email service for email trigger', async () => {
+  test('Should call createCodeOTP function of repository and call the email service for email trigger', async () => {
     const user = {
       id: 10,
       password: 'test-password'
@@ -206,16 +206,16 @@ describe('forgotPasswordService', () => {
     const hashCodeForgot = 'hashCodeForgot';
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-    vi.mocked(Model_User.findByEmail).mockResolvedValue(user);
+    vi.mocked(Repository_User.findByEmail).mockResolvedValue(user);
     vi.mocked(generateCode).mockReturnValue(code);
     vi.mocked(hashUtils.transformForHash).mockReturnValue(hashCodeForgot);
-    vi.mocked(Model_OTP.createCodeOTP);
+    vi.mocked(Repository_OTP.createCodeOTP);
     vi.mocked(mailService.sendForgotPasswordEmail);
 
     await forgotPasswordService(email);
 
-    expect(Model_OTP.createCodeOTP).toBeCalledTimes(1);
-    expect(Model_OTP.createCodeOTP).toBeCalledWith(hashCodeForgot, expiresAt, user.id);
+    expect(Repository_OTP.createCodeOTP).toBeCalledTimes(1);
+    expect(Repository_OTP.createCodeOTP).toBeCalledWith(hashCodeForgot, expiresAt, user.id);
     expect(mailService.sendForgotPasswordEmail).toBeCalledTimes(1);
     expect(mailService.sendForgotPasswordEmail).toBeCalledWith(email, code);
   });
@@ -237,7 +237,7 @@ describe('resetPassword', () => {
   test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 404', async () => {
     const err = new AppError('Token não encontrado', 404);
 
-    expect(
+    await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({
       message: err.message,
@@ -248,12 +248,12 @@ describe('resetPassword', () => {
   test('Should throw an AppError when the TokenResetPassword has been expired with the message: Token expirado; and statusCode: 400', async () => {
     const err = new AppError('Token expirado', 400);
 
-    vi.mocked(Model_Token.validateTokenResetPassword).mockResolvedValue({
+    vi.mocked(Repository_Token.validateTokenResetPassword).mockResolvedValue({
       ...resultValidateTokenResetPassword,
       expiresAt: new Date(Date.now() - 100000)
     });
 
-    expect(
+    await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({
       message: err.message,
@@ -264,13 +264,13 @@ describe('resetPassword', () => {
   test('Should throw an AppError when the TokenResetPassword has been marked as used with the message: Token já utilizado; and statusCode: 400', async () => {
     const err = new AppError('Token já utilizado', 400);
 
-    vi.mocked(Model_Token.validateTokenResetPassword).mockResolvedValue({
+    vi.mocked(Repository_Token.validateTokenResetPassword).mockResolvedValue({
       ...resultValidateTokenResetPassword,
       expiresAt: new Date(Date.now() + 100000),
       used: true
     });
 
-    expect(
+    await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({ statusCode: err.statusCode, message: err.message });
   });
@@ -279,23 +279,23 @@ describe('resetPassword', () => {
     const newPassword = 'newPassword';
     const hashNewPassword = 'hashNewPassword';
 
-    vi.mocked(Model_Token.validateTokenResetPassword).mockResolvedValue(
+    vi.mocked(Repository_Token.validateTokenResetPassword).mockResolvedValue(
       resultValidateTokenResetPassword
     );
     const spy = vi.spyOn(hashUtils, 'createHashPassword').mockResolvedValue(hashNewPassword);
-    vi.mocked(Model_User.changePassword);
-    vi.mocked(Model_Token.markTokenAsUsed);
+    vi.mocked(Repository_User.changePassword);
+    vi.mocked(Repository_Token.markTokenAsUsed);
 
     await resetPassword(newPassword, 'token-reset-test');
 
     expect(spy).toBeCalledWith(newPassword);
-    expect(Model_User.changePassword).toBeCalledWith(
+    expect(Repository_User.changePassword).toBeCalledWith(
       resultValidateTokenResetPassword.userId,
       hashNewPassword
     );
-    expect(Model_User.changePassword).toBeCalledTimes(1);
-    expect(Model_Token.markTokenAsUsed).toBeCalledWith(resultValidateTokenResetPassword.id);
-    expect(Model_Token.markTokenAsUsed).toBeCalledTimes(1);
+    expect(Repository_User.changePassword).toBeCalledTimes(1);
+    expect(Repository_Token.markTokenAsUsed).toBeCalledWith(resultValidateTokenResetPassword.id);
+    expect(Repository_Token.markTokenAsUsed).toBeCalledTimes(1);
   });
 });
 
@@ -312,12 +312,12 @@ describe('verifyCodeService', () => {
   test('Should throw an AppError if the OTP Code has been expired with the message: Código expirado; and statusCode: 400', async () => {
     const err = new AppError('Código expirado', 400);
 
-    vi.mocked(Model_OTP.findCodeOTP).mockResolvedValue({
+    vi.mocked(Repository_OTP.findCodeOTP).mockResolvedValue({
       ...codeFetched,
       expiresAt: new Date(Date.now() - 99999)
     });
 
-    expect(verifyCodeService).rejects.toMatchObject({
+    await expect(verifyCodeService).rejects.toMatchObject({
       message: err.message,
       statusCode: err.statusCode
     });
@@ -326,13 +326,13 @@ describe('verifyCodeService', () => {
   test('Should throw an AppError if the code has already been used with the message: Código já utilizado; and statusCode: 400', async () => {
     const err = new AppError('Código já utilizado', 400);
 
-    vi.mocked(Model_OTP.findCodeOTP).mockResolvedValue({
+    vi.mocked(Repository_OTP.findCodeOTP).mockResolvedValue({
       ...codeFetched,
       expiresAt: new Date(Date.now() + 99999),
       used: true
     });
 
-    expect(verifyCodeService).rejects.toMatchObject({
+    await expect(verifyCodeService).rejects.toMatchObject({
       message: err.message,
       statusCode: err.statusCode
     });
@@ -346,18 +346,18 @@ describe('verifyCodeService', () => {
     const codeHash = 'codeHash-test';
     const tokenReset = 'tkn-tkn-tkn-tkn-tkn';
 
-    vi.mocked(Model_User.findByEmail).mockResolvedValue(findByEmailResolved);
+    vi.mocked(Repository_User.findByEmail).mockResolvedValue(findByEmailResolved);
     vi.mocked(hashUtils.transformForHash).mockReturnValue(codeHash);
-    vi.mocked(Model_OTP.findCodeOTP).mockResolvedValue({
+    vi.mocked(Repository_OTP.findCodeOTP).mockResolvedValue({
       ...codeFetched,
       expiresAt: new Date(Date.now() + 9999)
     });
     vi.mocked(hashUtils.tokenUUID).mockReturnValue(tokenReset);
-    vi.mocked(Model_Token.createTokenUUID);
+    vi.mocked(Repository_Token.createTokenUUID);
 
     expect(await verifyCodeService(code, email)).toEqual(tokenReset);
-    expect(Model_Token.createTokenUUID).toBeCalledWith(codeFetched.userId, tokenReset);
-    expect(Model_Token.createTokenUUID).toBeCalledTimes(1);
-    expect(Model_OTP.markCodeAsUsed).toBeCalledWith(codeFetched.id);
+    expect(Repository_Token.createTokenUUID).toBeCalledWith(codeFetched.userId, tokenReset);
+    expect(Repository_Token.createTokenUUID).toBeCalledTimes(1);
+    expect(Repository_OTP.markCodeAsUsed).toBeCalledWith(codeFetched.id);
   });
 });

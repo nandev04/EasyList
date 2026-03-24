@@ -3,7 +3,7 @@ import {
   generateRefreshToken,
   generateRefreshExpirationDate
 } from '../../shared/utils/TokenUtils.js';
-import * as Model_Token from './token.model.js';
+import * as Repository_Token from './token.repository.js';
 import generateDeviceId from '../../shared/utils/generateDeviceId.js';
 import { AppError } from '../../shared/utils/error.js';
 
@@ -36,7 +36,7 @@ const createTokens = async (userId: number) => {
 const createRefreshTokenFromDeviceUUID = async (userId: number, deviceId: number) => {
   const { hashRefreshToken, refreshTokenRaw } = generateRefreshToken();
   const { expirationDate } = generateRefreshExpirationDate();
-  await Model_Token.createRefreshToken({
+  await Repository_Token.createRefreshToken({
     hashRefreshToken,
     userId,
     deviceId,

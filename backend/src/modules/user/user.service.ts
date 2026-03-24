@@ -1,5 +1,5 @@
 import { CreateUserBodySchemaType, updateUserSchemaBodyType } from './user.schema.js';
-import * as Model_User from './user.model.js';
+import * as Repository_User from './user.repository.js';
 import { AppError } from '../../shared/utils/error.js';
 import { createHashPassword, tokenUUID, transformForHash } from '../../shared/utils/crypto.js';
 import * as mailService from '../../shared/services/mail.service.js';
@@ -14,7 +14,7 @@ import { userCreateSelect, userPublicSelect } from './user.select.js';
 dotenv.config();
 
 const getUser = async (id: number) => {
-  const user = await Model_User.getUser(id, userPublicSelect);
+  const user = await Repository_User.getUser(id, userPublicSelect);
   return user;
 };
 
@@ -24,7 +24,7 @@ const createUser = async (data: CreateUserBodySchemaType) => {
     const hashPassword = await createHashPassword(password);
 
     const newData = { hashPassword, ...safeData };
-    const createdUser = await Model_User.createUser(newData, userCreateSelect);
+    const createdUser = await Repository_User.createUser(newData, userCreateSelect);
 
     await Service_Auth.emailVerificationAccount(createdUser.id, createdUser.email);
 
@@ -43,7 +43,7 @@ const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
     const tokenHash = transformForHash(code);
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-    await Model_User.createEmailCodeOTP({
+    await Repository_User.createEmailCodeOTP({
       userId: id,
       tokenHash,
       new_email: email,
@@ -52,14 +52,14 @@ const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
     mailService.sendOTPEmail(email, code);
   }
 
-  await Model_User.updateUser({ id, data: safeData });
+  await Repository_User.updateUser({ id, data: safeData });
 
   return safeData;
 };
 
 const verifyOTPAndUpdateEmail = async (userId: number, code: string) => {
   const hashCode = transformForHash(code);
-  const codeFound = await Model_User.verifyOTPCodeUpdateEmail(userId, hashCode);
+  const codeFound = await Repository_User.verifyOTPCodeUpdateEmail(userId, hashCode);
 
   const dateNow = new Date();
   if (!codeFound) throw new AppError('Código não encontrado', 404);
@@ -68,8 +68,8 @@ const verifyOTPAndUpdateEmail = async (userId: number, code: string) => {
 
   const oldEmail = codeFound.user.email;
 
-  await Model_User.updateUser({ id: userId, data: { email: codeFound.new_email } });
-  await Model_User.markCodeAsUsed(codeFound.id);
+  await Repository_User.updateUser({ id: userId, data: { email: codeFound.new_email } });
+  await Repository_User.markCodeAsUsed(codeFound.id);
 
   mailService.emailChangeNotice(oldEmail, codeFound.new_email, dateNow.toLocaleDateString());
 
@@ -77,7 +77,7 @@ const verifyOTPAndUpdateEmail = async (userId: number, code: string) => {
 };
 
 const deleteUser = async (id: number) => {
-  return await Model_User.deleteUser(id);
+  return await Repository_User.deleteUser(id);
 };
 
 const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
@@ -91,9 +91,9 @@ const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
 
   await s3.send(putCommand);
 
-  await Model_User.updateAvatar(userId, newKey);
+  await Repository_User.updateAvatar(userId, newKey);
 
-  const { avatarKey: oldKey } = (await Model_User.getUser(userId, userPublicSelect)) as {
+  const { avatarKey: oldKey } = (await Repository_User.getUser(userId, userPublicSelect)) as {
     avatarKey: string;
   };
 
