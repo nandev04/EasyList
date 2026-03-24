@@ -3,7 +3,7 @@ import { AppError } from '../shared/utils/error.js';
 import { ZodError } from 'zod';
 import multer from 'multer';
 
-export const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
+export const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof ZodError) {
     return res.status(400).json({
       error: {

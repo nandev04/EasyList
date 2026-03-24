@@ -22,6 +22,7 @@
     "@aws-sdk/client-s3": "^3.962.0",
     "@aws-sdk/s3-request-presigner": "^3.962.0",
     "@prisma/client": "^6",
+    "api-task": "link:",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
