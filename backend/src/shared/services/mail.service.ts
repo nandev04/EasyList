@@ -4,14 +4,14 @@ import emailMask from '../utils/emailMask.js';
 
 const getTransporter = async () => {
   if (process.env.NODE_ENV === 'production') {
-    // Prod - SendGrid
+    // Prod - NodeMailerSendGrid
     return nodemailer.createTransport(
       sendgridTransport({
         apiKey: process.env.SENDGRID_API_KEY!
       })
     );
   }
-  // Dev - SendGrid
+  // Dev - NodeMailerSendGrid
   const testAccount = await nodemailer.createTestAccount();
   return nodemailer.createTransport({
     host: 'smtp.ethereal.email',
@@ -26,7 +26,7 @@ const getTransporter = async () => {
 
 const sendVerificationMail = async (to: string, token: string) => {
   const transporter = await getTransporter();
-  const verificationLink = `http://localhost:3333/auth/verify?token=${token}`;
+  const verificationLink = `${process.env.FRONTEND_URL}/confirm-email?token=${token}`;
 
   const template = `<p>Bem-vindo! Clique no link abaixo para verificar sua conta:</p>
              <a href="${verificationLink}">Verificar Conta</a>`;
