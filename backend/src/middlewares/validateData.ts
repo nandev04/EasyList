@@ -7,6 +7,7 @@ type Schemas = {
   query?: ZodType;
   cookies?: ZodType;
   signedCookies?: ZodType;
+  file?: ZodType;
 };
 
 const validate = (schema: Schemas) => {
@@ -42,6 +43,12 @@ const validate = (schema: Schemas) => {
         const result = schema.signedCookies.safeParse(req.signedCookies);
         if (!result.success) return next(result.error);
         validated.signedCookies = result.data;
+      }
+
+      if (schema.file) {
+        const result = schema.file.safeParse(req.file);
+        if (!result.success) return next(result.error);
+        validated.file = result.data;
       }
 
       req.validated = validated;

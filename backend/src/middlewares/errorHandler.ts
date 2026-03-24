@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../shared/utils/error.js';
 import { ZodError } from 'zod';
+import multer from 'multer';
 
 export const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof ZodError) {
@@ -10,6 +11,18 @@ export const errorHandler = (err: unknown, _req: Request, res: Response, _next: 
         fields: Object.fromEntries(err.issues.map((issue) => [issue.path.join('.'), issue.message]))
       }
     });
+  }
+
+  if (err instanceof multer.MulterError) {
+    switch (err.code) {
+      case 'LIMIT_FILE_SIZE':
+        return res.status(400).json({ error: 'Arquivo muito grande' });
+      case 'LIMIT_FILE_COUNT':
+      case 'LIMIT_UNEXPECTED_FILE':
+        return res.status(400).json({ error: err.message });
+      default:
+        return res.status(400).json({ error: err.message });
+    }
   }
 
   if (err instanceof AppError) {
