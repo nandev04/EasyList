@@ -1,7 +1,7 @@
-import * as Model_Device from '../device/device.model.js';
+import * as Repository_Device from './device.repository.js';
 
 const verifyTokenDevice = async (deviceId: string) => {
-  const deviceUUIDRecovered = await Model_Device.verifyDeviceId(deviceId);
+  const deviceUUIDRecovered = await Repository_Device.verifyDeviceId(deviceId);
   return deviceUUIDRecovered ?? null;
 };
 

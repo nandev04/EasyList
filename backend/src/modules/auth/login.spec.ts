@@ -1,4 +1,4 @@
-vi.mock('../user/user.model', () => ({
+vi.mock('../user/user.repository', () => ({
   findByEmail: vi.fn()
 }));
 
@@ -6,7 +6,7 @@ vi.mock('./token.service', () => ({
   createTokens: vi.fn()
 }));
 
-vi.mock('./token.model', () => ({
+vi.mock('./token.repository', () => ({
   createRefreshToken: vi.fn()
 }));
 
@@ -14,15 +14,15 @@ vi.mock('../../shared/utils/crypto', () => ({
   compareHash: vi.fn()
 }));
 
-vi.mock('../device/device.model', () => ({
+vi.mock('../device/device.repository', () => ({
   createDevice: vi.fn()
 }));
 
 import * as crypto from '../../shared/utils/crypto';
-import * as Model_User from '../user/user.model';
+import * as Repository_User from '../user/user.repository';
 import * as Service_Token from './token.service';
-import * as Model_Token from './token.model';
-import * as Model_Device from '../device/device.model';
+import * as Repository_Token from './token.repository';
+import * as Repository_Device from '../device/device.repository';
 import { loginUser } from './login.service';
 
 describe('Login flow', () => {
@@ -62,11 +62,11 @@ describe('Login flow', () => {
   const returnFindByEmail = { id: 777, password: 'testPassword' };
   const resultCreateDeviceId = 10;
   test('Should successfully find the user and create their data for cookies.', async () => {
-    vi.mocked(Model_User.findByEmail).mockResolvedValue(returnFindByEmail);
+    vi.mocked(Repository_User.findByEmail).mockResolvedValue(returnFindByEmail);
     vi.spyOn(crypto, 'compareHash').mockResolvedValue(true);
     vi.mocked(Service_Token.createTokens).mockResolvedValue(resultCreateTokens);
-    vi.mocked(Model_Device.createDevice).mockResolvedValue({ id: resultCreateDeviceId });
-    vi.mocked(Model_Token.createRefreshToken).mockResolvedValue(resultCreateRefreshToken);
+    vi.mocked(Repository_Device.createDevice).mockResolvedValue({ id: resultCreateDeviceId });
+    vi.mocked(Repository_Token.createRefreshToken).mockResolvedValue(resultCreateRefreshToken);
 
     const emailTeste = 'teste@gmail.com';
     const passwordTeste = 'testePassword';
@@ -79,25 +79,25 @@ describe('Login flow', () => {
       deviceUUID: resultCreateTokens.deviceUUID
     });
 
-    expect(Model_User.findByEmail).toBeCalledWith(emailTeste);
+    expect(Repository_User.findByEmail).toBeCalledWith(emailTeste);
     expect(crypto.compareHash).toBeCalledTimes(1);
     expect(Service_Token.createTokens).toBeCalledWith(returnFindByEmail.id);
-    expect(Model_Device.createDevice).toBeCalledWith({
+    expect(Repository_Device.createDevice).toBeCalledWith({
       deviceUUID: resultCreateTokens.deviceUUID,
       userId: returnFindByEmail.id,
       maxDevicePerUser: Number(process.env.MAX_DEVICES_PER_USER)
     });
-    expect(Model_Token.createRefreshToken).toBeCalledWith({
+    expect(Repository_Token.createRefreshToken).toBeCalledWith({
       hashRefreshToken: resultCreateTokens.hashRefreshToken,
       userId: returnFindByEmail.id,
       deviceId: resultCreateDeviceId,
       expiresAt: resultCreateTokens.expirationDate
     });
-    expect(Model_Token.createRefreshToken).toBeCalledTimes(1);
+    expect(Repository_Token.createRefreshToken).toBeCalledTimes(1);
   });
 
   test('It should throw a 401 error in case of an invalid password, with the message: Credenciais inválidas.', async () => {
-    vi.mocked(Model_User.findByEmail).mockResolvedValue(returnFindByEmail);
+    vi.mocked(Repository_User.findByEmail).mockResolvedValue(returnFindByEmail);
     const verifyHash = await crypto.compareHash('wrong-password', returnFindByEmail.password);
 
     expect(verifyHash).toBeFalsy();
