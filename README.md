@@ -21,7 +21,7 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 - 🚀 [Express](https://expressjs.com/) + [TypeScript](https://www.typescriptlang.org/)  
 - ✅ [Zod](https://zod.dev/) (validação de dados)  
 - 🗄️ [Prisma](https://www.prisma.io/) (ORM para MySQL)  
-- 🔑 [bcrypt](https://www.npmjs.com/package/bcrypt) (hash de senhas)  
+- 🔑 [Argon2](https://www.npmjs.com/package/argon2) (hash de senhas)  
 - 🛢️ [MySQL](https://www.mysql.com/) (banco de dados principal)
 - ⚡ [Redis](https://redis.io/) (rate limiting)
 - 📧 [SendGrid](https://sendgrid.com/) (envio de emails de confirmação de login)  
