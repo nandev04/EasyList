@@ -1,5 +1,4 @@
 import { randomBytes, createHash, randomUUID } from 'crypto';
-import bcrypt from 'bcrypt';
 import argon2 from 'argon2';
 
 const generateTokenRaw = () => {
