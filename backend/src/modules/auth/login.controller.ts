@@ -33,7 +33,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       ...cookieUser,
       maxAge: accessTokenMaxAge
     });
-    return res.status(200).json({ token: accessToken });
+    return res.sendStatus(204);
   } catch (error) {
     next(error);
   }

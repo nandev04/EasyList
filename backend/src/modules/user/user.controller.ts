@@ -16,8 +16,8 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.userId!;
     const data = await Service.getUser(id);
     const response = {
-      ...(data.signedUrl && { signedUrlAvatar: data.signedUrl }),
-      user: data.safeUser
+      ...data.safeUser,
+      ...(data.signedUrl && { signedUrlAvatar: data.signedUrl })
     };
     return res.status(200).json(response);
   } catch (err) {
