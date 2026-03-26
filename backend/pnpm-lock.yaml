@@ -62,6 +62,9 @@ importers:
       uuid:
         specifier: ^13.0.0
         version: 13.0.0
+      uuidv7:
+        specifier: ^1.2.1
+        version: 1.2.1
       zod:
         specifier: ^4.1.13
         version: 4.2.1
@@ -2506,6 +2509,10 @@ packages:
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
     deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    hasBin: true
+
+  uuidv7@1.2.1:
+    resolution: {integrity: sha512-4kPkK3/XTQW9Hbm4CaqfICn+kY9LJtDVEOfgsRRra/+n2Ofg4NqzRFceAkxvQ/Ud/6BpHOPzj8cirqM7TzTN5Q==}
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -5435,6 +5442,8 @@ snapshots:
   uuid@13.0.0: {}
 
   uuid@3.4.0: {}
+
+  uuidv7@1.2.1: {}
 
   v8-compile-cache-lib@3.0.1: {}
 

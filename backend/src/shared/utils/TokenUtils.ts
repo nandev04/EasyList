@@ -2,12 +2,12 @@ import jwt from 'jsonwebtoken';
 import { generateTokenRaw, transformForHash } from './crypto.js';
 import ms from 'ms';
 
-const generateVerifyToken = (userId: number) => {
+const generateVerifyToken = (userId: string) => {
   const token = jwt.sign({ userId }, process.env.JWT_EMAIL_SECRET!, { expiresIn: '15m' });
   return token;
 };
 
-const generateAccessToken = (userId: number) => {
+const generateAccessToken = (userId: string) => {
   const token = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, { expiresIn: '15m' });
   return token;
 };
@@ -26,12 +26,12 @@ const generateRefreshExpirationDate = () => {
 };
 
 const utilJwtVerifyEmail = async (token: string) => {
-  return jwt.verify(token, process.env.JWT_EMAIL_SECRET!) as { userId: number };
+  return jwt.verify(token, process.env.JWT_EMAIL_SECRET!) as { userId: string };
 };
 
 const utilJwtVerifyAccess = async (accessToken: string) => {
   return jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as {
-    userId: number;
+    userId: string;
   };
 };
 

@@ -18,10 +18,10 @@ const createRefreshToken = async ({
   return createRefreshToken;
 };
 
-const createTokenUUID = async (id: number, token: string) => {
+const createTokenUUID = async (userId: string, token: string) => {
   const createToken = await prisma.passwordResetToken.create({
     data: {
-      userId: id,
+      userId,
       token,
       expiresAt: new Date(Date.now() + 15 * 60 * 1000)
     }

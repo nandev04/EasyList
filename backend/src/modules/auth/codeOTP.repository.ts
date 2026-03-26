@@ -1,7 +1,7 @@
 import { AppError } from '../../shared/utils/error.js';
 import prisma from '../../lib/prisma.js';
 
-const createCodeOTP = async (tokenHash: string, expiresAt: Date, userId: number) => {
+const createCodeOTP = async (tokenHash: string, expiresAt: Date, userId: string) => {
   const createTokenForgot = await prisma.passwordResetOTP.create({
     data: {
       tokenHash,
@@ -12,7 +12,7 @@ const createCodeOTP = async (tokenHash: string, expiresAt: Date, userId: number)
   return createTokenForgot;
 };
 
-const findCodeOTP = async (hashCode: string, userId: number) => {
+const findCodeOTP = async (hashCode: string, userId: string) => {
   const code = await prisma.passwordResetOTP.findFirst({
     where: {
       userId,

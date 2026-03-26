@@ -7,7 +7,7 @@ import * as Repository_Token from './token.repository.js';
 import generateDeviceId from '../../shared/utils/generateDeviceId.js';
 import { AppError } from '../../shared/utils/error.js';
 
-const createTokens = async (userId: number) => {
+const createTokens = async (userId: string) => {
   try {
     if (!process.env.JWT_ACCESS_SECRET) throw new AppError('JWT_ACCESS_SECRET não definido!', 500);
     if (!process.env.JWT_REFRESH_SECRET)
@@ -33,7 +33,7 @@ const createTokens = async (userId: number) => {
   }
 };
 
-const createRefreshTokenFromDeviceUUID = async (userId: number, deviceId: number) => {
+const createRefreshTokenFromDeviceUUID = async (userId: string, deviceId: number) => {
   const { hashRefreshToken, refreshTokenRaw } = generateRefreshToken();
   const { expirationDate } = generateRefreshExpirationDate();
   await Repository_Token.createRefreshToken({

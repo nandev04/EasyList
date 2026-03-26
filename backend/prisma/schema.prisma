@@ -1,3 +1,5 @@
+
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,7 +10,7 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id
   firstname String
   lastname  String
   username  String
@@ -30,7 +32,7 @@ model User {
 model Device {
   id         Int      @id @default(autoincrement())
   deviceUUID String   @unique
-  userId     Int
+  userId     String
   createdAt  DateTime @default(now())
 
   refreshToken RefreshToken[]
@@ -47,7 +49,7 @@ model Task {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  userId Int
+  userId String
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -55,7 +57,7 @@ model RefreshToken {
   id        Int       @id @default(autoincrement())
   deviceId  Int
   token     String    @unique
-  userId    Int
+  userId    String
   createdAt DateTime  @default(now())
   expiresAt DateTime
   revokedAt DateTime?
@@ -70,7 +72,7 @@ model PasswordResetOTP {
   tokenHash String
   expiresAt DateTime
   createdAt DateTime @default(now())
-  userId    Int
+  userId    String
   used      Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -79,7 +81,7 @@ model PasswordResetOTP {
 
 model PasswordResetToken {
   id        Int      @id @default(autoincrement())
-  userId    Int
+  userId    String
   token     String   @unique
   expiresAt DateTime
   used      Boolean  @default(false)
@@ -94,7 +96,7 @@ model UpdateEmailOTP {
   expiresAt DateTime
   createdAt DateTime @default(now())
   new_email String
-  userId    Int
+  userId    String
   used      Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

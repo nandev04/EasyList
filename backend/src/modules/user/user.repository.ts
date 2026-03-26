@@ -4,7 +4,7 @@ import { CreateUserType } from './user.type.js';
 import { updateUserSchemaBodyType } from './user.schema.js';
 import { Prisma } from '@prisma/client/default.js';
 
-const getUser = async <T extends Prisma.UserSelect>(id: number, select: T) => {
+const getUser = async <T extends Prisma.UserSelect>(id: string, select: T) => {
   const user = await prisma.user.findUnique({
     where: {
       id: id
@@ -15,12 +15,10 @@ const getUser = async <T extends Prisma.UserSelect>(id: number, select: T) => {
 };
 
 const createUser = async <T extends Prisma.UserSelect>(data: CreateUserType, select: T) => {
+  const { hashPassword, ...restData } = data;
   const createdUser = await prisma.user.create({
     data: {
-      firstname: data.firstname,
-      lastname: data.lastname,
-      username: data.username,
-      email: data.email,
+      ...restData,
       password: data.hashPassword
     },
     select
@@ -28,9 +26,9 @@ const createUser = async <T extends Prisma.UserSelect>(data: CreateUserType, sel
   return createdUser;
 };
 
-const updateUser = async ({ id, data }: { id: number; data: updateUserSchemaBodyType }) => {
-  const editedUser = await prisma.user.update({
-    where: { id },
+const updateUser = async ({ userId, data }: { userId: string; data: updateUserSchemaBodyType }) => {
+  await prisma.user.update({
+    where: { id: userId },
     data: { ...data }
   });
 };
@@ -39,12 +37,12 @@ const createEmailCodeOTP = async (data: {
   tokenHash: string;
   expiresAt: Date;
   new_email: string;
-  userId: number;
+  userId: string;
 }) => {
   await prisma.updateEmailOTP.create({ data });
 };
 
-const changePassword = async (userId: number, newPassword: string) => {
+const changePassword = async (userId: string, newPassword: string) => {
   const updatedUser = await prisma.user.update({
     where: { id: userId },
     data: { password: newPassword },
@@ -53,20 +51,20 @@ const changePassword = async (userId: number, newPassword: string) => {
   return updatedUser;
 };
 
-const deleteUser = async (id: number) => {
+const deleteUser = async (userId: string) => {
   return await prisma.user.delete({
-    where: { id }
+    where: { id: userId }
   });
 };
 
-const updateAvatar = async (id: number, avatarKey: string) => {
+const updateAvatar = async (userId: string, avatarKey: string) => {
   return await prisma.user.update({
-    where: { id },
+    where: { id: userId },
     data: { avatarKey }
   });
 };
 
-const verifyOTPCodeUpdateEmail = async (userId: number, tokenHash: string) => {
+const verifyOTPCodeUpdateEmail = async (userId: string, tokenHash: string) => {
   return await prisma.updateEmailOTP.findFirst({
     where: { userId, tokenHash },
     select: {
@@ -86,7 +84,7 @@ const markCodeAsUsed = async (id: number) => {
   });
 };
 
-const verifyUser = async (id: number) => {
+const verifyUser = async (id: string) => {
   const verifiedUser = await prisma.user.update({
     where: { id },
     data: { verified: true },
