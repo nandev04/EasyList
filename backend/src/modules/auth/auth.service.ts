@@ -25,7 +25,7 @@ import { userAuthSelect, userPublicSelect } from '../user/user.select.js';
 
 dotenv.config();
 
-const emailVerificationAccount = async (userId: number, email: string): Promise<void> => {
+const emailVerificationAccount = async (userId: string, email: string): Promise<void> => {
   if (!process.env.JWT_EMAIL_SECRET) throw new AppError('JWT_EMAIL_SECRET não definido!', 500);
 
   try {
@@ -115,7 +115,7 @@ const refreshToken = async (token: string) => {
   }
 };
 
-const changePassword = async (userId: number, currentPassword: string, newPassword: string) => {
+const changePassword = async (userId: string, currentPassword: string, newPassword: string) => {
   const user = await Repository_User.getUser(userId, userAuthSelect);
   if (!user) throw new AppError('Usuário não encontrado', 404);
   const isValid = await compareHash(currentPassword, user?.password);

@@ -1,6 +1,6 @@
 export interface createTokensType {
   hashRefreshToken: string;
-  userId: number;
+  userId: string;
   deviceId: number;
   expiresAt: Date;
 }

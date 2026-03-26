@@ -15,12 +15,13 @@ import {
 import generateCode from '../../shared/utils/generateCode.js';
 import { userCreateSelect, userPublicSelect } from './user.select.js';
 import s3Client from '../../lib/s3.js';
+import { createUserId } from '../../shared/utils/uuid.js';
 
 dotenv.config();
 
-const getUser = async (id: number) => {
+const getUser = async (userId: string) => {
   let signedUrl: string | null = null;
-  const user = await Repository_User.getUser(id, userPublicSelect);
+  const user = await Repository_User.getUser(userId, userPublicSelect);
   if (!user) throw new AppError('Usuário não encontrado', 404);
   const { avatarKey, ...safeUser } = user;
   if (user.avatarKey) {
@@ -36,7 +37,8 @@ const createUser = async (data: CreateUserBodySchemaType) => {
     const { password, ...safeData } = data;
     const hashPassword = await createHashPassword(password);
 
-    const newData = { hashPassword, ...safeData };
+    const userId = createUserId();
+    const newData = { id: userId, hashPassword, ...safeData };
     const createdUser = await Repository_User.createUser(newData, userCreateSelect);
 
     await Service_Auth.emailVerificationAccount(createdUser.id, createdUser.email);
@@ -49,7 +51,7 @@ const createUser = async (data: CreateUserBodySchemaType) => {
   }
 };
 
-const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
+const updateUser = async (userId: string, data: updateUserSchemaBodyType) => {
   const { email, ...safeData } = data;
   if (email) {
     const code = generateCode();
@@ -57,7 +59,7 @@ const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
     await Repository_User.createEmailCodeOTP({
-      userId: id,
+      userId,
       tokenHash,
       new_email: email,
       expiresAt
@@ -65,12 +67,12 @@ const updateUser = async (id: number, data: updateUserSchemaBodyType) => {
     mailService.sendOTPEmail(email, code);
   }
 
-  await Repository_User.updateUser({ id, data: safeData });
+  await Repository_User.updateUser({ userId, data: safeData });
 
   return safeData;
 };
 
-const verifyOTPAndUpdateEmail = async (userId: number, code: string) => {
+const verifyOTPAndUpdateEmail = async (userId: string, code: string) => {
   const hashCode = transformForHash(code);
   const codeFound = await Repository_User.verifyOTPCodeUpdateEmail(userId, hashCode);
 
@@ -81,7 +83,7 @@ const verifyOTPAndUpdateEmail = async (userId: number, code: string) => {
 
   const oldEmail = codeFound.user.email;
 
-  await Repository_User.updateUser({ id: userId, data: { email: codeFound.new_email } });
+  await Repository_User.updateUser({ userId, data: { email: codeFound.new_email } });
   await Repository_User.markCodeAsUsed(codeFound.id);
 
   mailService.emailChangeNotice(oldEmail, codeFound.new_email, dateNow.toLocaleDateString());
@@ -89,11 +91,11 @@ const verifyOTPAndUpdateEmail = async (userId: number, code: string) => {
   return codeFound.new_email;
 };
 
-const deleteUser = async (id: number) => {
-  return await Repository_User.deleteUser(id);
+const deleteUser = async (userId: string) => {
+  return await Repository_User.deleteUser(userId);
 };
 
-const uploadAvatar = async (userId: number, file: Express.Multer.File) => {
+const uploadAvatar = async (userId: string, file: Express.Multer.File) => {
   const timestamp = Date.now();
   const uniqueName = `${timestamp}-${tokenUUID()}.webp`;
 
