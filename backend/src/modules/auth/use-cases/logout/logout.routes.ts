@@ -6,11 +6,6 @@ import { signedCookiesSchema } from '../../auth.schema.js';
 
 const logoutRoutes = Router();
 
-logoutRoutes.post(
-  '/',
-  authenticate,
-  validate({ signedCookies: signedCookiesSchema }),
-  Controller_Logout.logout
-);
+logoutRoutes.post('/', validate({ signedCookies: signedCookiesSchema }), Controller_Logout.logout);
 
 export default logoutRoutes;

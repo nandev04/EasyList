@@ -1,24 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import * as Service_Auth from './auth.service.js';
 
-import {
-  forgotPasswordBodyType,
-  resetPasswordBodyType,
-  VerifyCodeBodySchemaType
-} from './auth.schema.js';
+import { resetPasswordBodyType, VerifyCodeBodySchemaType } from './auth.schema.js';
 
 import cookieUser from '../../shared/constants/cookieUser.js';
-
-const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { email } = <forgotPasswordBodyType>req.validated!.body;
-    await Service_Auth.forgotPasswordService(email);
-
-    return res.sendStatus(204);
-  } catch (err) {
-    next(err);
-  }
-};
 
 const verifyCode = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -46,4 +31,4 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export { forgotPassword, verifyCode, resetPassword };
+export { verifyCode, resetPassword };

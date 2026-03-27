@@ -85,19 +85,6 @@ const verifyTokensLogin = async ({
   return { newAccessToken, userId: tokenData.userId, deviceUUID: tokenData.device.deviceUUID };
 };
 
-const forgotPasswordService = async (email: string): Promise<void> => {
-  const user = await Repository_User.findByEmail(email);
-  if (!user) throw new AppError('Usuário não encontrado', 404);
-
-  const code = generateCode();
-  const hashCodeForgot = transformForHash(code);
-  const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
-
-  await Repository_OTP.createCodeOTP(hashCodeForgot, expiresAt, user.id);
-
-  mailService.sendForgotPasswordEmail(email, code);
-};
-
 const resetPassword = async (newPassword: string, tokenReset: string): Promise<void> => {
   const dateNow = new Date();
   const TokenResetPassword = await Repository_Token.validateTokenResetPassword(tokenReset);
@@ -134,10 +121,4 @@ const verifyCodeService = async (code: string, email: string) => {
   return tokenResetPassword;
 };
 
-export {
-  emailVerificationAccount,
-  verifyTokensLogin,
-  forgotPasswordService,
-  resetPassword,
-  verifyCodeService
-};
+export { emailVerificationAccount, verifyTokensLogin, resetPassword, verifyCodeService };

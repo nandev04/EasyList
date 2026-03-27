@@ -6,11 +6,6 @@ import * as Controller_Login from './login.controller.js';
 
 const loginRoutes = express.Router();
 
-loginRoutes.post(
-  '/',
-  resolveSessionIfExists,
-  validate({ body: loginUserBodySchema }),
-  Controller_Login.loginUser
-);
+loginRoutes.post('/', validate({ body: loginUserBodySchema }), Controller_Login.loginUser);
 
 export default loginRoutes;
