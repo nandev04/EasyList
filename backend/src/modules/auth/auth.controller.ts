@@ -11,18 +11,6 @@ import {
 import { AppError } from '../../shared/utils/error.js';
 import cookieUser from '../../shared/constants/cookieUser.js';
 
-const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { refreshToken } = <signedCookieSchemaType>req.validated!.signedCookies;
-    if (!refreshToken) throw new AppError('Cookie refreshToken não encontrado', 400);
-    await Service_Auth.refreshToken(refreshToken);
-
-    return res.sendStatus(204);
-  } catch (err) {
-    next(err);
-  }
-};
-
 const changePassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!;
@@ -72,4 +60,4 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export { changePassword, forgotPassword, verifyCode, refreshToken, resetPassword };
+export { changePassword, forgotPassword, verifyCode, resetPassword };

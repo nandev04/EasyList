@@ -5,12 +5,7 @@ type VerifyCodeBodySchemaType = z.infer<typeof verifyCodeBodySchema>;
 type resetPasswordBodyType = z.infer<typeof resetPasswordBodySchema>;
 type changePasswordBodyType = z.infer<typeof changePasswordBodySchema>;
 type forgotPasswordBodyType = z.infer<typeof forgotPasswordBodySchema>;
-type RefreshTokenUserCookieType = z.infer<typeof refreshTokenUserCookieSchema>;
 type signedCookieSchemaType = z.infer<typeof signedCookiesSchema>;
-
-const refreshTokenUserCookieSchema = z.object({
-  token: z.string().min(1)
-});
 
 const verifyCodeBodySchema = z.object({
   code: z.string().length(6, 'O código deve ter exatamente 6 caracteres'),
@@ -46,8 +41,6 @@ export {
   changePasswordBodyType,
   forgotPasswordBodySchema,
   forgotPasswordBodyType,
-  refreshTokenUserCookieSchema,
-  RefreshTokenUserCookieType,
   signedCookiesSchema,
   signedCookieSchemaType
 };

@@ -86,21 +86,6 @@ const verifyTokensLogin = async ({
   return { newAccessToken, userId: tokenData.userId, deviceUUID: tokenData.device.deviceUUID };
 };
 
-const refreshToken = async (token: string) => {
-  try {
-    if (!process.env.JWT_REFRESH_SECRET)
-      throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
-    const { userId } = jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as { userId: string };
-
-    const newAccessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, {
-      expiresIn: '1h'
-    });
-    return newAccessToken;
-  } catch (error) {
-    throw new AppError('Refresh token inválido ou expirado', 401);
-  }
-};
-
 const changePassword = async (userId: string, currentPassword: string, newPassword: string) => {
   const user = await Repository_User.getUser(userId, userAuthSelect);
   if (!user) throw new AppError('Usuário não encontrado', 404);
@@ -163,7 +148,6 @@ const verifyCodeService = async (code: string, email: string) => {
 export {
   emailVerificationAccount,
   verifyTokensLogin,
-  refreshToken,
   changePassword,
   forgotPasswordService,
   resetPassword,
