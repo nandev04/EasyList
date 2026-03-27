@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import applyAuthCookies from '../shared/utils/applyAuthCookies.js';
-import resolveSession from '../shared/utils/resolveSession.js';
+import * as Service_ResolveSession from '../modules/auth/use-cases/resolveSession/resolveSession.service.js';
 
 const resolveSessionIfExists = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await resolveSession(req.signedCookies);
+    const result = await Service_ResolveSession.verifyTokensLogin(req.signedCookies);
 
     if (result?.userId) {
       req.userId = result.userId;

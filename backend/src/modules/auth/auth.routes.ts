@@ -12,13 +12,13 @@ import resetPwdRoutes from './use-cases/passwordRecovery/resetPassword/resetPwd.
 
 const authRoutes = express.Router();
 
+authRoutes.use('/login', resolveSessionIfExists, loginRoutes);
+authRoutes.use('/logout', authenticate, logoutRoutes);
 authRoutes.use('/verify', verifyAccRoutes);
 authRoutes.use('/refresh-token', refreshTknRoutes);
 authRoutes.use('/change-password', authenticate, requireAuth, changePasswordRoutes);
 authRoutes.use('/forgot-password', forgotPwdRoutes);
 authRoutes.use('/verify-code', forgotPwdRoutes);
 authRoutes.use('/reset-password', resetPwdRoutes);
-authRoutes.use('/login', resolveSessionIfExists, loginRoutes);
-authRoutes.use('/logout', authenticate, logoutRoutes);
 
 export default authRoutes;
