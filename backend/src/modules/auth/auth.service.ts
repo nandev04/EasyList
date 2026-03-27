@@ -20,7 +20,7 @@ import {
 import generateCode from '../../shared/utils/generateCode.js';
 import * as Service_Device from '../device/device.service.js';
 import * as Service_Token from './token.service.js';
-import { VerifyTokensTypeResult, verifyTokensLoginType } from './types/auth.types.js';
+import { VerifyTokensTypeResult, verifyTokensLoginType } from './auth.types.js';
 import { userAuthSelect, userPublicSelect } from '../user/user.select.js';
 
 dotenv.config();
@@ -37,20 +37,6 @@ const emailVerificationAccount = async (userId: string, email: string): Promise<
     if (err instanceof jwt.JsonWebTokenError) throw new AppError(err.message, 401);
 
     throw new AppError(err instanceof Error ? err.message : 'Erro desconhecido', 500);
-  }
-};
-
-const verifyTokenEmailAccount = async (token: string) => {
-  if (!process.env.JWT_EMAIL_SECRET) throw new Error('JWT_EMAIL_SECRET não definido!');
-
-  try {
-    const payload = await utilJwtVerifyEmail(token);
-
-    const verifiedUser = await Repository_User.verifyUser(payload.userId);
-    return verifiedUser;
-  } catch (err) {
-    if (err instanceof AppError) throw err;
-    throw new AppError(err instanceof Error ? err.message : 'Token Inválido', 401);
   }
 };
 
@@ -176,7 +162,6 @@ const verifyCodeService = async (code: string, email: string) => {
 
 export {
   emailVerificationAccount,
-  verifyTokenEmailAccount,
   verifyTokensLogin,
   refreshToken,
   changePassword,

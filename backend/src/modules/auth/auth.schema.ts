@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 type VerifyCodeBodySchemaType = z.infer<typeof verifyCodeBodySchema>;
-type verifyUserQuerySchemaType = z.infer<typeof verifyUserQuerySchema>;
+
 type resetPasswordBodyType = z.infer<typeof resetPasswordBodySchema>;
 type changePasswordBodyType = z.infer<typeof changePasswordBodySchema>;
 type forgotPasswordBodyType = z.infer<typeof forgotPasswordBodySchema>;
@@ -15,10 +15,6 @@ const refreshTokenUserCookieSchema = z.object({
 const verifyCodeBodySchema = z.object({
   code: z.string().length(6, 'O código deve ter exatamente 6 caracteres'),
   email: z.email()
-});
-
-const verifyUserQuerySchema = z.object({
-  token: z.string().min(1, 'Token is required')
 });
 
 const resetPasswordBodySchema = z.object({
@@ -44,8 +40,6 @@ const signedCookiesSchema = z.object({
 export {
   verifyCodeBodySchema,
   VerifyCodeBodySchemaType,
-  verifyUserQuerySchema,
-  verifyUserQuerySchemaType,
   resetPasswordBodySchema,
   resetPasswordBodyType,
   changePasswordBodySchema,

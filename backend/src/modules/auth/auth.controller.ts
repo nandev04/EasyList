@@ -4,25 +4,12 @@ import * as Service_Auth from './auth.service.js';
 import {
   changePasswordBodyType,
   forgotPasswordBodyType,
-  RefreshTokenUserCookieType,
   resetPasswordBodyType,
   signedCookieSchemaType,
-  VerifyCodeBodySchemaType,
-  verifyUserQuerySchemaType
-} from './schema/auth.schema.js';
+  VerifyCodeBodySchemaType
+} from './auth.schema.js';
 import { AppError } from '../../shared/utils/error.js';
 import cookieUser from '../../shared/constants/cookieUser.js';
-
-const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { token } = <verifyUserQuerySchemaType>req.validated!.query;
-    const verifiedUser = await Service_Auth.verifyTokenEmailAccount(token);
-
-    return res.status(200).json(verifiedUser);
-  } catch (err) {
-    next(err);
-  }
-};
 
 const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -85,4 +72,4 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export { verifyEmail, changePassword, forgotPassword, verifyCode, refreshToken, resetPassword };
+export { changePassword, forgotPassword, verifyCode, refreshToken, resetPassword };
