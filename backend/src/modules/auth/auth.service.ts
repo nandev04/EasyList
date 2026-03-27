@@ -1,20 +1,9 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import * as Repository_User from '../user/user.repository.js';
-import * as Repository_Token from './repositories/token.repository.js';
-import * as Repository_OTP from './repositories/codeOTP.repository.js';
+
 import * as mailService from '../../shared/services/mail.service.js';
 import { AppError } from '../../shared/utils/error.js';
-import {
-  generateAccessToken,
-  generateVerifyToken,
-  utilJwtVerifyAccess
-} from '../../shared/utils/TokenUtils.js';
-import { transformForHash } from '../../shared/utils/crypto.js';
-import generateCode from '../../shared/utils/generateCode.js';
-import * as Service_Device from '../device/device.service.js';
-import * as Service_Token from './token.service.js';
-import { VerifyTokensTypeResult, verifyTokensLoginType } from './auth.types.js';
+import { generateVerifyToken } from '../../shared/utils/TokenUtils.js';
 
 dotenv.config();
 
