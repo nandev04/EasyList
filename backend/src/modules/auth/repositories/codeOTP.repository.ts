@@ -1,5 +1,5 @@
-import { AppError } from '../../shared/utils/error.js';
-import prisma from '../../lib/prisma.js';
+import { AppError } from '../../../shared/utils/error.js';
+import prisma from '../../../lib/prisma.js';
 
 const createCodeOTP = async (tokenHash: string, expiresAt: Date, userId: string) => {
   const createTokenForgot = await prisma.passwordResetOTP.create({

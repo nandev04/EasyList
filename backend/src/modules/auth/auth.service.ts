@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import * as Repository_User from '../user/user.repository.js';
-import * as Repository_Token from './token.repository.js';
-import * as Repository_OTP from './codeOTP.repository.js';
+import * as Repository_Token from './repositories/token.repository.js';
+import * as Repository_OTP from './repositories/codeOTP.repository.js';
 import * as mailService from '../../shared/services/mail.service.js';
 import { AppError } from '../../shared/utils/error.js';
 import {
@@ -20,7 +20,7 @@ import {
 import generateCode from '../../shared/utils/generateCode.js';
 import * as Service_Device from '../device/device.service.js';
 import * as Service_Token from './token.service.js';
-import { VerifyTokensTypeResult, verifyTokensLoginType } from './auth.types.js';
+import { VerifyTokensTypeResult, verifyTokensLoginType } from './types/auth.types.js';
 import { userAuthSelect, userPublicSelect } from '../user/user.select.js';
 
 dotenv.config();
@@ -104,7 +104,7 @@ const refreshToken = async (token: string) => {
   try {
     if (!process.env.JWT_REFRESH_SECRET)
       throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
-    const { userId } = jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as { userId: number };
+    const { userId } = jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as { userId: string };
 
     const newAccessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, {
       expiresIn: '1h'
@@ -174,14 +174,6 @@ const verifyCodeService = async (code: string, email: string) => {
   return tokenResetPassword;
 };
 
-const logout = async (refreshToken: string) => {
-  const hashRefreshToken = transformForHash(refreshToken);
-  const tokenData = await Repository_Token.verifyRefreshToken(hashRefreshToken);
-  if (!tokenData) throw new AppError('Token Inválido', 401);
-
-  await Repository_Token.revokeRefreshToken(tokenData.id);
-};
-
 export {
   emailVerificationAccount,
   verifyTokenEmailAccount,
@@ -190,6 +182,5 @@ export {
   changePassword,
   forgotPasswordService,
   resetPassword,
-  verifyCodeService,
-  logout
+  verifyCodeService
 };

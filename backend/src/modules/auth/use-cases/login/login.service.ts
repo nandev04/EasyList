@@ -1,9 +1,9 @@
-import { AppError } from '../../shared/utils/error.js';
-import * as Repository_Token from './token.repository.js';
-import * as Service_Token from './token.service.js';
-import * as Repository_User from '../user/user.repository.js';
-import * as Repository_Device from '../device/device.repository.js';
-import { compareHash } from '../../shared/utils/crypto.js';
+import { AppError } from '../../../../shared/utils/error.js';
+import * as Repository_Token from '../../repositories/token.repository.js';
+import * as Service_Token from './../../token.service.js';
+import * as Repository_User from '../../../user/user.repository.js';
+import * as Repository_Device from '../../../device/device.repository.js';
+import { compareHash } from '../../../../shared/utils/crypto.js';
 
 const loginUser = async (email: string, password: string) => {
   const user = await Repository_User.findByEmail(email);

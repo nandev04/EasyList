@@ -1,5 +1,5 @@
-export interface createDevicesType {
-  userId: number;
+export type createDevicesType = {
+  userId: string;
   deviceUUID: string;
   maxDevicePerUser: number;
-}
+};

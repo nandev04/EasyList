@@ -6,7 +6,6 @@ type resetPasswordBodyType = z.infer<typeof resetPasswordBodySchema>;
 type changePasswordBodyType = z.infer<typeof changePasswordBodySchema>;
 type forgotPasswordBodyType = z.infer<typeof forgotPasswordBodySchema>;
 type RefreshTokenUserCookieType = z.infer<typeof refreshTokenUserCookieSchema>;
-type loginUserBodySchemaType = z.infer<typeof loginUserBodySchema>;
 type signedCookieSchemaType = z.infer<typeof signedCookiesSchema>;
 
 const refreshTokenUserCookieSchema = z.object({
@@ -36,11 +35,6 @@ const forgotPasswordBodySchema = z.object({
   email: z.email().min(1)
 });
 
-const loginUserBodySchema = z.object({
-  email: z.email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres').max(100)
-});
-
 const signedCookiesSchema = z.object({
   refreshToken: z.string().min(1),
   accessToken: z.string().min(1),
@@ -60,8 +54,6 @@ export {
   forgotPasswordBodyType,
   refreshTokenUserCookieSchema,
   RefreshTokenUserCookieType,
-  loginUserBodySchema,
-  loginUserBodySchemaType,
   signedCookiesSchema,
   signedCookieSchemaType
 };

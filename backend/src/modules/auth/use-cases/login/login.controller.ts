@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import * as Service_Login from './login.service.js';
 import ms from 'ms';
-import cookieUser from '../../shared/constants/cookieUser.js';
-import { loginUserBodySchemaType } from './auth.schema.js';
+import cookieUser from '../../../../shared/constants/cookieUser.js';
+import { loginUserBodySchemaType } from '../../schema/login.schema.js';
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {

@@ -3,24 +3,22 @@ import validate from '../../middlewares/validateData.js';
 import {
   changePasswordBodySchema,
   forgotPasswordBodySchema,
-  loginUserBodySchema,
   refreshTokenUserCookieSchema,
   resetPasswordBodySchema,
-  signedCookiesSchema,
   verifyCodeBodySchema,
   verifyUserQuerySchema
-} from './auth.schema.js';
+} from './schema/auth.schema.js';
 import * as Controller_Auth from './auth.controller.js';
-import * as Controller_Login from './login.controller.js';
 import { authenticate } from '../../middlewares/authenticate.js';
 import * as Rate_Limit from '../../middlewares/rateLimit.js';
-import resolveSessionIfExists from '../../middlewares/resolveSessionIfExists.js';
 import requireAuth from '../../middlewares/requireAuth.js';
+import loginRoutes from './use-cases/login/login.routes.js';
+import logoutRoutes from './use-cases/logout/logout.routes.js';
 
 const authRoutes = express.Router();
 
-authRoutes.get(
-  '/auth/verify',
+authRoutes.patch(
+  '/verify',
   Rate_Limit.auth,
   validate({ query: verifyUserQuerySchema }),
   Controller_Auth.verifyEmail
@@ -64,19 +62,7 @@ authRoutes.post(
   Controller_Auth.resetPassword
 );
 
-authRoutes.post(
-  '/login',
-  Rate_Limit.auth,
-  resolveSessionIfExists,
-  validate({ body: loginUserBodySchema }),
-  Controller_Login.loginUser
-);
-
-authRoutes.post(
-  '/logout',
-  authenticate,
-  validate({ signedCookies: signedCookiesSchema }),
-  Controller_Auth.logout
-);
+authRoutes.use('/login', loginRoutes);
+authRoutes.use('/logout', logoutRoutes);
 
 export default authRoutes;

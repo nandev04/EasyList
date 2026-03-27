@@ -9,7 +9,7 @@ import {
   signedCookieSchemaType,
   VerifyCodeBodySchemaType,
   verifyUserQuerySchemaType
-} from './auth.schema.js';
+} from './schema/auth.schema.js';
 import { AppError } from '../../shared/utils/error.js';
 import cookieUser from '../../shared/constants/cookieUser.js';
 
@@ -85,29 +85,4 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-const logout = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { refreshToken } = <signedCookieSchemaType>req.validated!.signedCookies;
-
-    await Service_Auth.logout(refreshToken);
-
-    res.clearCookie('deviceId', cookieUser);
-    res.clearCookie('accessToken', cookieUser);
-    res.clearCookie('refreshToken', cookieUser);
-
-    return res.sendStatus(204);
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
-};
-
-export {
-  verifyEmail,
-  changePassword,
-  forgotPassword,
-  verifyCode,
-  refreshToken,
-  resetPassword,
-  logout
-};
+export { verifyEmail, changePassword, forgotPassword, verifyCode, refreshToken, resetPassword };

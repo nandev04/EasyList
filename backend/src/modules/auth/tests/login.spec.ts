@@ -1,29 +1,29 @@
-vi.mock('../user/user.repository', () => ({
+vi.mock('../../../user/user.repository', () => ({
   findByEmail: vi.fn()
 }));
 
-vi.mock('./token.service', () => ({
+vi.mock('../../token.service', () => ({
   createTokens: vi.fn()
 }));
 
-vi.mock('./token.repository', () => ({
+vi.mock('../../token.repository', () => ({
   createRefreshToken: vi.fn()
 }));
 
-vi.mock('../../shared/utils/crypto', () => ({
+vi.mock('../../../../shared/utils/crypto', () => ({
   compareHash: vi.fn()
 }));
 
-vi.mock('../device/device.repository', () => ({
+vi.mock('../../../device/device.repository', () => ({
   createDevice: vi.fn()
 }));
 
-import * as crypto from '../../shared/utils/crypto';
-import * as Repository_User from '../user/user.repository';
-import * as Service_Token from './token.service';
-import * as Repository_Token from './token.repository';
-import * as Repository_Device from '../device/device.repository';
-import { loginUser } from './login.service';
+import * as crypto from '../../../shared/utils/crypto.js';
+import * as Repository_User from '../../user/user.repository.js';
+import * as Service_Token from '../token.service.js';
+import * as Repository_Token from '../repositories/token.repository.js';
+import * as Repository_Device from '../../device/device.repository.js';
+import { loginUser } from '../use-cases/login/login.service.js';
 
 describe('Login flow', () => {
   const OLD_ENV = process.env;
@@ -59,7 +59,7 @@ describe('Login flow', () => {
     revokedAt: null
   };
 
-  const returnFindByEmail = { id: 777, password: 'testPassword' };
+  const returnFindByEmail = { id: 'uuidv7-userId', password: 'testPassword' };
   const resultCreateDeviceId = 10;
   test('Should successfully find the user and create their data for cookies.', async () => {
     vi.mocked(Repository_User.findByEmail).mockResolvedValue(returnFindByEmail);

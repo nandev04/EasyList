@@ -9,6 +9,6 @@ declare module 'express' {
       cookies?: unknown;
       signedCookies?: unknown;
     };
-    userId?: number;
+    userId?: string;
   }
 }
