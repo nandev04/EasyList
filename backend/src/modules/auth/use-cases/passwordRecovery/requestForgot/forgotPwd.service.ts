@@ -5,7 +5,7 @@ import * as Repository_User from '../../../../user/user.repository.js';
 import * as Repository_OTP from '../../../repositories/codeOTP.repository.js';
 import * as MailService from '../../../../../shared/services/mail.service.js';
 
-const forgotPasswordService = async (email: string): Promise<void> => {
+const forgotPasswordService = async (email: string) => {
   const user = await Repository_User.findByEmail(email);
   if (!user) throw new AppError('Usuário não encontrado', 404);
 

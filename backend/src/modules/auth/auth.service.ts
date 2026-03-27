@@ -10,21 +10,15 @@ import {
   generateVerifyToken,
   utilJwtVerifyAccess
 } from '../../shared/utils/TokenUtils.js';
-import {
-  transformForHash,
-  tokenUUID,
-  createHashPassword,
-  compareHash
-} from '../../shared/utils/crypto.js';
+import { transformForHash } from '../../shared/utils/crypto.js';
 import generateCode from '../../shared/utils/generateCode.js';
 import * as Service_Device from '../device/device.service.js';
 import * as Service_Token from './token.service.js';
 import { VerifyTokensTypeResult, verifyTokensLoginType } from './auth.types.js';
-import { userAuthSelect, userPublicSelect } from '../user/user.select.js';
 
 dotenv.config();
 
-const emailVerificationAccount = async (userId: string, email: string): Promise<void> => {
+const emailVerificationAccount = async (userId: string, email: string) => {
   if (!process.env.JWT_EMAIL_SECRET) throw new AppError('JWT_EMAIL_SECRET não definido!', 500);
 
   try {
@@ -85,19 +79,4 @@ const verifyTokensLogin = async ({
   return { newAccessToken, userId: tokenData.userId, deviceUUID: tokenData.device.deviceUUID };
 };
 
-const resetPassword = async (newPassword: string, tokenReset: string): Promise<void> => {
-  const dateNow = new Date();
-  const TokenResetPassword = await Repository_Token.validateTokenResetPassword(tokenReset);
-
-  if (!TokenResetPassword) throw new AppError('Token não encontrado', 404);
-  if (TokenResetPassword.expiresAt < dateNow) throw new AppError('Token expirado', 400);
-  if (TokenResetPassword.used) throw new AppError('Token já utilizado', 400);
-
-  const hashNewPassword = await createHashPassword(newPassword);
-
-  await Repository_User.changePassword(TokenResetPassword.userId, hashNewPassword);
-
-  await Repository_Token.markTokenAsUsed(TokenResetPassword.id);
-};
-
-export { emailVerificationAccount, verifyTokensLogin, resetPassword };
+export { emailVerificationAccount, verifyTokensLogin };
