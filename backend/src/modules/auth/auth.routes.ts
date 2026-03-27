@@ -1,7 +1,6 @@
 import express from 'express';
 import validate from '../../middlewares/validateData.js';
 import {
-  changePasswordBodySchema,
   forgotPasswordBodySchema,
   resetPasswordBodySchema,
   verifyCodeBodySchema
@@ -14,20 +13,13 @@ import loginRoutes from './use-cases/login/login.routes.js';
 import logoutRoutes from './use-cases/logout/logout.routes.js';
 import verifyAccRoutes from './use-cases/verifyAccount/verifyAcc.routes.js';
 import refreshTknRoutes from './use-cases/refreshToken/refreshTkn.routes.js';
+import changePasswordRoutes from './use-cases/changePassword/changePwd.routes.js';
 
 const authRoutes = express.Router();
 
 authRoutes.use('/verify', verifyAccRoutes);
-
 authRoutes.use('/refresh-token', refreshTknRoutes);
-
-authRoutes.patch(
-  '/auth/change-password',
-  authenticate,
-  requireAuth,
-  validate({ body: changePasswordBodySchema }),
-  Controller_Auth.changePassword
-);
+authRoutes.use('/change-password', authenticate, requireAuth, changePasswordRoutes);
 
 // recovery password
 authRoutes.post(

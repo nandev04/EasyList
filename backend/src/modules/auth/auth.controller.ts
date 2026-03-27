@@ -2,26 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 import * as Service_Auth from './auth.service.js';
 
 import {
-  changePasswordBodyType,
   forgotPasswordBodyType,
   resetPasswordBodyType,
-  signedCookieSchemaType,
   VerifyCodeBodySchemaType
 } from './auth.schema.js';
-import { AppError } from '../../shared/utils/error.js';
+
 import cookieUser from '../../shared/constants/cookieUser.js';
-
-const changePassword = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userId = req.userId!;
-    const { newPassword, currentPassword } = <changePasswordBodyType>req.validated!.body;
-    await Service_Auth.changePassword(userId, currentPassword, newPassword);
-
-    return res.status(200).json({ message: 'Operação realizada com sucesso' });
-  } catch (err) {
-    next(err);
-  }
-};
 
 const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -60,4 +46,4 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export { changePassword, forgotPassword, verifyCode, resetPassword };
+export { forgotPassword, verifyCode, resetPassword };

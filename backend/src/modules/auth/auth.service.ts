@@ -8,8 +8,7 @@ import { AppError } from '../../shared/utils/error.js';
 import {
   generateAccessToken,
   generateVerifyToken,
-  utilJwtVerifyAccess,
-  utilJwtVerifyEmail
+  utilJwtVerifyAccess
 } from '../../shared/utils/TokenUtils.js';
 import {
   transformForHash,
@@ -86,16 +85,6 @@ const verifyTokensLogin = async ({
   return { newAccessToken, userId: tokenData.userId, deviceUUID: tokenData.device.deviceUUID };
 };
 
-const changePassword = async (userId: string, currentPassword: string, newPassword: string) => {
-  const user = await Repository_User.getUser(userId, userAuthSelect);
-  if (!user) throw new AppError('Usuário não encontrado', 404);
-  const isValid = await compareHash(currentPassword, user?.password);
-  if (!isValid) throw new AppError('Credenciais inválidas', 400);
-
-  const hashNewPassword = await createHashPassword(newPassword);
-  await Repository_User.changePassword(user.id, hashNewPassword);
-};
-
 const forgotPasswordService = async (email: string): Promise<void> => {
   const user = await Repository_User.findByEmail(email);
   if (!user) throw new AppError('Usuário não encontrado', 404);
@@ -148,7 +137,6 @@ const verifyCodeService = async (code: string, email: string) => {
 export {
   emailVerificationAccount,
   verifyTokensLogin,
-  changePassword,
   forgotPasswordService,
   resetPassword,
   verifyCodeService
