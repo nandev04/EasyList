@@ -1,20 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import * as Service_Auth from './auth.service.js';
 
-import { resetPasswordBodyType, VerifyCodeBodySchemaType } from './auth.schema.js';
+import { resetPasswordBodyType } from './auth.schema.js';
 
 import cookieUser from '../../shared/constants/cookieUser.js';
-
-const verifyCode = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { code, email } = <VerifyCodeBodySchemaType>req.validated!.body;
-    const tokenReset = await Service_Auth.verifyCodeService(code, email);
-
-    return res.status(200).json(tokenReset);
-  } catch (err) {
-    next(err);
-  }
-};
 
 const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -31,4 +20,4 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export { verifyCode, resetPassword };
+export { resetPassword };

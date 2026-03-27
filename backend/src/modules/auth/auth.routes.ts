@@ -1,6 +1,6 @@
 import express from 'express';
 import validate from '../../middlewares/validateData.js';
-import { resetPasswordBodySchema, verifyCodeBodySchema } from './auth.schema.js';
+import { resetPasswordBodySchema } from './auth.schema.js';
 import * as Controller_Auth from './auth.controller.js';
 import { authenticate } from '../../middlewares/authenticate.js';
 import requireAuth from '../../middlewares/requireAuth.js';
@@ -18,14 +18,9 @@ authRoutes.use('/verify', verifyAccRoutes);
 authRoutes.use('/refresh-token', refreshTknRoutes);
 authRoutes.use('/change-password', authenticate, requireAuth, changePasswordRoutes);
 authRoutes.use('/auth/forgot-password', forgotPwdRoutes);
+authRoutes.use('/auth/verify-code', forgotPwdRoutes);
 
 // recovery password
-
-authRoutes.post(
-  '/auth/verify-code',
-  validate({ body: verifyCodeBodySchema }),
-  Controller_Auth.verifyCode
-);
 
 authRoutes.post(
   '/auth/reset-password',

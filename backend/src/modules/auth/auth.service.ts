@@ -100,25 +100,4 @@ const resetPassword = async (newPassword: string, tokenReset: string): Promise<v
   await Repository_Token.markTokenAsUsed(TokenResetPassword.id);
 };
 
-const verifyCodeService = async (code: string, email: string) => {
-  const { id } = await Repository_User.findByEmail(email);
-
-  const dateNow = new Date();
-
-  const codeHash = transformForHash(code);
-
-  const codeFetched = await Repository_OTP.findCodeOTP(codeHash, id);
-
-  if (codeFetched.expiresAt < dateNow) throw new AppError('Código expirado', 400);
-  if (codeFetched.used) throw new AppError('Código já utilizado', 400);
-
-  await Repository_OTP.markCodeAsUsed(codeFetched.id);
-
-  const tokenResetPassword = tokenUUID();
-
-  await Repository_Token.createTokenUUID(codeFetched.userId, tokenResetPassword);
-
-  return tokenResetPassword;
-};
-
-export { emailVerificationAccount, verifyTokensLogin, resetPassword, verifyCodeService };
+export { emailVerificationAccount, verifyTokensLogin, resetPassword };
