@@ -4,24 +4,24 @@ import tryResolveByAccessToken from './tryResolveByAccessToken.service.js';
 import tryResolveByDevice from './tryResolveByDevice.service.js';
 import renewAccesToken from './renewAccessToken.service.js';
 
-type verifyTokensLoginType = {
+type resolveSessionTokenType = {
   refreshToken?: string;
   accessToken?: string;
   deviceId?: string;
 };
 
-export type verifyTokensLoginResultType = {
+export type resolveSessionTokenResultType = {
   userId?: string;
   newAccessToken?: string;
   deviceUUID?: string;
   newRefreshTokenRaw?: string;
 };
 
-const verifyTokensLogin = async ({
+const resolveSessionToken = async ({
   refreshToken,
   accessToken,
   deviceId
-}: verifyTokensLoginType): Promise<verifyTokensLoginResultType> => {
+}: resolveSessionTokenType): Promise<resolveSessionTokenResultType> => {
   if (accessToken) {
     try {
       const resultResolve = await tryResolveByAccessToken(accessToken, refreshToken, deviceId);
@@ -44,4 +44,4 @@ const verifyTokensLogin = async ({
   return { ...resultRenewAccessToken };
 };
 
-export { verifyTokensLogin };
+export { resolveSessionToken };

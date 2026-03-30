@@ -4,7 +4,7 @@ import * as Service_ResolveSession from '../modules/auth/use-cases/resolveSessio
 
 const resolveSessionIfExists = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await Service_ResolveSession.verifyTokensLogin(req.signedCookies);
+    const result = await Service_ResolveSession.resolveSessionToken(req.signedCookies);
 
     if (result?.userId) {
       req.userId = result.userId;

@@ -4,7 +4,6 @@ import { AppError } from '../../shared/utils/error.js';
 import { createHashPassword, tokenUUID, transformForHash } from '../../shared/utils/crypto.js';
 import * as mailService from '../../shared/services/mail.service.js';
 import dotenv from 'dotenv';
-import * as Service_Auth from '../auth/auth.service.js';
 import processAvatarImage from '../../shared/utils/processAvatarImage.js';
 import {
   deleteAvatarS3,
@@ -16,6 +15,7 @@ import generateCode from '../../shared/utils/generateCode.js';
 import { userCreateSelect, userPublicSelect } from './user.select.js';
 import s3Client from '../../lib/s3.js';
 import { createUserId } from '../../shared/utils/uuid.js';
+import * as VerifyAcc_Service from '../auth/use-cases/verifyAccount/verifyAcc.service.js';
 
 dotenv.config();
 
@@ -41,7 +41,7 @@ const createUser = async (data: CreateUserBodySchemaType) => {
     const newData = { id: userId, hashPassword, ...safeData };
     const createdUser = await Repository_User.createUser(newData, userCreateSelect);
 
-    await Service_Auth.emailVerificationAccount(createdUser.id, createdUser.email);
+    await VerifyAcc_Service.emailAccountVerification(createdUser.id, createdUser.email);
 
     return createdUser;
   } catch (err) {

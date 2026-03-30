@@ -2,9 +2,9 @@ import {
   generateAccessToken,
   generateRefreshToken,
   generateRefreshExpirationDate
-} from '../../shared/utils/TokenUtils.js';
-import generateDeviceId from '../../shared/utils/generateDeviceId.js';
-import { AppError } from '../../shared/utils/error.js';
+} from '../../../shared/utils/TokenUtils.js';
+import generateDeviceId from '../../../shared/utils/generateDeviceId.js';
+import { AppError } from '../../../shared/utils/error.js';
 
 const createTokens = async (userId: string) => {
   try {
