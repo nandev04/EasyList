@@ -7,9 +7,9 @@ const resetPassword = async (newPassword: string, tokenReset: string) => {
   const dateNow = new Date();
   const TokenResetPassword = await Repository_Token.validateTokenResetPassword(tokenReset);
 
-  if (!TokenResetPassword) throw new AppError('Token não encontrado', 404);
-  if (TokenResetPassword.expiresAt < dateNow) throw new AppError('Token expirado', 400);
-  if (TokenResetPassword.used) throw new AppError('Token já utilizado', 400);
+  if (!TokenResetPassword) throw new AppError('Token não encontrado', 401);
+  if (TokenResetPassword.expiresAt < dateNow) throw new AppError('Token expirado', 401);
+  if (TokenResetPassword.used) throw new AppError('Token já utilizado', 401);
 
   const hashNewPassword = await createHashPassword(newPassword);
 

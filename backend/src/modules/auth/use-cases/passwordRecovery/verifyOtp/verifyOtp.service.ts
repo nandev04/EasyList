@@ -14,8 +14,8 @@ const verifyCodeService = async (code: string, email: string) => {
 
   const codeFetched = await Otp_Repository.findCodeOTP(codeHash, user.id);
 
-  if (codeFetched.expiresAt < dateNow) throw new AppError('Código expirado', 400);
-  if (codeFetched.used) throw new AppError('Código já utilizado', 400);
+  if (codeFetched.expiresAt < dateNow) throw new AppError('Código expirado', 401);
+  if (codeFetched.used) throw new AppError('Código já utilizado', 401);
 
   await Otp_Repository.markCodeAsUsed(codeFetched.id);
 

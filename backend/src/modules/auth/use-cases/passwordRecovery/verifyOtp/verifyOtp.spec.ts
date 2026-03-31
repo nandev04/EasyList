@@ -36,8 +36,8 @@ describe('verifyOtpService', () => {
     });
   });
 
-  test('Should throw an AppError if the OTP Code has been expired with the message: Código expirado; and statusCode: 400', async () => {
-    const err = new AppError('Código expirado', 400);
+  test('Should throw an AppError if the OTP Code has been expired with the message: Código expirado; and statusCode: 401', async () => {
+    const err = new AppError('Código expirado', 401);
 
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(userFindByEmail);
     vi.spyOn(OtpCode_Repository, 'findCodeOTP').mockResolvedValue({
@@ -51,8 +51,8 @@ describe('verifyOtpService', () => {
     });
   });
 
-  test('Should throw an AppError if the code has already been used with the message: Código já utilizado; and statusCode: 400', async () => {
-    const err = new AppError('Código já utilizado', 400);
+  test('Should throw an AppError if the code has already been used with the message: Código já utilizado; and statusCode: 401', async () => {
+    const err = new AppError('Código já utilizado', 401);
 
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(userFindByEmail);
     vi.spyOn(OtpCode_Repository, 'findCodeOTP').mockResolvedValue({

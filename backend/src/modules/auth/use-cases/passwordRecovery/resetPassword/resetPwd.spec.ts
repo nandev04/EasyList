@@ -23,8 +23,8 @@ describe('resetPassword', () => {
     vi.restoreAllMocks();
   });
 
-  test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 404', async () => {
-    const err = new AppError('Token não encontrado', 404);
+  test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 401', async () => {
+    const err = new AppError('Token não encontrado', 401);
 
     await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
@@ -34,8 +34,8 @@ describe('resetPassword', () => {
     });
   });
 
-  test('Should throw an AppError when the TokenResetPassword has been expired with the message: Token expirado; and statusCode: 400', async () => {
-    const err = new AppError('Token expirado', 400);
+  test('Should throw an AppError when the TokenResetPassword has been expired with the message: Token expirado; and statusCode: 401', async () => {
+    const err = new AppError('Token expirado', 401);
 
     vi.spyOn(Token_Repository, 'validateTokenResetPassword').mockResolvedValue({
       ...resultValidateTokenResetPassword,
@@ -50,8 +50,8 @@ describe('resetPassword', () => {
     });
   });
 
-  test('Should throw an AppError when the TokenResetPassword has been marked as used with the message: Token expirado; and statusCode: 400', async () => {
-    const err = new AppError('Token expirado', 400);
+  test('Should throw an AppError when the TokenResetPassword has been marked as used with the message: Token expirado; and statusCode: 401', async () => {
+    const err = new AppError('Token expirado', 401);
 
     vi.spyOn(Token_Repository, 'validateTokenResetPassword').mockResolvedValue({
       ...resultValidateTokenResetPassword,
