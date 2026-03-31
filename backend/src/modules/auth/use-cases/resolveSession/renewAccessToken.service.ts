@@ -3,7 +3,7 @@ import { AppError } from '../../../../shared/utils/error.js';
 import { generateAccessToken } from '../../../../shared/utils/TokenUtils.js';
 import * as Repository_Token from '../../repositories/token.repository.js';
 
-const renewAccesToken = async (refreshToken: string) => {
+const renewAccessToken = async (refreshToken: string) => {
   const hashRefreshToken = transformForHash(refreshToken);
   const tokenData = await Repository_Token.verifyRefreshToken(hashRefreshToken);
   const dateNow = new Date();
@@ -16,4 +16,4 @@ const renewAccesToken = async (refreshToken: string) => {
   return { newAccessToken, userId: tokenData.userId, deviceUUID: tokenData.device.deviceUUID };
 };
 
-export default renewAccesToken;
+export default renewAccessToken;

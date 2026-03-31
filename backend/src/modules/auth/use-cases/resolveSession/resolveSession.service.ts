@@ -2,7 +2,7 @@ import { AppError } from '../../../../shared/utils/error.js';
 import jwt from 'jsonwebtoken';
 import tryResolveByAccessToken from './tryResolveByAccessToken.service.js';
 import tryResolveByDevice from './tryResolveByDevice.service.js';
-import renewAccesToken from './renewAccessToken.service.js';
+import renewAccessToken from './renewAccessToken.service.js';
 
 type resolveSessionTokenType = {
   refreshToken?: string;
@@ -40,7 +40,7 @@ const resolveSessionToken = async ({
 
   if (!refreshToken) throw new AppError('Token de atualização ausente', 401);
 
-  const resultRenewAccessToken = await renewAccesToken(refreshToken);
+  const resultRenewAccessToken = await renewAccessToken(refreshToken);
   return { ...resultRenewAccessToken };
 };
 
