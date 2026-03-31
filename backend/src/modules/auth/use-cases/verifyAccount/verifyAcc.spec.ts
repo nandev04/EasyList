@@ -13,6 +13,10 @@ const { userId, email } = {
 };
 
 describe('verifyTokenEmailAccount', async () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test('Should successfully verify jwt token and call verifyUser function.', async () => {
     const returnRepositoryVerifyUser = {
       verified: true,

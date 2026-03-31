@@ -19,6 +19,10 @@ describe('resetPassword', () => {
     password: 'password!test'
   };
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 404', async () => {
     const err = new AppError('Token não encontrado', 404);
 

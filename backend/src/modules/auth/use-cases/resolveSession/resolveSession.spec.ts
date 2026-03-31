@@ -11,6 +11,10 @@ vi.mock('./tryResolveByDevice.service.js');
 vi.mock('./renewAccessToken.service.js');
 
 describe('resolveSessionToken', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test('Should throw an AppError if an invalid access token with status code 401 is encountered.', async () => {
     vi.mocked(utilJwtVerifyAccess).mockRejectedValueOnce(
       new AppError('Token de acesso inválido', 401)

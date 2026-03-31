@@ -7,6 +7,8 @@ import * as Auth_Service from '../../services/createTokens.service.js';
 
 const loginUser = async (email: string, password: string) => {
   const user = await Repository_User.findByEmail(email);
+  if (!user) throw new AppError('Usuário correspondente ao email não encontrado', 404);
+
   const verifyHash = await compareHash(password, user.password);
 
   if (!verifyHash) throw new AppError('Credenciais inválidas', 401);

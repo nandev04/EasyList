@@ -11,6 +11,11 @@ vi.mock('../../../../../shared/utils/generateCode.js');
 
 describe('forgotPasswordService', () => {
   const email = 'teste@gmail.com';
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test('Should throw an AppError if the user is not found with message: Usuário não encontrado and statusCode 404', async () => {
     const error = new AppError('Usuário não encontrado', 404);
 

@@ -1,26 +1,27 @@
 import { tokenUUID, transformForHash } from '../../../../../shared/utils/crypto.js';
 import { AppError } from '../../../../../shared/utils/error.js';
-import * as Repository_User from '../../../../user/user.repository.js';
-import * as Repository_Otp from '../../../repositories/codeOtp.repository.js';
-import * as Repository_Token from '../../../repositories/token.repository.js';
+import * as User_Repository from '../../../../user/user.repository.js';
+import * as Otp_Repository from '../../../repositories/codeOtp.repository.js';
+import * as Token_Repository from '../../../repositories/token.repository.js';
 
 const verifyCodeService = async (code: string, email: string) => {
-  const { id } = await Repository_User.findByEmail(email);
+  const user = await User_Repository.findByEmail(email);
+  if (!user) throw new AppError('Usuário correspondente ao email não encontrado', 404);
 
   const dateNow = new Date();
 
   const codeHash = transformForHash(code);
 
-  const codeFetched = await Repository_Otp.findCodeOTP(codeHash, id);
+  const codeFetched = await Otp_Repository.findCodeOTP(codeHash, user.id);
 
   if (codeFetched.expiresAt < dateNow) throw new AppError('Código expirado', 400);
   if (codeFetched.used) throw new AppError('Código já utilizado', 400);
 
-  await Repository_Otp.markCodeAsUsed(codeFetched.id);
+  await Otp_Repository.markCodeAsUsed(codeFetched.id);
 
   const tokenResetPassword = tokenUUID();
 
-  await Repository_Token.createTokenUUID(codeFetched.userId, tokenResetPassword);
+  await Token_Repository.createTokenUUID(codeFetched.userId, tokenResetPassword);
 
   return tokenResetPassword;
 };
