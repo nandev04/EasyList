@@ -1,31 +1,12 @@
-vi.mock('../../../user/user.repository', () => ({
-  findByEmail: vi.fn()
-}));
+import * as User_Repository from '../../../user/user.repository.js';
+import * as cryptoUtils from '../../../../shared/utils/crypto.js';
+import * as Token_Repository from '../../repositories/token.repository.js';
+import * as Device_Repository from '../../../device/device.repository.js';
+import { loginUser } from './login.service.js';
+import * as Auth_Service from '../../services/createTokens.service.js';
+import { createUserId } from '../../../../shared/utils/uuid.js';
 
-vi.mock('../../token.service', () => ({
-  createTokens: vi.fn()
-}));
-
-vi.mock('../../token.repository', () => ({
-  createRefreshToken: vi.fn()
-}));
-
-vi.mock('../../../../shared/utils/crypto', () => ({
-  compareHash: vi.fn()
-}));
-
-vi.mock('../../../device/device.repository', () => ({
-  createDevice: vi.fn()
-}));
-
-import * as crypto from '../../../shared/utils/crypto.js';
-import * as Repository_User from '../../user/user.repository.js';
-import * as Service_Token from '../token.service.js';
-import * as Repository_Token from '../repositories/token.repository.js';
-import * as Repository_Device from '../../device/device.repository.js';
-import { loginUser } from '../use-cases/login/login.service.js';
-
-describe('Login flow', () => {
+describe('Login Service', () => {
   const OLD_ENV = process.env;
 
   beforeEach(() => {
@@ -40,7 +21,7 @@ describe('Login flow', () => {
     process.env = OLD_ENV;
   });
 
-  const resultCreateTokens = {
+  const resultCreateTokens: Awaited<ReturnType<typeof Auth_Service.createTokens>> = {
     accessToken: 'testeAccess',
     refreshTokenRaw: 'testeRefresh',
     expiresMs: 77777777777,
@@ -49,27 +30,52 @@ describe('Login flow', () => {
     hashRefreshToken: 'hashRefreshTeste'
   };
 
-  const resultCreateRefreshToken = {
-    id: 313,
-    createdAt: new Date(),
-    userId: 31234,
-    deviceId: 3132,
-    expiresAt: new Date(),
-    token: 'tokenTeste',
-    revokedAt: null
-  };
+  const resultCreateRefreshToken: Awaited<ReturnType<typeof Token_Repository.createRefreshToken>> =
+    {
+      id: 313,
+      createdAt: new Date(),
+      userId: createUserId(),
+      deviceId: 3132,
+      expiresAt: new Date(),
+      token: 'tokenTeste',
+      revokedAt: null
+    };
 
   const returnFindByEmail = { id: 'uuidv7-userId', password: 'testPassword' };
-  const resultCreateDeviceId = 10;
+  const createdDeviceId = 10;
+
+  test('Should throw an AppError if the user email is not found with status code 404 and message error: "Usuário correspondente ao email não encontrado"', async () => {
+    const invalidEmail = 'userNotFound@gmail.com';
+    const password = 'testPassword';
+
+    vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(null);
+
+    await expect(loginUser(invalidEmail, password)).rejects.toMatchObject({
+      message: 'Usuário correspondente ao email não encontrado',
+      statusCode: 404
+    });
+  });
+
+  test('It should throw a 401 error in case of an invalid password, with the message: Credenciais inválidas.', async () => {
+    vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(returnFindByEmail);
+    vi.spyOn(cryptoUtils, 'compareHash').mockResolvedValue(false);
+
+    await expect(loginUser).rejects.toMatchObject({
+      message: 'Credenciais inválidas',
+      statusCode: 401
+    });
+  });
+
   test('Should successfully find the user and create their data for cookies.', async () => {
-    vi.mocked(Repository_User.findByEmail).mockResolvedValue(returnFindByEmail);
-    vi.spyOn(crypto, 'compareHash').mockResolvedValue(true);
-    vi.mocked(Service_Token.createTokens).mockResolvedValue(resultCreateTokens);
-    vi.mocked(Repository_Device.createDevice).mockResolvedValue({ id: resultCreateDeviceId });
-    vi.mocked(Repository_Token.createRefreshToken).mockResolvedValue(resultCreateRefreshToken);
+    vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(returnFindByEmail);
+    vi.spyOn(cryptoUtils, 'compareHash').mockResolvedValue(true);
+    vi.spyOn(Auth_Service, 'createTokens').mockResolvedValue(resultCreateTokens);
+    vi.spyOn(Device_Repository, 'createDevice').mockResolvedValue({ id: createdDeviceId });
+    vi.spyOn(Token_Repository, 'createRefreshToken').mockResolvedValue(resultCreateRefreshToken);
 
     const emailTeste = 'teste@gmail.com';
     const passwordTeste = 'testePassword';
+
     const returnLoginUserService = await loginUser(emailTeste, passwordTeste);
 
     expect(returnLoginUserService).toEqual({
@@ -79,31 +85,20 @@ describe('Login flow', () => {
       deviceUUID: resultCreateTokens.deviceUUID
     });
 
-    expect(Repository_User.findByEmail).toBeCalledWith(emailTeste);
-    expect(crypto.compareHash).toBeCalledTimes(1);
-    expect(Service_Token.createTokens).toBeCalledWith(returnFindByEmail.id);
-    expect(Repository_Device.createDevice).toBeCalledWith({
+    expect(User_Repository.findByEmail).toBeCalledWith(emailTeste);
+    expect(cryptoUtils.compareHash).toBeCalledTimes(1);
+    expect(Auth_Service.createTokens).toBeCalledWith(returnFindByEmail.id);
+    expect(Device_Repository.createDevice).toBeCalledWith({
       deviceUUID: resultCreateTokens.deviceUUID,
       userId: returnFindByEmail.id,
       maxDevicePerUser: Number(process.env.MAX_DEVICES_PER_USER)
     });
-    expect(Repository_Token.createRefreshToken).toBeCalledWith({
+    expect(Token_Repository.createRefreshToken).toBeCalledWith({
       hashRefreshToken: resultCreateTokens.hashRefreshToken,
       userId: returnFindByEmail.id,
-      deviceId: resultCreateDeviceId,
+      deviceId: createdDeviceId,
       expiresAt: resultCreateTokens.expirationDate
     });
-    expect(Repository_Token.createRefreshToken).toBeCalledTimes(1);
-  });
-
-  test('It should throw a 401 error in case of an invalid password, with the message: Credenciais inválidas.', async () => {
-    vi.mocked(Repository_User.findByEmail).mockResolvedValue(returnFindByEmail);
-    const verifyHash = await crypto.compareHash('wrong-password', returnFindByEmail.password);
-
-    expect(verifyHash).toBeFalsy();
-    await expect(loginUser).rejects.toMatchObject({
-      message: 'Credenciais inválidas',
-      statusCode: 401
-    });
+    expect(Token_Repository.createRefreshToken).toBeCalledTimes(1);
   });
 });
