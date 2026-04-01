@@ -6,14 +6,14 @@ import {
 import generateDeviceId from '../../../shared/utils/generateDeviceId.js';
 import { AppError } from '../../../shared/utils/error.js';
 
-const createTokens = async (userId: string) => {
+const createTokens = async (userId: string, tokenVersion: number) => {
   try {
     if (!process.env.JWT_ACCESS_SECRET) throw new AppError('JWT_ACCESS_SECRET não definido!', 500);
     if (!process.env.JWT_REFRESH_SECRET)
       throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
 
     const deviceUUID = generateDeviceId();
-    const accessToken = generateAccessToken(userId);
+    const accessToken = generateAccessToken(userId, tokenVersion);
     const { refreshTokenRaw, hashRefreshToken } = generateRefreshToken();
 
     const { expirationDate, expiresMs } = generateRefreshExpirationDate();

@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id
-  firstname String
-  lastname  String
-  username  String
-  email     String   @unique
-  password  String
-  verified  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  avatarKey String?
+  id           String   @id
+  firstname    String
+  lastname     String
+  username     String
+  email        String   @unique
+  password     String
+  verified     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  tokenVersion Int      @default(0)
+  avatarKey    String?
 
   tasks              Task[]
   refreshTokens      RefreshToken[]
@@ -50,7 +49,7 @@ model Task {
   updatedAt   DateTime @updatedAt
 
   userId String
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model RefreshToken {
@@ -76,7 +75,7 @@ model PasswordResetOTP {
   used      Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId, used,expiresAt, id])
+  @@index([userId, used, expiresAt, id])
 }
 
 model PasswordResetToken {

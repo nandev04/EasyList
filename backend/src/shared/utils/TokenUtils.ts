@@ -7,8 +7,10 @@ const generateVerifyToken = (userId: string) => {
   return token;
 };
 
-const generateAccessToken = (userId: string) => {
-  const token = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, { expiresIn: '15m' });
+const generateAccessToken = (userId: string, tokenVersion: number) => {
+  const token = jwt.sign({ userId, tokenVersion }, process.env.JWT_ACCESS_SECRET!, {
+    expiresIn: '15m'
+  });
   return token;
 };
 
@@ -32,6 +34,7 @@ const utilJwtVerifyEmail = async (token: string) => {
 const utilJwtVerifyAccess = async (accessToken: string) => {
   return jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as {
     userId: string;
+    tokenVersion: number;
   };
 };
 

@@ -6,9 +6,12 @@ const refreshToken = async (token: string) => {
   try {
     if (!process.env.JWT_REFRESH_SECRET)
       throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
-    const { userId } = jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as { userId: string };
+    const { userId, tokenVersion } = jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as {
+      userId: string;
+      tokenVersion: number;
+    };
 
-    const newAccessToken = generateAccessToken(userId);
+    const newAccessToken = generateAccessToken(userId, tokenVersion);
     return newAccessToken;
   } catch (error) {
     throw new AppError('Refresh token inválido ou expirado', 401);

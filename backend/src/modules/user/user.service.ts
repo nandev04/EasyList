@@ -13,7 +13,7 @@ import {
 } from '../../shared/utils/S3ClientCommands.js';
 import generateCode from '../../shared/utils/generateCode.js';
 import { userCreateSelect, userPublicSelect } from './user.select.js';
-import s3Client from '../../lib/s3.js';
+import s3Client from '../../infra/aws/s3Client.js';
 import { createUserId } from '../../shared/utils/uuid.js';
 import * as VerifyAcc_Service from '../auth/use-cases/verifyAccount/verifyAcc.service.js';
 

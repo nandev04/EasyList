@@ -14,7 +14,8 @@ export const userPublicSelect = {
 
 export const userAuthSelect = {
   id: true,
-  password: true
+  password: true,
+  tokenVersion: true
 } satisfies Prisma.UserSelect;
 
 export const userCreateSelect = {

@@ -4,7 +4,9 @@ import {
   generateRefreshToken
 } from '../../../../shared/utils/TokenUtils.js';
 import * as Repository_Device from '../../../device/device.repository.js';
+import * as Repository_user from '../../../user/user.repository.js';
 import * as Repository_Token from '../../repositories/token.repository.js';
+import { getTokenVersion } from '../../services/tokenVersion.service.js';
 
 const tryResolveByDevice = async (deviceUUID: string) => {
   const deviceUUIDRecovered = await Repository_Device.verifyDeviceUUID(deviceUUID);
@@ -14,7 +16,8 @@ const tryResolveByDevice = async (deviceUUID: string) => {
       deviceUUIDRecovered.userId,
       deviceUUIDRecovered.id
     );
-    const newAccessToken = generateAccessToken(deviceUUIDRecovered.userId);
+    const tokenVersion = await getTokenVersion(deviceUUIDRecovered.userId);
+    const newAccessToken = generateAccessToken(deviceUUIDRecovered.userId, tokenVersion);
     return {
       userId: deviceUUIDRecovered.userId,
       newAccessToken,

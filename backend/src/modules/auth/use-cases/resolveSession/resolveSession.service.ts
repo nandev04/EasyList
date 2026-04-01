@@ -27,6 +27,9 @@ const resolveSessionToken = async ({
       const resultResolve = await tryResolveByAccessToken(accessToken, refreshToken, deviceId);
       return { ...resultResolve };
     } catch (err) {
+      if (err instanceof AppError) {
+        throw err;
+      }
       if (!(err instanceof jwt.TokenExpiredError)) {
         throw new AppError('Token de acesso inválido', 401);
       }

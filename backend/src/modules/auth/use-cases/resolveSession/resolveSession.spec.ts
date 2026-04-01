@@ -9,12 +9,11 @@ import tryResolveByDevice from './tryResolveByDevice.service.js';
 vi.mock('../../../../shared/utils/TokenUtils.js');
 vi.mock('./tryResolveByDevice.service.js');
 vi.mock('./renewAccessToken.service.js');
+vi.mock('../../../../infra/cache/cache.service.js', () => ({
+  getCache: vi.fn()
+}));
 
 describe('resolveSessionToken', () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   test('Should throw an AppError if an invalid access token with status code 401 is encountered.', async () => {
     vi.mocked(utilJwtVerifyAccess).mockRejectedValueOnce(
       new AppError('Token de acesso inválido', 401)
@@ -53,6 +52,7 @@ describe('resolveSessionToken', () => {
   });
 
   test('Should access token be created successfully.', async () => {
+    const REDIS_URL = 'testt';
     const renewAccessTokenReturn: Awaited<ReturnType<typeof renewAccessToken>> = {
       deviceUUID: generateDeviceId(),
       newAccessToken: 'accessToken-test',

@@ -1,5 +1,5 @@
 import { AppError } from '../../shared/utils/error.js';
-import prisma from '../../lib/prisma.js';
+import prisma from '../../infra/database/prismaClient.js';
 import { CreateUserType } from './user.type.js';
 import { updateUserSchemaBodyType } from './user.schema.js';
 import { Prisma } from '@prisma/client/default.js';
@@ -97,9 +97,18 @@ const verifyUser = async (id: string) => {
 const findByEmail = async (email: string) => {
   const user = await prisma.user.findUnique({
     where: { email: email, verified: true },
-    select: { password: true, id: true }
+    select: { password: true, id: true, tokenVersion: true }
   });
   return user;
+};
+
+const incrementTokenVersion = async (id: string) => {
+  await prisma.user.update({
+    where: { id },
+    data: {
+      tokenVersion: { increment: 1 }
+    }
+  });
 };
 
 export {
@@ -112,6 +121,7 @@ export {
   verifyOTPCodeUpdateEmail,
   markCodeAsUsed,
   verifyUser,
+  updateAvatar,
   findByEmail,
-  updateAvatar
+  incrementTokenVersion
 };
