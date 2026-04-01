@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { signedCookieSchemaType } from '../../auth.schema.js';
+import { signedCookieSchemaType } from '../logout/logout.schema.js';
 import { AppError } from '../../../../shared/utils/error.js';
 import * as Service_RefreshTkn from './refreshTkn.service.js';
 

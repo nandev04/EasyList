@@ -1,4 +1,4 @@
-import emailMask from './emailMask';
+import emailMask from './emailMask.js';
 
 describe('Mask email', () => {
   test('Should return mask email, showing 3 local part characters and domain', async () => {
@@ -15,8 +15,6 @@ describe('Mask email', () => {
   });
 
   test('Should return mask email, hiding everything because the local part is less than or equal 3', async () => {
-    const emailTestTwoCharacters = 'ex@gmail.com';
-    const emailTestThreeCharacters = 'exe@gmail.com';
     const expectReturnTwo = '**@gmail.com';
     const expectReturnThreeCharacters = '***@gmail.com';
 

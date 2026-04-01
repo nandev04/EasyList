@@ -8,6 +8,7 @@
     "dev": "concurrently \"npx tsc --watch --project tsconfig.build.json\" \"nodemon dist/server.js\"",
     "start": "node dist/server.js",
     "lint": "eslint 'src/**/*.ts'",
+    "type-check": "tsc --noEmit",
     "testscript": "echo 'Hello World'",
     "test": "vitest run",
     "test:watch": "vitest --watch",

@@ -3,7 +3,7 @@ import { AppError } from '../../../../../shared/utils/error.js';
 import generateCode from '../../../../../shared/utils/generateCode.js';
 import { createUserId } from '../../../../../shared/utils/uuid.js';
 import * as User_Repository from '../../../../user/user.repository.js';
-import * as Otp_Repository from '../../../repositories/codeOtp.repository.js';
+import * as Otp_Repository from '../../../repositories/codeOTP.repository.js';
 import * as ServiceMail from '../../../../../shared/services/mail.service.js';
 import { forgotPasswordService } from './forgotPwd.service.js';
 

@@ -2,7 +2,7 @@ import { transformForHash } from '../../../../../shared/utils/crypto.js';
 import { AppError } from '../../../../../shared/utils/error.js';
 import generateCode from '../../../../../shared/utils/generateCode.js';
 import * as Repository_User from '../../../../user/user.repository.js';
-import * as Repository_OTP from '../../../repositories/codeOtp.repository.js';
+import * as Repository_OTP from '../../../repositories/codeOTP.repository.js';
 import * as MailService from '../../../../../shared/services/mail.service.js';
 
 const forgotPasswordService = async (email: string) => {

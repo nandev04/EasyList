@@ -2,7 +2,7 @@ import * as Repository_Task from './task.repository.js';
 import { updateTaskSchemaBodyType } from '../task/task.schema.js';
 import { createTaskInputType } from './task.type.js';
 
-const getTasks = async (userId: number) => {
+const getTasks = async (userId: string) => {
   return await Repository_Task.getTasks(userId);
 };
 
@@ -10,11 +10,11 @@ const createTask = async ({ userId, title, status, description }: createTaskInpu
   return await Repository_Task.createTask({ userId, title, description, status });
 };
 
-const updateTask = async (taskId: number, userId: number, data: updateTaskSchemaBodyType) => {
+const updateTask = async (taskId: number, userId: string, data: updateTaskSchemaBodyType) => {
   return await Repository_Task.updateTask(taskId, userId, data);
 };
 
-const removeTask = async (taskId: number, userId: number) => {
+const removeTask = async (taskId: number, userId: string) => {
   return await Repository_Task.removeTask(taskId, userId);
 };
 

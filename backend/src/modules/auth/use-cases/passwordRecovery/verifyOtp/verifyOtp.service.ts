@@ -1,7 +1,7 @@
 import { tokenUUID, transformForHash } from '../../../../../shared/utils/crypto.js';
 import { AppError } from '../../../../../shared/utils/error.js';
 import * as User_Repository from '../../../../user/user.repository.js';
-import * as Otp_Repository from '../../../repositories/codeOtp.repository.js';
+import * as Otp_Repository from '../../../repositories/codeOTP.repository.js';
 import * as Token_Repository from '../../../repositories/token.repository.js';
 
 const verifyCodeService = async (code: string, email: string) => {

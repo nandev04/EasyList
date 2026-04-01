@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import cookieUser from '../../../../shared/constants/cookieUser.js';
-import { signedCookieSchemaType } from '../../auth.schema.js';
+import { signedCookieSchemaType } from './logout.schema.js';
 import * as Service_Logout from './logout.service.js';
 
 const logout = async (req: Request, res: Response, next: NextFunction) => {

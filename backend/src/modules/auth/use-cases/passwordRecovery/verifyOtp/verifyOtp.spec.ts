@@ -1,7 +1,7 @@
 import { AppError } from '../../../../../shared/utils/error.js';
 import { verifyCodeService } from './verifyOtp.service.js';
 import * as cryptoUtils from '../../../../../shared/utils/crypto.js';
-import * as OtpCode_Repository from '../../../repositories/codeOtp.repository.js';
+import * as OtpCode_Repository from '../../../repositories/codeOTP.repository.js';
 import * as Token_Repository from '../../../repositories/token.repository.js';
 import * as User_Repository from '../../../../user/user.repository.js';
 import { createUserId } from '../../../../../shared/utils/uuid.js';

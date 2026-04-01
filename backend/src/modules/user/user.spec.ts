@@ -1,26 +1,26 @@
-vi.mock('../../shared/utils/crypto');
-vi.mock('../auth/auth.service');
-vi.mock('./user.repository');
-vi.mock('../../shared/utils/S3ClientCommands');
-vi.mock('../../shared/utils/uuid');
+import { AppError } from '../../shared/utils/error.js';
+import * as cryptoUtils from '../../shared/utils/crypto.js';
+import * as VerifyAcc_Service from '../auth/use-cases/verifyAccount/verifyAcc.service.js';
+import * as Repository_User from './user.repository.js';
+import * as Service_User from './user.service.js';
+import { userCreateSelect, userPublicSelect } from './user.select.js';
+import * as s3CommandsUtils from '../../shared/utils/S3ClientCommands.js';
+import * as uuidUtils from '../../shared/utils/uuid.js';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 
-import { AppError } from '../../shared/utils/error';
-import { createHashPassword } from '../../shared/utils/crypto';
-import * as Service_Auth from '../auth/auth.service';
-import * as Repository_User from './user.repository';
-import * as Service_User from './user.service';
-import { userCreateSelect, userPublicSelect } from './user.select';
-import { Prisma } from '@prisma/client/default';
-import { getAvatarS3, generateSignedUrl } from '../../shared/utils/S3ClientCommands';
-import { createUserId } from '../../shared/utils/uuid';
-
-type ReturnGetUserType = Prisma.UserGetPayload<{
-  select: typeof userPublicSelect;
-}>;
-const userIdMock = 'uuidv7-id-teste';
-describe('get user flow', () => {
+const userIdMock = uuidUtils.createUserId();
+describe('Get User flow', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  test('Should throw an AppError with status code 404 and message: "Usuário não encontrado" if user not found', async () => {
+    vi.spyOn(Repository_User, 'getUser').mockResolvedValue(null);
+
+    await expect(Service_User.getUser(userIdMock)).rejects.toMatchObject({
+      message: 'Usuário não encontrado',
+      statusCode: 404
+    });
   });
 
   test('Should get user from the repository by id', async () => {
@@ -34,15 +34,19 @@ describe('get user flow', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       avatarKey: 'avatar/url/test'
-    } satisfies ReturnGetUserType;
+    };
 
-    vi.mocked(Repository_User.getUser).mockResolvedValue(returnGetUser);
+    vi.spyOn(Repository_User, 'getUser').mockResolvedValue(returnGetUser);
+    vi.spyOn(s3CommandsUtils, 'getAvatarS3').mockResolvedValue(
+      new GetObjectCommand({ Bucket: 'test', Key: 'test' })
+    );
+    vi.spyOn(s3CommandsUtils, 'generateSignedUrl').mockResolvedValue('signedUrlTest');
 
     await Service_User.getUser(userIdMock);
 
-    expect(getAvatarS3).toHaveBeenCalledTimes(1);
-    expect(getAvatarS3).toHaveBeenCalledWith(returnGetUser.avatarKey);
-    expect(generateSignedUrl).toHaveBeenCalledTimes(1);
+    expect(s3CommandsUtils.getAvatarS3).toHaveBeenCalledTimes(1);
+    expect(s3CommandsUtils.getAvatarS3).toHaveBeenCalledWith(returnGetUser.avatarKey);
+    expect(s3CommandsUtils.generateSignedUrl).toHaveBeenCalledTimes(1);
 
     expect(Repository_User.getUser).toHaveBeenCalledWith(userIdMock, userPublicSelect);
     expect(Repository_User.getUser).toHaveBeenCalledTimes(1);
@@ -72,10 +76,10 @@ describe('Create user flow', () => {
   };
 
   test('Should create a user and request email verification.', async () => {
-    vi.mocked(createHashPassword).mockResolvedValue(hashPassword);
-    vi.mocked(Repository_User.createUser).mockResolvedValue(result);
-    vi.mocked(Service_Auth.emailVerificationAccount).mockResolvedValue(undefined);
-    vi.mocked(createUserId).mockReturnValue(userIdMock);
+    vi.spyOn(cryptoUtils, 'createHashPassword').mockResolvedValue(hashPassword);
+    vi.spyOn(Repository_User, 'createUser').mockResolvedValue(result);
+    vi.spyOn(VerifyAcc_Service, 'emailAccountVerification').mockResolvedValue(undefined);
+    vi.spyOn(uuidUtils, 'createUserId').mockReturnValue(userIdMock);
 
     const { password, ...safeInput } = testInput;
 
@@ -86,30 +90,32 @@ describe('Create user flow', () => {
     };
     const createdUser = await Service_User.createUser(testInput);
 
-    expect(createHashPassword).toHaveBeenCalledWith(testInput.password);
-    expect(createUserId).toHaveBeenCalledBefore(vi.mocked(Repository_User.createUser));
+    expect(cryptoUtils.createHashPassword).toHaveBeenCalledWith(testInput.password);
+    expect(uuidUtils.createUserId).toHaveBeenCalledBefore(vi.mocked(Repository_User.createUser));
 
     expect(Repository_User.createUser).toHaveBeenCalledWith(dataCreate, userCreateSelect);
-    expect(Service_Auth.emailVerificationAccount).toHaveBeenCalledWith(
+    expect(VerifyAcc_Service.emailAccountVerification).toHaveBeenCalledWith(
       createdUser.id,
       createdUser.email
     );
-    expect(Service_Auth.emailVerificationAccount).toHaveBeenCalledTimes(1);
+    expect(VerifyAcc_Service.emailAccountVerification).toHaveBeenCalledTimes(1);
 
     expect(createdUser).toEqual(result);
   });
 
   test('Should throw AppError if hash fails', async () => {
     const error = new AppError('Senha inválida', 400);
-    vi.mocked(createHashPassword).mockRejectedValue(error);
+    vi.spyOn(cryptoUtils, 'createHashPassword').mockRejectedValue(error);
 
     await expect(Service_User.createUser(testInput)).rejects.toBe(error);
   });
 
   test('Should throw an AppError with status 500 for generic errors.', async () => {
-    vi.mocked(createHashPassword).mockResolvedValue(hashPassword);
-    vi.mocked(Repository_User.createUser).mockResolvedValue(result);
-    vi.mocked(Service_Auth.emailVerificationAccount).mockRejectedValue(new Error('Erro interno'));
+    vi.spyOn(cryptoUtils, 'createHashPassword').mockResolvedValue(hashPassword);
+    vi.spyOn(Repository_User, 'createUser').mockResolvedValue(result);
+    vi.spyOn(VerifyAcc_Service, 'emailAccountVerification').mockRejectedValue(
+      new Error('Erro interno')
+    );
 
     await expect(Service_User.createUser(testInput)).rejects.toMatchObject({
       message: 'Erro interno',
