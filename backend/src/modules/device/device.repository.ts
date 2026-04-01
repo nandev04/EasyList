@@ -19,15 +19,12 @@ const createDevice = async ({ deviceUUID, userId, maxDevicePerUser }: createDevi
   });
 };
 
-const verifyDeviceId = async (deviceId: string) => {
-  const deviceUUID = await prisma.device.findUnique({
-    where: {
-      deviceUUID: deviceId
-    },
+const verifyDeviceUUID = async (deviceUUID: string) => {
+  const deviceUUUIDrecovered = await prisma.device.findUnique({
+    where: { deviceUUID },
     select: { deviceUUID: true, userId: true, id: true }
   });
-  if (!deviceUUID) throw new AppError('DeviceUUID não encontrado', 404);
-  return deviceUUID;
+  return deviceUUUIDrecovered;
 };
 
-export { createDevice, verifyDeviceId };
+export { createDevice, verifyDeviceUUID };

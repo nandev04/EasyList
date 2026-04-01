@@ -44,7 +44,7 @@ userRoutes.patch(
   authenticate,
   requireAuth,
   (req, res, next) => {
-    Validate_Avatar.uploadAvatar.single('avatar')(req, res, (err) => {
+    Validate_Avatar.uploadAvatar.single('avatar')(req, res, (err: unknown) => {
       if (err) next(err);
       next();
     });

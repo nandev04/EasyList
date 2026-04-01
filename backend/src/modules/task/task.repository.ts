@@ -2,7 +2,7 @@ import prisma from '../../lib/prisma.js';
 import { createTaskInputType } from '../task/task.type.js';
 import { updateTaskSchemaBodyType } from '../task/task.schema.js';
 
-const getTasks = async (userId: number) => {
+const getTasks = async (userId: string) => {
   const tasks = await prisma.task.findMany({
     where: { userId },
     select: {
@@ -41,7 +41,7 @@ const createTask = async ({ userId, title, description, status }: createTaskInpu
   };
 };
 
-const updateTask = async (id: number, userId: number, data: updateTaskSchemaBodyType) => {
+const updateTask = async (id: number, userId: string, data: updateTaskSchemaBodyType) => {
   const editedtask = await prisma.task.update({
     where: { id, userId },
     data: { ...data },
@@ -50,7 +50,7 @@ const updateTask = async (id: number, userId: number, data: updateTaskSchemaBody
   return editedtask;
 };
 
-const removeTask = async (taskId: number, userId: number) => {
+const removeTask = async (taskId: number, userId: string) => {
   const removedTask = await prisma.task.delete({
     where: { id: taskId, userId }
   });

@@ -2,10 +2,9 @@ import {
   generateAccessToken,
   generateRefreshToken,
   generateRefreshExpirationDate
-} from '../../shared/utils/TokenUtils.js';
-import * as Repository_Token from './token.repository.js';
-import generateDeviceId from '../../shared/utils/generateDeviceId.js';
-import { AppError } from '../../shared/utils/error.js';
+} from '../../../shared/utils/TokenUtils.js';
+import generateDeviceId from '../../../shared/utils/generateDeviceId.js';
+import { AppError } from '../../../shared/utils/error.js';
 
 const createTokens = async (userId: string) => {
   try {
@@ -33,16 +32,4 @@ const createTokens = async (userId: string) => {
   }
 };
 
-const createRefreshTokenFromDeviceUUID = async (userId: string, deviceId: number) => {
-  const { hashRefreshToken, refreshTokenRaw } = generateRefreshToken();
-  const { expirationDate } = generateRefreshExpirationDate();
-  await Repository_Token.createRefreshToken({
-    hashRefreshToken,
-    userId,
-    deviceId,
-    expiresAt: expirationDate
-  });
-  return refreshTokenRaw;
-};
-
-export { createTokens, createRefreshTokenFromDeviceUUID };
+export { createTokens };

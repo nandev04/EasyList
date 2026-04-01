@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer, { Transporter } from 'nodemailer';
 import sendgridTransport from 'nodemailer-sendgrid';
 import emailMask from '../utils/emailMask.js';
 
@@ -25,7 +25,7 @@ const getTransporter = async () => {
 };
 
 const sendVerificationMail = async (to: string, token: string) => {
-  const transporter = await getTransporter();
+  const transporter: Transporter = await getTransporter();
   const verificationLink = `${process.env.FRONTEND_URL}/confirm-email?token=${token}`;
 
   const template = `<p>Bem-vindo! Clique no link abaixo para verificar sua conta:</p>
@@ -58,7 +58,7 @@ const sendForgotPasswordEmail = async (to: string, code: string) => {
       </div>
     `;
 
-  const transporter = await getTransporter();
+  const transporter: Transporter = await getTransporter();
 
   const info = await transporter.sendMail({
     from: 'no-reply@minhaempresa.com',
@@ -115,7 +115,7 @@ const sendOTPEmail = async (to: string, code: string) => {
   </div>
 </div>`;
 
-  const transporter = await getTransporter();
+  const transporter: Transporter = await getTransporter();
 
   const info = await transporter.sendMail({
     from: 'no-reply@minhaempresa.com',
@@ -170,7 +170,7 @@ const emailChangeNotice = async (oldEmail: string, newEmail: string, changeDate:
   </div>
 </div>`;
 
-  const transporter = await getTransporter();
+  const transporter: Transporter = await getTransporter();
 
   const info = await transporter.sendMail({
     from: 'no-reply@minhaempresa.com',

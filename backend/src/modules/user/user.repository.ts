@@ -99,7 +99,6 @@ const findByEmail = async (email: string) => {
     where: { email: email, verified: true },
     select: { password: true, id: true }
   });
-  if (!user) throw new AppError('Usuário não encontrado', 404);
   return user;
 };
 

@@ -10,6 +10,7 @@ import refreshTokenCleanup from './cron/refreshTokenCleanup.js';
 import resetPasswordCodeCleanup from './cron/passwordCodeCleanup.js';
 import oldDevicesCleanup from './cron/oldDevicesCleanup.js';
 import updateEmailCodeCleanup from './cron/updateEmailCodeCleanup.js';
+import * as Rate_Limit from './middlewares/rateLimit.js';
 
 const app = express();
 
@@ -32,7 +33,7 @@ updateEmailCodeCleanup();
 
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(authRoutes);
+app.use('/auth', Rate_Limit.auth, authRoutes);
 app.use(userRoutes);
 app.use(taskRoutes);
 app.use(errorHandler);

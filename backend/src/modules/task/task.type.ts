@@ -1,5 +1,5 @@
 import { CreateTaskSchemaType } from './task.schema.js';
 
-type createTaskInputType = CreateTaskSchemaType & { userId: number };
+type createTaskInputType = CreateTaskSchemaType & { userId: string };
 
 export { createTaskInputType };

@@ -1,5 +1,11 @@
-import { createTokensType } from './token.type.js';
-import prisma from '../../lib/prisma.js';
+import prisma from '../../../lib/prisma.js';
+
+export type createTokensType = {
+  hashRefreshToken: string;
+  userId: string;
+  deviceId: number;
+  expiresAt: Date;
+};
 
 const createRefreshToken = async ({
   hashRefreshToken,

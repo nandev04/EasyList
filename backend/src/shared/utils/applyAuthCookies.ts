@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { VerifyTokensTypeResult } from '../../modules/auth/auth.types';
+import { resolveSessionTokenResultType } from '../../modules/auth/use-cases/resolveSession/resolveSession.service.js';
 
-const applyAuthCookies = (res: Response, result: VerifyTokensTypeResult) => {
+const applyAuthCookies = (res: Response, result: resolveSessionTokenResultType) => {
   if (result.newAccessToken) {
     res.cookie('accessToken', result.newAccessToken, {
       httpOnly: true,
