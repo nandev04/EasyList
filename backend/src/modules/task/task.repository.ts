@@ -1,4 +1,4 @@
-import prisma from '../../lib/prisma.js';
+import prisma from '../../infra/database/prismaClient.js';
 import { createTaskInputType } from '../task/task.type.js';
 import { updateTaskSchemaBodyType } from '../task/task.schema.js';
 

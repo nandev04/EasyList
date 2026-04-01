@@ -1,5 +1,5 @@
 import { createDevicesType } from './device.type.js';
-import prisma from '../../lib/prisma.js';
+import prisma from '../../infra/database/prismaClient.js';
 import { AppError } from '../../shared/utils/error.js';
 
 const createDevice = async ({ deviceUUID, userId, maxDevicePerUser }: createDevicesType) => {

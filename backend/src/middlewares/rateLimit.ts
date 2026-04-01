@@ -1,16 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
-import { redisClient } from '../lib/redis.js';
+import { redis } from '../infra/cache/redis.js';
+import formatIp from '../shared/utils/formatIp.js';
 
 const default_message = 'Too many requests, try again later.';
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:auth:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:auth:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 240);
+      await redis.expire(key, 240);
     }
 
     if (value > 8) {
@@ -24,13 +26,14 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:getUser:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:getUser:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 180);
+      await redis.expire(key, 180);
     }
 
     if (value > 1000) {
@@ -44,13 +47,14 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:createUser:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:createUser:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 600);
+      await redis.expire(key, 600);
     }
 
     if (value > 10) {
@@ -64,13 +68,14 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const editUser = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:editUser:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:editUser:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 600);
+      await redis.expire(key, 600);
     }
 
     if (value > 30) {
@@ -84,13 +89,14 @@ const editUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:deleteUser:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:deleteUser:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 600);
+      await redis.expire(key, 600);
     }
 
     if (value > 8) {
@@ -104,13 +110,14 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getAvatar = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:getAvatar:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:getAvatar:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 180);
+      await redis.expire(key, 180);
     }
 
     if (value > 1000) {
@@ -124,13 +131,14 @@ const getAvatar = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getTasks = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:getTask:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:getTask:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 180);
+      await redis.expire(key, 180);
     }
 
     if (value > 1000) {
@@ -144,13 +152,14 @@ const getTasks = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const createtask = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:createTask:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:createTask:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 300);
+      await redis.expire(key, 300);
     }
 
     if (value > 35) {
@@ -164,13 +173,14 @@ const createtask = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const editTask = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:editTask:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:editTask:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 300);
+      await redis.expire(key, 300);
     }
 
     if (value > 75) {
@@ -184,13 +194,14 @@ const editTask = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
-  const key = `rate:deleteTask:${req.ip}`;
+  const ip = formatIp(req.ip);
+  const key = `rate:deleteTask:${ip}`;
 
   try {
-    const value = await redisClient.incr(key);
+    const value = await redis.incr(key);
 
     if (value === 1) {
-      await redisClient.expire(key, 300);
+      await redis.expire(key, 300);
     }
 
     if (value > 30) {

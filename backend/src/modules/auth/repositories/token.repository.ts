@@ -1,4 +1,4 @@
-import prisma from '../../../lib/prisma.js';
+import prisma from '../../../infra/database/prismaClient.js';
 
 export type createTokensType = {
   hashRefreshToken: string;
@@ -73,11 +73,19 @@ const revokeRefreshTokenFromDeviceId = async (deviceId: number): Promise<void> =
   });
 };
 
+const revokeRefreshTokenFromUser = async (userId: string) => {
+  await prisma.refreshToken.updateMany({
+    where: { userId },
+    data: { revokedAt: new Date() }
+  });
+};
+
 export {
   createRefreshToken,
   verifyRefreshToken,
   revokeRefreshToken,
   revokeRefreshTokenFromDeviceId,
+  revokeRefreshTokenFromUser,
   createTokenUUID,
   validateTokenResetPassword,
   markTokenAsUsed

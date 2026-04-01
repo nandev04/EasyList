@@ -30,7 +30,8 @@ describe('forgotPasswordService', () => {
   test('Should call createCodeOTP function of repository and call the email service for email trigger', async () => {
     const user: Awaited<ReturnType<typeof User_Repository.findByEmail>> = {
       id: createUserId(),
-      password: 'test-password'
+      password: 'test-password',
+      tokenVersion: 30
     };
     const code = generateCode();
     const hashCodeForgot = 'hash-Code-forgot';

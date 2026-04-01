@@ -44,7 +44,6 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!;
-    console.log(userId);
     const data = <updateUserSchemaBodyType>req.validated!.body;
     const updatedData = await Service.updateUser(userId, data);
     return res.status(200).json({

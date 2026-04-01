@@ -4,6 +4,7 @@ import * as User_Repository from '../../../user/user.repository.js';
 import * as Device_Repository from '../../../device/device.repository.js';
 import { compareHash } from '../../../../shared/utils/crypto.js';
 import * as Auth_Service from '../../services/createTokens.service.js';
+import { setTokenVersion } from '../../services/tokenVersion.service.js';
 
 const loginUser = async (email: string, password: string) => {
   const user = await User_Repository.findByEmail(email);
@@ -14,7 +15,7 @@ const loginUser = async (email: string, password: string) => {
   if (!verifyHash) throw new AppError('Credenciais inválidas', 401);
 
   const { accessToken, refreshTokenRaw, expiresMs, deviceUUID, expirationDate, hashRefreshToken } =
-    await Auth_Service.createTokens(user.id);
+    await Auth_Service.createTokens(user.id, user.tokenVersion);
 
   const maxDevicePerUser = Number(process.env.MAX_DEVICES_PER_USER);
   const { id } = await Device_Repository.createDevice({
@@ -28,6 +29,8 @@ const loginUser = async (email: string, password: string) => {
     deviceId: id,
     expiresAt: expirationDate
   });
+
+  await setTokenVersion(user.id, user.tokenVersion);
 
   return { accessToken, refreshTokenRaw, expiresMs, deviceUUID };
 };

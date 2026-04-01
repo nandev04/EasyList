@@ -15,7 +15,8 @@ describe('verifyOtpService', () => {
   };
   const userFindByEmail = {
     id: idUser,
-    password: 'test-password'
+    password: 'test-password',
+    tokenVersion: 30
   };
 
   const code = '123456';
@@ -70,7 +71,8 @@ describe('verifyOtpService', () => {
   test('Should call the functions correctly, create a token for reset password, save it in database and return', async () => {
     const findByEmailResolved = {
       id: idUser,
-      password: 'password-test'
+      password: 'password-test',
+      tokenVersion: 30
     };
     const codeHash = 'codeHash-test';
     const tokenReset = 'tkn-tkn-tkn-tkn-tkn';

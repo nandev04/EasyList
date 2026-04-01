@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import prisma from '../lib/prisma.js';
+import prisma from '../infra/database/prismaClient.js';
 
 const resetPasswordCodeCleanup = () => {
   cron.schedule('0 3 * * *', async () => {

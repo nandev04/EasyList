@@ -41,7 +41,7 @@ describe('Login Service', () => {
       revokedAt: null
     };
 
-  const returnFindByEmail = { id: 'uuidv7-userId', password: 'testPassword' };
+  const returnFindByEmail = { id: 'uuidv7-userId', password: 'testPassword', tokenVersion: 40 };
   const createdDeviceId = 10;
 
   test('Should throw an AppError if the user email is not found with status code 404 and message error: "Usuário correspondente ao email não encontrado"', async () => {
@@ -87,7 +87,10 @@ describe('Login Service', () => {
 
     expect(User_Repository.findByEmail).toBeCalledWith(emailTeste);
     expect(cryptoUtils.compareHash).toBeCalledTimes(1);
-    expect(Auth_Service.createTokens).toBeCalledWith(returnFindByEmail.id);
+    expect(Auth_Service.createTokens).toBeCalledWith(
+      returnFindByEmail.id,
+      returnFindByEmail.tokenVersion
+    );
     expect(Device_Repository.createDevice).toBeCalledWith({
       deviceUUID: resultCreateTokens.deviceUUID,
       userId: returnFindByEmail.id,
