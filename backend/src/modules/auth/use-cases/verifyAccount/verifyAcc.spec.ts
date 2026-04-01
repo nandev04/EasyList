@@ -10,8 +10,10 @@ const { userId, email } = {
 };
 
 describe('verifyTokenEmailAccount', async () => {
+  const OLD_ENV = process.env;
   afterEach(() => {
     vi.restoreAllMocks();
+    process.env = OLD_ENV;
   });
 
   test('Should successfully verify jwt token and call verifyUser function.', async () => {
