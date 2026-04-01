@@ -11,6 +11,9 @@ const { userId, email } = {
 
 describe('verifyTokenEmailAccount', async () => {
   const OLD_ENV = process.env;
+  beforeEach(() => {
+    process.env = { ...OLD_ENV };
+  });
   afterEach(() => {
     vi.restoreAllMocks();
     process.env = OLD_ENV;
