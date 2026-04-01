@@ -5,22 +5,15 @@ import * as Device_Repository from '../../../device/device.repository.js';
 import { loginUser } from './login.service.js';
 import * as Auth_Service from '../../services/createTokens.service.js';
 import { createUserId } from '../../../../shared/utils/uuid.js';
+import * as TokenVersion_Service from '../../services/tokenVersion.service.js';
 
+beforeEach(() => {
+  vi.clearAllMocks();
+});
 describe('Login Service', () => {
-  const OLD_ENV = process.env;
-
-  beforeEach(() => {
-    vi.resetAllMocks();
-    process.env = {
-      ...OLD_ENV,
-      MAX_DEVICES_PER_USER: '3'
-    };
-  });
-
-  afterEach(() => {
-    process.env = OLD_ENV;
-  });
-
+  vi.mock('../../../../infra/cache/cache.service.js', () => ({
+    getCache: vi.fn()
+  }));
   const resultCreateTokens: Awaited<ReturnType<typeof Auth_Service.createTokens>> = {
     accessToken: 'testeAccess',
     refreshTokenRaw: 'testeRefresh',
@@ -72,6 +65,7 @@ describe('Login Service', () => {
     vi.spyOn(Auth_Service, 'createTokens').mockResolvedValue(resultCreateTokens);
     vi.spyOn(Device_Repository, 'createDevice').mockResolvedValue({ id: createdDeviceId });
     vi.spyOn(Token_Repository, 'createRefreshToken').mockResolvedValue(resultCreateRefreshToken);
+    vi.spyOn(TokenVersion_Service, 'setTokenVersion').mockResolvedValue(undefined as never);
 
     const emailTeste = 'teste@gmail.com';
     const passwordTeste = 'testePassword';
