@@ -10,16 +10,8 @@ const { userId, email } = {
 };
 
 describe('verifyTokenEmailAccount', async () => {
-  const OLD_ENV = process.env;
-  beforeEach(() => {
-    process.env = { ...OLD_ENV };
-  });
-  afterEach(() => {
-    vi.restoreAllMocks();
-    process.env = OLD_ENV;
-  });
-
   test('Should successfully verify jwt token and call verifyUser function.', async () => {
+    process.env.JWT_EMAIL_SECRET = 'test-secret';
     const returnRepositoryVerifyUser = {
       verified: true,
       updatedAt: new Date()
