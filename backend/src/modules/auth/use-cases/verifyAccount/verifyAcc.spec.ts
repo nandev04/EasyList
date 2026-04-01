@@ -1,11 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { emailAccountVerification, verifyAccountToken } from './verifyAcc.service.js';
-import * as Repository_User from '../../../user/user.repository.js';
-import { generateVerifyToken, utilJwtVerifyEmail } from '../../../../shared/utils/TokenUtils.js';
+import * as User_Repository from '../../../user/user.repository.js';
+import * as tokenUtils from '../../../../shared/utils/TokenUtils.js';
 import { createUserId } from '../../../../shared/utils/uuid.js';
-
-vi.mock('../../../user/user.repository.js');
-vi.mock('../../../../shared/utils/TokenUtils.js');
 
 const { userId, email } = {
   userId: createUserId(),
@@ -22,13 +19,14 @@ describe('verifyTokenEmailAccount', async () => {
       verified: true,
       updatedAt: new Date()
     };
-    vi.mocked(utilJwtVerifyEmail).mockResolvedValue({ userId });
-    vi.mocked(Repository_User.verifyUser).mockResolvedValue(returnRepositoryVerifyUser);
+
+    vi.spyOn(tokenUtils, 'utilJwtVerifyEmail').mockResolvedValue({ userId });
+    vi.spyOn(User_Repository, 'verifyUser').mockResolvedValue(returnRepositoryVerifyUser);
 
     await verifyAccountToken('token-test');
-    expect(utilJwtVerifyEmail).toBeCalledTimes(1);
-    expect(Repository_User.verifyUser).toBeCalledWith(userId);
-    expect(Repository_User.verifyUser).toBeCalledTimes(1);
+    expect(tokenUtils.utilJwtVerifyEmail).toBeCalledTimes(1);
+    expect(User_Repository.verifyUser).toBeCalledWith(userId);
+    expect(User_Repository.verifyUser).toBeCalledTimes(1);
   });
 });
 
@@ -53,7 +51,7 @@ describe('emailVerificationAccount', () => {
   test('should throw an JsonWebTokenError if the parameter type is incorrect with a statusCode of 401.', async () => {
     const jwtError = new jwt.JsonWebTokenError('Token Inválido');
 
-    vi.mocked(generateVerifyToken).mockImplementation(() => {
+    vi.spyOn(tokenUtils, 'generateVerifyToken').mockImplementation(() => {
       throw jwtError;
     });
 
@@ -64,7 +62,7 @@ describe('emailVerificationAccount', () => {
   });
 
   test('should throw an AppError for general errors', async () => {
-    vi.mocked(generateVerifyToken).mockImplementation(() => {
+    vi.spyOn(tokenUtils, 'generateVerifyToken').mockImplementation(() => {
       throw new Error('Falha inesperada');
     });
 

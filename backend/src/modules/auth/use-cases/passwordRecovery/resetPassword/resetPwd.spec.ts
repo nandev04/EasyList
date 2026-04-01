@@ -26,6 +26,8 @@ describe('resetPassword', () => {
   test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 401', async () => {
     const err = new AppError('Token não encontrado', 401);
 
+    vi.spyOn(Token_Repository, 'validateTokenResetPassword').mockResolvedValue(null);
+
     await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({

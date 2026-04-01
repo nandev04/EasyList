@@ -19,6 +19,8 @@ describe('forgotPasswordService', () => {
   test('Should throw an AppError if the user is not found with message: Usuário não encontrado and statusCode 404', async () => {
     const error = new AppError('Usuário não encontrado', 404);
 
+    vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(null);
+
     await expect(forgotPasswordService(email)).rejects.toMatchObject({
       message: error.message,
       statusCode: error.statusCode
