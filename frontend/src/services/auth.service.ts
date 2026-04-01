@@ -4,7 +4,7 @@ import { privateApi, publicApi } from "./api";
 import { changePasswordSchemaType } from "../components/DialogChangePassword/change-password.schema.ts";
 
 export async function loginUser(data: loginSchemaType) {
-  await publicApi.post<UserDTO>("/login", data);
+  await publicApi.post<UserDTO>("/auth/login", data);
 }
 
 export async function changePassword(data: changePasswordSchemaType) {
