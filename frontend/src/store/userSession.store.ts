@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { UserDTO } from "../types/user.types";
-import { loadUser, logoutUser } from "../services/user.service";
+import { loadUser } from "../services/user.service";
+import { logoutUser } from "../services/auth.service";
 
 type UserStoreType = {
   user: UserDTO | null;

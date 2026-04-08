@@ -7,7 +7,7 @@ const verifyAccRoutes = Router();
 
 verifyAccRoutes.patch(
   '/',
-  validate({ query: verifyAccountQuerySchema }),
+  validate({ body: verifyAccountQuerySchema }),
   Controller_VerifyAcc.verifyAccount
 );
 
