@@ -7,6 +7,11 @@ export async function loginUser(data: loginSchemaType) {
   await publicApi.post<UserDTO>("/auth/login", data);
 }
 
+export async function logoutUser() {
+  const response = await privateApi.post("auth/logout");
+  return response;
+}
+
 export async function changePassword(data: changePasswordSchemaType) {
   return await privateApi.patch("/auth/change-password", data);
 }

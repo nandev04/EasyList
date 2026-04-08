@@ -6,6 +6,7 @@ import ProtectedRoutes from "./components/protectedRoutes/ProtectedRoutes";
 import { useUserStore } from "./store/userSession.store";
 import { useEffect } from "react";
 import Profile from "./pages/profile";
+import Register from "./pages/register";
 
 function MainRoutes() {
   const loadUser = useUserStore((state) => state.loadUser);
@@ -21,6 +22,7 @@ function MainRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
       </Route>
+      <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
     </Routes>
   );

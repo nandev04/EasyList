@@ -1,11 +1,13 @@
 /* IMPORTAÇÃO DE FONTES */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital@1&family=Montserrat:wght@500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Noto+Sans:ital,wght@0,500;1,500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
 /* VARIÁVEIS */
 :root {
   --primary-font: "Montserrat", serif;
   --secondary-font: "Geist", sans-serif;
+  --tertiary-font: "Poppins", sans-serif;
   --primary-color: #9684ed;
   --primary-color-hover: #7365b9;
   --secondary-color: #3c384a;
