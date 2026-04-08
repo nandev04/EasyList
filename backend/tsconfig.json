@@ -7,10 +7,10 @@
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "outDir": "dist",
+    "rootDir": "./src",
     "strict": true,
-    "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*"]
+      "@app/*": ["./src/app/*"]
     },
     "skipLibCheck": true
   },
