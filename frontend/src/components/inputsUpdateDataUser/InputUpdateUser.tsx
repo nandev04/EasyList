@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./inputUpdateUser.module.css";
-import { useUserStore } from "../../store/userSession.store";
 import { MdEdit } from "react-icons/md";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { GoAlert } from "react-icons/go";
@@ -20,10 +19,11 @@ import OtpSlots from "../OtpComponent/OtpSlots";
 import ResendOtpCodeBtn from "../resendOtpCode/ResendOtpCodeBtn";
 import DialogChangePassword from "../DialogChangePassword/DialogChangePassword";
 import CloseDialogBtn from "../closeDialogBtn/CloseDialogBtn";
+import { useGetUser, useUpdateUser } from "../../hooks/React/useUser";
 
 const InputUpdateUser = () => {
-  const user = useUserStore((s) => s.user);
-  const updateUser = useUserStore((s) => s.updateUser);
+  const { data: user } = useGetUser();
+  const { mutate: updateUser } = useUpdateUser();
 
   const [isEditing, setIsEditing] = useState(false);
   const [openOtpDialog, setIsOpenOtpDialog] = useState(false);

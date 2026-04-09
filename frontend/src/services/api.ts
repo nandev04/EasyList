@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useUserStore } from "../store/userSession.store";
+import { logoutUser } from "./auth.service";
 
 export const privateApi = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -11,17 +11,25 @@ export const publicApi = axios.create({
   withCredentials: true,
 });
 
+let isInterceptorSet = false;
 export function setupInterceptors() {
-  const logout = useUserStore.getState().logout;
+  if (isInterceptorSet) return;
+  isInterceptorSet = true;
+
   privateApi.interceptors.response.use(
     (res) => res,
     (err) => {
-      if (err.response?.status === 401) {
-        logout();
+      const isSessionCheck = err.config?.url === "/user";
+
+      if (err.response?.status === 401 && !isSessionCheck) {
+        logoutUser();
       }
 
-      const message = err.response?.data?.message || "Erro inesperado";
-      return Promise.reject(new Error(message));
+      err.message = err.response?.data?.message || "Erro inesperado";
+
+      return Promise.reject(err);
     },
   );
 }
+
+setupInterceptors();

@@ -1,4 +1,3 @@
-import React from "react";
 import style from "./loadingTask.module.css";
 import { motion, Variants } from "motion/react";
 

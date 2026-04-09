@@ -1,12 +1,12 @@
 import { MenuSeparator, Popover, PopoverPanel } from "@headlessui/react";
 import styles from "./dropdownHeader.module.css";
 import { useState } from "react";
-import { useUserStore } from "../../store/userSession.store";
 import LogoutBtn from "../logoutBtn/LogoutBtn";
 import ProfileBtn from "../profileBtn/ProfileBtn";
+import { useGetUser } from "../../hooks/React/useUser";
 
 const DropdownHeader = () => {
-  const user = useUserStore((s) => s.user);
+  const { data: user } = useGetUser();
   const [open, setOpen] = useState(true);
   const S3_URL_AVATARS = import.meta.env.VITE_S3_URL_AVATARS;
 

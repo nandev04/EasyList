@@ -1,22 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
-import { createTask, deleteTask, editTask } from "../services/task.service";
-import { queryClient } from "../lib/reactQuery";
+import { createTask, deleteTask, editTask } from "../../services/task.service";
+import { queryClient } from "../../lib/reactQuery";
 
-const useCreateTask = () =>
+const useCreateTaskMutation = () =>
   useMutation({
     mutationFn: createTask,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 
-const useEditTask = () =>
+const useEditTaskMutation = () =>
   useMutation({
     mutationFn: editTask,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
-const useDeleteTask = () =>
+
+const useDeleteTaskMutation = () =>
   useMutation({
     mutationFn: deleteTask,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 
-export { useCreateTask, useEditTask, useDeleteTask };
+export { useCreateTaskMutation, useEditTaskMutation, useDeleteTaskMutation };

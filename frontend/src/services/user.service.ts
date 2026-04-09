@@ -1,8 +1,21 @@
 import { emailOtpSchemaType } from "../schemas/EmailOtp.schema";
-import { UpdateUserType, UserDTO } from "../types/user.types";
+import {
+  CreateUserBodyType,
+  CreateUserResponseType,
+  UpdateUserBodyType,
+  UserDTO,
+} from "../types/user.types";
 import { privateApi } from "./api";
 
-export async function loadUser() {
+export async function createUser(formData: CreateUserBodyType) {
+  const createUser = await privateApi.post<CreateUserResponseType>(
+    "/user",
+    formData,
+  );
+  return createUser;
+}
+
+export async function getUser() {
   const user = await privateApi.get<UserDTO>("/user");
   return {
     ...user.data,
@@ -15,7 +28,7 @@ export async function updateAvatar(formData: FormData) {
   return response;
 }
 
-export async function updateUser(data: UpdateUserType) {
+export async function updateUser(data: UpdateUserBodyType) {
   const response = await privateApi.patch("/user", data);
   return response;
 }

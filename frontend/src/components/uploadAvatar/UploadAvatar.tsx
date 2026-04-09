@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { BiImageAdd } from "react-icons/bi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
-
 import styles from "./uploadAvatar.module.css";
 import { updateAvatar } from "../../services/user.service";
-import { useUserStore } from "../../store/userSession.store";
 
 // CONFIGURAR PREVIEW DE FOTO(LAYOUT), IMPLEMENTAR VALIDAÇÃO COM ZOD DE INPUT, IMPLEMENTAR LÓGICA DE PATCH AVATAR
 
@@ -26,9 +24,6 @@ const UploadAvatar = ({
 
   const [preview, setPreview] = useState<string | null>(null);
   const [visibleDeleteIcon, setVisibleDeleteIcon] = useState(false);
-
-  const user = useUserStore((s) => s.user);
-  const setUser = useUserStore((s) => s.setUser);
 
   useEffect(() => {
     if (!image || image.length === 0) {

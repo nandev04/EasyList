@@ -1,3 +1,5 @@
+import { registerSchemaType } from "../schemas/register.schema";
+
 type UserDTO = {
   firstname: string;
   lastname: string;
@@ -9,11 +11,19 @@ type UserDTO = {
   avatarKey: string | null;
 };
 
-type UpdateUserType = {
+type CreateUserBodyType = registerSchemaType;
+type CreateUserResponseType = { message: string };
+
+type UpdateUserBodyType = {
   firstname?: string;
   lastname?: string;
   username?: string;
   email?: string;
 };
 
-export type { UserDTO, UpdateUserType };
+export type {
+  UserDTO,
+  CreateUserBodyType,
+  CreateUserResponseType,
+  UpdateUserBodyType,
+};

@@ -1,21 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/login";
-import { setupInterceptors } from "./services/api";
 import ProtectedRoutes from "./components/protectedRoutes/ProtectedRoutes";
-import { useUserStore } from "./store/userSession.store";
-import { useEffect } from "react";
 import Profile from "./pages/profile";
 import Register from "./pages/register";
+import VerifyAccount from "./pages/verify-account";
 
 function MainRoutes() {
-  const loadUser = useUserStore((state) => state.loadUser);
-
-  useEffect(() => {
-    loadUser();
-    setupInterceptors();
-  }, []);
-
   return (
     <Routes>
       <Route element={<ProtectedRoutes />}>
@@ -23,6 +14,7 @@ function MainRoutes() {
         <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="/register" element={<Register />} />
+      <Route path="/verify-account" element={<VerifyAccount />} />
       <Route path="/login" element={<Login />} />
     </Routes>
   );

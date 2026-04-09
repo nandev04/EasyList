@@ -10,7 +10,7 @@ import {
 } from "./change-password.schema";
 import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
 import * as Service from "../../services/auth.service";
-import useDelayLoading from "../../hooks/useDelayLoading";
+import useDelayLoading from "../../hooks/React/useDelayLoading";
 
 const DialogChangePassword = ({
   openDialog,
