@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { useUserStore } from "../../store/userSession.store";
 import styles from "./profileOverview.module.css";
 import { MdOutlineFlipCameraIos } from "react-icons/md";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import { Dialog, DialogPanel } from "@headlessui/react";
 import { RiCloseFill } from "react-icons/ri";
 import UploadAvatar from "../uploadAvatar/UploadAvatar";
+import { useGetUser } from "../../hooks/React/useUser";
 
 const ProfileOverview = () => {
-  const user = useUserStore((s) => s.user);
+  const { data: user } = useGetUser();
   const [openAvatarDialog, setOpenAvatarDialog] = useState(false);
   const [openUpdateAvatarDialog, setOpenUpdateAvatarDialog] = useState(false);
   const S3_URL_AVATARS = false;

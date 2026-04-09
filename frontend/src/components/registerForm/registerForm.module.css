@@ -28,6 +28,22 @@
   margin-top: 5px;
 }
 
+.error_message {
+  font-size: 0.765rem;
+  font-style: italic;
+  margin-left: 10px;
+  margin-top: 5px;
+  color: var(--error-message-color);
+}
+
+.error_submit_container {
+  font-size: 0.765rem;
+  font-style: italic;
+  margin-left: 10px;
+  margin-top: -10px;
+  color: var(--error-message-color);
+}
+
 .btn_container {
   justify-self: end;
 }
@@ -45,4 +61,18 @@
 
 .submit_btn:hover {
   background-color: var(--primary-color-hover);
+}
+
+@media (max-width: 760px) {
+  .form {
+    max-width: 100%;
+  }
+
+  .input {
+    font-size: 0.785rem;
+  }
+
+  .label {
+    font-size: 0.85rem;
+  }
 }

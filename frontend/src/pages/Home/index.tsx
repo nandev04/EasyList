@@ -1,25 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
 import CreateTaskBtn from "../../components/createTaskBtn/CreateTaskBtn";
 import ContainerTask from "../../components/taskCard/ContainerTask";
-import { useUserStore } from "../../store/userSession.store";
 import styles from "./home.module.css";
-import { getTasks } from "../../services/task.service";
-import useDelayLoading from "../../hooks/useDelayLoading";
+import useDelayLoading from "../../hooks/React/useDelayLoading";
 import LoadingTask from "../../components/loadingTask/LoadingTask";
 import DropdownHeader from "../../components/dropdownHeader/DropdownHeader";
 import { useState } from "react";
 import { StatusTask } from "../../types/task.types";
 import DropdownFilter from "../../components/dropDownFilter/DropdownFilter";
+import { useGetUser } from "../../hooks/React/useUser";
+import useTasks from "../../hooks/React/useTasks";
 
 const Home = () => {
-  const user = useUserStore((state) => state.user);
+  const user = useGetUser();
+  const tasks = useTasks(!!user.data);
 
-  const { data, isLoading, dataUpdatedAt } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: getTasks,
-    enabled: !!user,
-  });
-  const { showLoading } = useDelayLoading(isLoading, 300);
+  const { showLoading } = useDelayLoading(tasks.isLoading, 300);
   const [selectedStatus, setSelectedStatus] = useState<StatusTask | null>(null);
   const statusLabel: Record<StatusTask, string> = {
     [StatusTask.PENDING]: "Pendente",
@@ -29,10 +24,10 @@ const Home = () => {
 
   const filters = Object.values(StatusTask);
 
-  if (isLoading && !showLoading) return null;
-  if (isLoading) return <LoadingTask />;
+  if (tasks.isLoading && !showLoading) return null;
+  if (tasks.isLoading) return <LoadingTask />;
 
-  const filteredTasks = (data ?? []).filter((task) =>
+  const filteredTasks = (tasks.data ?? []).filter((task) =>
     selectedStatus ? task.status === selectedStatus : true,
   );
 
@@ -43,7 +38,7 @@ const Home = () => {
       </header>
       <main className={styles.main}>
         <h1 className={styles.welcome_title}>
-          <span>Olá</span>, {user?.username}!
+          <span>Olá</span>, {user.data?.username}!
         </h1>
         <section className={styles.tasks_section}>
           <div className={styles.container_section}>
@@ -77,7 +72,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            {data?.length === 0 && (
+            {tasks.data?.length === 0 && (
               <div className={styles.container_guidance}>
                 <p className={styles.newTask_guidance}>
                   Clique no <span className={styles.more_guidance}>+</span> e
@@ -99,7 +94,7 @@ const Home = () => {
             {filteredTasks.map((task) => (
               <ContainerTask
                 key={task.id}
-                updateAt={dataUpdatedAt}
+                updateAt={tasks.dataUpdatedAt}
                 taskId={task.id}
                 title={task.title}
                 status={task.status}

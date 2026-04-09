@@ -6,10 +6,10 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema, taskSchemaType } from "../../schemas/taskSchema";
 import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
-import useDelayLoading from "../../hooks/useDelayLoading";
+import useDelayLoading from "../../hooks/React/useDelayLoading";
 import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 import { OptionsStatusTask } from "../../types/task.types";
-import { useCreateTask } from "../../hooks/useTaskMutation";
+import { useCreateTaskMutation } from "../../hooks/Query/useTaskMutation";
 import CloseDialogBtn from "../closeDialogBtn/CloseDialogBtn";
 const CreateTaskBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +26,7 @@ const CreateTaskBtn = () => {
     resolver: zodResolver(taskSchema),
     mode: "onSubmit",
   });
-  const { mutate, isPending, isError } = useCreateTask();
+  const { mutate, isPending, isError } = useCreateTaskMutation();
   const { showLoading } = useDelayLoading(isPending, 150);
 
   const options: OptionsStatusTask[] = [

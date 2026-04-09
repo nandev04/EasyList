@@ -1,10 +1,10 @@
 import { Navigate } from "react-router-dom";
 import LoginForm from "../../components/loginForm/loginForm";
-import { useUserStore } from "../../store/userSession.store";
 import styles from "./login.module.css";
+import { useGetUser } from "../../hooks/React/useUser";
 
 const Login = () => {
-  const { user } = useUserStore();
+  const { data: user } = useGetUser();
 
   if (user) return <Navigate to="/" />;
   return (

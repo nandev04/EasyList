@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./editTaskBtn.module.css";
 import { MdEdit } from "react-icons/md";
-import useDelayLoading from "../../hooks/useDelayLoading";
+import useDelayLoading from "../../hooks/React/useDelayLoading";
 import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
 import {
   Dialog,
@@ -13,7 +13,7 @@ import {
 } from "@headlessui/react";
 import { EditTaskPayload, OptionsStatusTask } from "../../types/task.types";
 import { Controller, useForm } from "react-hook-form";
-import { useEditTask } from "../../hooks/useTaskMutation";
+import { useEditTaskMutation } from "../../hooks/Query/useTaskMutation";
 import CloseDialogBtn from "../closeDialogBtn/CloseDialogBtn";
 
 const EditTaskBtn = ({
@@ -24,7 +24,7 @@ const EditTaskBtn = ({
   taskId: number;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate, isPending, isError } = useEditTask();
+  const { mutate, isPending, isError } = useEditTaskMutation();
 
   const {
     register,
