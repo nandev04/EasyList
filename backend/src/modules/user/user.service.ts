@@ -41,7 +41,7 @@ const createUser = async (data: CreateUserBodySchemaType) => {
     const newData = { id: userId, hashPassword, ...safeData };
     const createdUser = await Repository_User.createUser(newData, userCreateSelect);
 
-    await VerifyAcc_Service.emailAccountVerification(createdUser.id, createdUser.email);
+    await VerifyAcc_Service.generateAccountToken(createdUser.id, createdUser.email);
 
     return createdUser;
   } catch (err) {

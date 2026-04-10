@@ -20,12 +20,27 @@ model User {
   tokenVersion Int      @default(0)
   avatarKey    String?
 
-  tasks              Task[]
-  refreshTokens      RefreshToken[]
-  PasswordResetCode  PasswordResetOTP[]
-  PasswordResetToken PasswordResetToken[]
-  devices            Device[]
-  EmailResetCode     UpdateEmailOTP[]
+  tasks                    Task[]
+  refreshTokens            RefreshToken[]
+  PasswordResetCode        PasswordResetOTP[]
+  PasswordResetToken       PasswordResetToken[]
+  devices                  Device[]
+  EmailResetCode           UpdateEmailOTP[]
+  accountVerificationToken AccountVerificationToken[]
+}
+
+model AccountVerificationToken {
+  id        Int       @id @default(autoincrement())
+  tokenHash String    @unique
+  userId    String
+  createdAt DateTime  @default(now())
+  expiresAt DateTime
+  revokedAt DateTime?
+  used      Boolean   @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Device {
