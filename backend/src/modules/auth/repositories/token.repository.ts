@@ -80,6 +80,34 @@ const revokeRefreshTokenFromUser = async (userId: string) => {
   });
 };
 
+const getAccountVerifyToken = async (tokenHash: string) =>
+  await prisma.accountVerificationToken.findUnique({
+    where: { tokenHash },
+    select: { id: true, expiresAt: true, revokedAt: true, used: true, userId: true }
+  });
+
+const createAccountVerifyToken = async (userId: string, tokenHash: string, expiresAt: Date) =>
+  await prisma.accountVerificationToken.create({
+    data: { tokenHash, userId, expiresAt },
+    select: { id: true }
+  });
+
+const revokeAccountVerifyTokenOld = async (userId: string, currentTokenId: number) =>
+  await prisma.accountVerificationToken.updateMany({
+    where: { userId, revokedAt: null, NOT: { id: currentTokenId } },
+    data: {
+      revokedAt: new Date()
+    }
+  });
+
+const markAccountVerifyTokenAsUsed = async (tokenId: number) =>
+  await prisma.accountVerificationToken.update({
+    where: { id: tokenId },
+    data: {
+      used: true
+    }
+  });
+
 export {
   createRefreshToken,
   verifyRefreshToken,
@@ -88,5 +116,9 @@ export {
   revokeRefreshTokenFromUser,
   createTokenUUID,
   validateTokenResetPassword,
-  markTokenAsUsed
+  markTokenAsUsed,
+  getAccountVerifyToken,
+  createAccountVerifyToken,
+  revokeAccountVerifyTokenOld,
+  markAccountVerifyTokenAsUsed
 };
