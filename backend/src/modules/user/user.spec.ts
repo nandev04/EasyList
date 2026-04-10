@@ -78,7 +78,7 @@ describe('Create user flow', () => {
   test('Should create a user and request email verification.', async () => {
     vi.spyOn(cryptoUtils, 'createHashPassword').mockResolvedValue(hashPassword);
     vi.spyOn(Repository_User, 'createUser').mockResolvedValue(result);
-    vi.spyOn(VerifyAcc_Service, 'emailAccountVerification').mockResolvedValue(undefined);
+    vi.spyOn(VerifyAcc_Service, 'generateAccountToken').mockResolvedValue(undefined);
     vi.spyOn(uuidUtils, 'createUserId').mockReturnValue(userIdMock);
 
     const { password, ...safeInput } = testInput;
@@ -94,11 +94,11 @@ describe('Create user flow', () => {
     expect(uuidUtils.createUserId).toHaveBeenCalledBefore(vi.mocked(Repository_User.createUser));
 
     expect(Repository_User.createUser).toHaveBeenCalledWith(dataCreate, userCreateSelect);
-    expect(VerifyAcc_Service.emailAccountVerification).toHaveBeenCalledWith(
+    expect(VerifyAcc_Service.generateAccountToken).toHaveBeenCalledWith(
       createdUser.id,
       createdUser.email
     );
-    expect(VerifyAcc_Service.emailAccountVerification).toHaveBeenCalledTimes(1);
+    expect(VerifyAcc_Service.generateAccountToken).toHaveBeenCalledTimes(1);
 
     expect(createdUser).toEqual(result);
   });
@@ -108,18 +108,5 @@ describe('Create user flow', () => {
     vi.spyOn(cryptoUtils, 'createHashPassword').mockRejectedValue(error);
 
     await expect(Service_User.createUser(testInput)).rejects.toBe(error);
-  });
-
-  test('Should throw an AppError with status 500 for generic errors.', async () => {
-    vi.spyOn(cryptoUtils, 'createHashPassword').mockResolvedValue(hashPassword);
-    vi.spyOn(Repository_User, 'createUser').mockResolvedValue(result);
-    vi.spyOn(VerifyAcc_Service, 'emailAccountVerification').mockRejectedValue(
-      new Error('Erro interno')
-    );
-
-    await expect(Service_User.createUser(testInput)).rejects.toMatchObject({
-      message: 'Erro interno',
-      statusCode: 500
-    });
   });
 });

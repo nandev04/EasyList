@@ -1,71 +1,103 @@
-import jwt from 'jsonwebtoken';
-import { emailAccountVerification, verifyAccountToken } from './verifyAcc.service.js';
-import * as User_Repository from '../../../user/user.repository.js';
+import { generateAccountToken, verifyAccountToken } from './verifyAcc.service.js';
+import * as Respository_User from '../../../user/user.repository.js';
+import * as Repository_Auth from '../../repositories/token.repository.js';
 import * as tokenUtils from '../../../../shared/utils/TokenUtils.js';
 import { createUserId } from '../../../../shared/utils/uuid.js';
+import * as cryptoUtils from '../../../../shared/utils/crypto.js';
 
-const { userId, email } = {
-  userId: createUserId(),
-  email: 'teste@gmail.com'
-};
+const tokenRaw = 'tokenRawTeste';
 
-describe('verifyTokenEmailAccount', async () => {
-  test('Should successfully verify jwt token and call verifyUser function.', async () => {
-    process.env.JWT_EMAIL_SECRET = 'test-secret';
-    const returnRepositoryVerifyUser = {
-      verified: true,
-      updatedAt: new Date()
+describe('verifyAccountToken', async () => {
+  test('Should successfully verify token and call verifyUser function.', async () => {
+    const tokenHash = 'tokenHashTeste';
+    const tokenSearched = {
+      userId: createUserId(),
+      expiresAt: new Date(Date.now() * 999999),
+      id: 3123,
+      revokedAt: null,
+      used: false
     };
 
-    vi.spyOn(tokenUtils, 'utilJwtVerifyEmail').mockResolvedValue({ userId });
-    vi.spyOn(User_Repository, 'verifyUser').mockResolvedValue(returnRepositoryVerifyUser);
+    vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(tokenHash);
+    vi.spyOn(Repository_Auth, 'getAccountVerifyToken').mockResolvedValue(tokenSearched);
+    vi.spyOn(Repository_Auth, 'markAccountVerifyTokenAsUsed').mockResolvedValue(undefined as never);
+    vi.spyOn(Respository_User, 'verifyUser').mockResolvedValue(undefined as never);
 
-    await verifyAccountToken('token-test');
-    expect(tokenUtils.utilJwtVerifyEmail).toBeCalledTimes(1);
-    expect(User_Repository.verifyUser).toBeCalledWith(userId);
-    expect(User_Repository.verifyUser).toBeCalledTimes(1);
-  });
-});
+    await verifyAccountToken(tokenRaw);
 
-describe('emailVerificationAccount', () => {
-  const ORIGINAL_ENV = process.env.JWT_EMAIL_SECRET;
-
-  beforeEach(() => {
-    vi.clearAllMocks();
+    expect(cryptoUtils.transformForHash).toHaveBeenCalledTimes(1);
+    expect(cryptoUtils.transformForHash).toHaveBeenCalledWith(tokenRaw);
+    expect(Repository_Auth.getAccountVerifyToken).toHaveBeenCalledWith(tokenHash);
+    expect(Repository_Auth.markAccountVerifyTokenAsUsed).toHaveBeenCalledWith(tokenSearched.id);
+    expect(Respository_User.verifyUser).toHaveBeenCalledTimes(1);
   });
 
-  test('should throw a dotenv error with the message: JWT_EMAIL_SECRET não definido! and statusCode 500', async () => {
-    delete process.env.JWT_EMAIL_SECRET;
+  test('Should throw an AppError with status code 404 and message: "Token inválido" if the token is not found', async () => {
+    const tokenHash = 'tokenHashTeste';
 
-    await expect(emailAccountVerification(userId, email)).rejects.toMatchObject({
-      message: 'JWT_EMAIL_SECRET não definido!',
-      statusCode: 500
-    });
+    vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(tokenHash);
+    vi.spyOn(Repository_Auth, 'getAccountVerifyToken').mockResolvedValue(null);
 
-    process.env.JWT_EMAIL_SECRET = ORIGINAL_ENV;
-  });
-
-  test('should throw an JsonWebTokenError if the parameter type is incorrect with a statusCode of 401.', async () => {
-    const jwtError = new jwt.JsonWebTokenError('Token Inválido');
-
-    vi.spyOn(tokenUtils, 'generateVerifyToken').mockImplementation(() => {
-      throw jwtError;
-    });
-
-    await expect(emailAccountVerification).rejects.toMatchObject({
-      message: 'Token Inválido',
-      statusCode: 401
+    await expect(verifyAccountToken).rejects.toMatchObject({
+      message: 'Token inválido',
+      statusCode: 404
     });
   });
 
-  test('should throw an AppError for general errors', async () => {
-    vi.spyOn(tokenUtils, 'generateVerifyToken').mockImplementation(() => {
-      throw new Error('Falha inesperada');
-    });
+  test('Should throw an AppError with status code 400 and message: "Token inválido ou expirado" if the token is revoked', async () => {
+    const tokenHash = 'tokenHashTeste';
+    const tokenSearched = {
+      userId: createUserId(),
+      expiresAt: new Date(Date.now() * 999999),
+      id: 3123,
+      revokedAt: new Date(Date.now() - 999999999),
+      used: false
+    };
 
-    await expect(emailAccountVerification(userId, email)).rejects.toMatchObject({
-      message: 'Falha inesperada',
-      statusCode: 500
+    vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(tokenHash);
+    vi.spyOn(Repository_Auth, 'getAccountVerifyToken').mockResolvedValue(tokenSearched);
+
+    await expect(verifyAccountToken).rejects.toMatchObject({
+      message: 'Token inválido ou expirado',
+      statusCode: 400
+    });
+  });
+
+  test('Should throw an AppError with status code 400 and message: "Token inválido ou expirado" if the token is expired', async () => {
+    const tokenHash = 'tokenHashTeste';
+    const tokenSearched = {
+      userId: createUserId(),
+      expiresAt: new Date(Date.now() - 999999),
+      id: 3123,
+      revokedAt: null,
+      used: false
+    };
+
+    vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(tokenHash);
+    vi.spyOn(Repository_Auth, 'getAccountVerifyToken').mockResolvedValue(tokenSearched);
+
+    await expect(verifyAccountToken).rejects.toMatchObject({
+      message: 'Token inválido ou expirado',
+      statusCode: 400
+    });
+  });
+
+  test('Should throw an AppError with status code 400 and message: "Token inválido ou expirado" if the token is used', async () => {
+    const tokenHash = 'tokenHashTeste';
+    const tokenSearched = {
+      userId: createUserId(),
+      expiresAt: new Date(Date.now() + 999999),
+      id: 3123,
+      revokedAt: null,
+      used: true
+    };
+
+    vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(tokenHash);
+    vi.spyOn(Repository_Auth, 'getAccountVerifyToken').mockResolvedValue(tokenSearched);
+
+    await expect(verifyAccountToken).rejects.toMatchObject({
+      message: 'Token inválido ou expirado',
+      statusCode: 400
     });
   });
 });
