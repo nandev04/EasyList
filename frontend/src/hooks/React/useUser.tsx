@@ -8,7 +8,7 @@ import {
 const useGetUser = () =>
   useQuery({
     queryKey: ["user"],
-    queryFn: getUser,
+    queryFn: async () => await getUser(),
     retry: false,
   });
 

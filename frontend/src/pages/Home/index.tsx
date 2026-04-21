@@ -81,15 +81,17 @@ const Home = () => {
               </div>
             )}
 
-            {filteredTasks?.length === 0 && (
-              <div className={styles.container_guidance}>
-                <p className={styles.newTask_guidance}>
-                  Sem tarefas, clique no{" "}
-                  <span className={styles.more_guidance}>+</span> e crie sua
-                  próxima tarefa!
-                </p>
-              </div>
-            )}
+            {tasks.data &&
+              tasks.data.length > 0 &&
+              filteredTasks?.length === 0 && (
+                <div className={styles.container_guidance}>
+                  <p className={styles.newTask_guidance}>
+                    Sem tarefas, clique no{" "}
+                    <span className={styles.more_guidance}>+</span> e crie sua
+                    próxima tarefa!
+                  </p>
+                </div>
+              )}
 
             {filteredTasks.map((task) => (
               <ContainerTask

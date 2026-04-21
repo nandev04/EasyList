@@ -1,6 +1,7 @@
 import { GiNotebook } from "react-icons/gi";
 import { FaPencilAlt } from "react-icons/fa";
 import styles from "./register.module.css";
+import { Link } from "react-router-dom";
 import RegisterForm from "../../components/registerForm/RegisterForm";
 
 const Register = () => {
@@ -19,9 +20,9 @@ const Register = () => {
           </h1>
           <p className={styles.description}>
             Já tem uma conta?{" "}
-            <a href="/login" className={styles.description_contrast}>
+            <Link to="/login" className={styles.description_contrast}>
               faça login
-            </a>
+            </Link>
           </p>
         </header>
         <RegisterForm />

@@ -4,7 +4,11 @@ const LogoutBtn = () => {
   const { mutate: logout } = useLogoutMutation();
 
   return (
-    <button onClick={() => logout}>
+    <button
+      onClick={() => {
+        logout();
+      }}
+    >
       <span>Sair</span> <FiLogOut strokeWidth={2} />
     </button>
   );
