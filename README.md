@@ -13,7 +13,6 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 - ⚛️ [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)  
 - 🔗 [React Router](https://reactrouter.com/) (navegação)
 - ✅ [Zod](https://zod.dev/) (validação de dados)
-- 🐻 [Zustand](https://zustand-demo.pmnd.rs/) (gerenciamento de estado global)
 - ⚡ [Vite](https://vitejs.dev/) (build e desenvolvimento)  
 - ✨ ESLint + Prettier (padronização de código)  
 
