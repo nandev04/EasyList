@@ -4,7 +4,9 @@ import styles from "./login.module.css";
 import { useGetUser } from "../../hooks/React/useUser";
 
 const Login = () => {
-  const { data: user } = useGetUser();
+  const { data: user, isLoading } = useGetUser();
+
+  if (isLoading) return null;
 
   if (user) return <Navigate to="/" />;
   return (

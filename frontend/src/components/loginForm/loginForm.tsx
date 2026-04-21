@@ -3,10 +3,12 @@ import styles from "./loginform.module.css";
 import { loginSchema, loginSchemaType } from "../../schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "../../services/auth.service";
-import { useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useGetUser } from "../../hooks/React/useUser";
+import { useQueryClient } from "@tanstack/react-query";
 
 const loginForm = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const {
     register,
@@ -20,7 +22,9 @@ const loginForm = () => {
   async function onSubmit(dataInput: loginSchemaType) {
     try {
       await loginUser(dataInput);
-      useGetUser();
+      await queryClient.invalidateQueries({
+        queryKey: ["user"],
+      });
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -64,12 +68,16 @@ const loginForm = () => {
         Login
       </button>
 
-      <a className={styles.links} style={{ fontStyle: "normal" }}>
+      <Link
+        to="/register"
+        className={styles.links}
+        style={{ fontStyle: "normal" }}
+      >
         <p>
           Ainda não tem uma conta?
           <span className={styles.contrast}> Registre-se</span>
         </p>
-      </a>
+      </Link>
     </form>
   );
 };

@@ -7,7 +7,7 @@ import { useGetUser } from "../../hooks/React/useUser";
 
 const DropdownHeader = () => {
   const { data: user } = useGetUser();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const S3_URL_AVATARS = import.meta.env.VITE_S3_URL_AVATARS;
 
   return (
@@ -16,7 +16,7 @@ const DropdownHeader = () => {
         <div
           className={styles.triggerWrapper}
           onMouseEnter={() => setOpen(true)}
-          // onMouseLeave={() => setOpen(false)}
+          onMouseLeave={() => setOpen(false)}
           onClick={() => setOpen(!open)}
         >
           <img
