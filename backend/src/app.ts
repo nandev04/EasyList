@@ -6,10 +6,10 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import taskRoutes from './modules/task/task.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import userRoutes from './modules/user/users.routes.js';
-import refreshTokenCleanup from './cron/refreshTokenCleanup.js';
-import resetPasswordCodeCleanup from './cron/passwordCodeCleanup.js';
-import oldDevicesCleanup from './cron/oldDevicesCleanup.js';
-import updateEmailCodeCleanup from './cron/updateEmailCodeCleanup.js';
+import refreshTokenCleanup from './cron/refreshToken.cleanup.js';
+import resetPasswordCodeCleanup from './cron/passwordCode.cleanup.js';
+import oldDevicesCleanup from './cron/oldDevices.cleanup.js';
+import updateEmailCodeCleanup from './cron/updateEmailCode.cleanup.js';
 import * as Rate_Limit from './middlewares/rateLimit.js';
 
 const app = express();

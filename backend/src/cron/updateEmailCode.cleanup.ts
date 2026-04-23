@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import prisma from '../infra/database/prismaClient.js';
 
 const updateEmailCodeCleanup = () => {
-  cron.schedule('0 3 * * *', async () => {
+  cron.schedule('40 3 * * *', async () => {
     console.log('[CRON] Iniciando limpeza de códigos OTP de atualização de email...');
 
     const now = new Date();
