@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import prisma from '../infra/database/prismaClient.js';
 
 const oldDevicesCleanup = () => {
-  cron.schedule('0 3 * * *', async () => {
+  cron.schedule('10 3 * * *', async () => {
     console.log('[CRON] Iniciando limpeza de dispositivos antigos...');
 
     const DateFormatThirtyDays = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);

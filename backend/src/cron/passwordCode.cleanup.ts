@@ -2,8 +2,8 @@ import cron from 'node-cron';
 import prisma from '../infra/database/prismaClient.js';
 
 const resetPasswordCodeCleanup = () => {
-  cron.schedule('0 3 * * *', async () => {
-    console.log('[CRON] Iniciando limpeza de códigos de reset de senha expirados...');
+  cron.schedule('20 3 * * *', async () => {
+    console.log('[CRON] Iniciando limpeza de códigos de reset de senha expirados e usados...');
 
     const now = new Date();
 

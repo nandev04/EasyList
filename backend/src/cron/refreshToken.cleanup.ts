@@ -2,17 +2,22 @@ import cron from 'node-cron';
 import prisma from '../infra/database/prismaClient.js';
 
 const cleanRefreshTokenDb = () => {
-  cron.schedule('0 3 * * *', async () => {
-    console.log('[CRON] Iniciando limpeza de refreshTokens expirados...');
+  cron.schedule('30 3 * * *', async () => {
+    console.log('[CRON] Iniciando limpeza de refreshTokens expirados e revogados...');
 
     const now = new Date();
 
     try {
       const result = await prisma.refreshToken.deleteMany({
         where: {
-          expiresAt: {
-            lt: now
-          }
+          OR: [
+            {
+              expiresAt: {
+                lt: now
+              }
+            },
+            { revokedAt: { not: null } }
+          ]
         }
       });
 
