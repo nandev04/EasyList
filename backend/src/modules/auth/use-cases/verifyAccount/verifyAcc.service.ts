@@ -27,4 +27,10 @@ const verifyAccountToken = async (token: string) => {
   await Repository_User.verifyUser(tokenSearched.userId);
 };
 
-export { verifyAccountToken, generateAccountToken };
+const resendAccountToken = async (email: string) => {
+  const user = await Repository_User.findByEmailNotVerified(email);
+  if (!user) return null;
+  await generateAccountToken(user.id, email);
+};
+
+export { verifyAccountToken, generateAccountToken, resendAccountToken };
