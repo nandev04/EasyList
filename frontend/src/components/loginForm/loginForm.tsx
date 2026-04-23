@@ -3,9 +3,11 @@ import styles from "./loginform.module.css";
 import { loginSchema, loginSchemaType } from "../../schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "../../services/auth.service";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useGetUser } from "../../hooks/React/useUser";
+import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { CiLogin } from "react-icons/ci";
+import { AxiosError } from "axios";
+import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
 
 const loginForm = () => {
   const queryClient = useQueryClient();
@@ -13,7 +15,8 @@ const loginForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    setError,
+    formState: { errors, isSubmitting },
   } = useForm<loginSchemaType>({
     resolver: zodResolver(loginSchema),
     mode: "onSubmit",
@@ -27,57 +30,87 @@ const loginForm = () => {
       });
       navigate("/");
     } catch (err) {
+      if (err instanceof AxiosError) {
+        const message = "Ocorreu um erro ao tentar o login";
+
+        setError("root", {
+          type: "server",
+          message:
+            err.response?.status === 429
+              ? "Ocorreu muitas tentativas, tente novamente mais tarde"
+              : err.response?.status === 401
+                ? err.response.data.message
+                : message,
+        });
+      } else {
+        setError("root", {
+          type: "server",
+          message: "Ocorreu um erro ao cadastrar o usuário",
+        });
+      }
       console.log(err);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+      <h1 className={styles.title}>
+        Login
+        <CiLogin />
+      </h1>
+      <p className={styles.subtitle}>
+        Ainda não tem uma conta?{" "}
+        <Link to="/register" className={styles.link_register}>
+          Registre-se
+        </Link>
+      </p>
+
       <div className={styles.container_input}>
-        <div className={styles.wrapper}>
+        <div className={styles.field}>
+          <label className={styles.label}>Email</label>
           <input
             className={styles.input}
-            placeholder="Email"
             autoComplete="username"
             {...register("email")}
           />
+          {errors.email && (
+            <span className={styles.error_message}>{errors.email.message}</span>
+          )}
         </div>
-        {errors.email && (
-          <span className={styles.error_message}>{errors.email.message}</span>
-        )}
-        <div className={styles.wrapper}>
+
+        <div className={styles.field}>
+          <label className={styles.label}>Senha</label>
           <input
-            placeholder="Senha"
             type="password"
             autoComplete="current-password"
             className={styles.input}
             {...register("password")}
           />
+          {errors.password && (
+            <span className={styles.error_message}>
+              {errors.password.message}
+            </span>
+          )}
         </div>
-        {errors.password && (
-          <span className={styles.error_message}>
-            {errors.password.message}
-          </span>
-        )}
       </div>
 
-      <a className={styles.links}>
-        Esqueceu sua <span className={styles.contrast}>senha?</span>
-      </a>
-      <button className={styles.btnSubmit} type="submit">
-        Login
-      </button>
+      {errors.root?.message && (
+        <span className={styles.error_message}>{errors.root.message}</span>
+      )}
 
-      <Link
-        to="/register"
-        className={styles.links}
-        style={{ fontStyle: "normal" }}
-      >
-        <p>
-          Ainda não tem uma conta?
-          <span className={styles.contrast}> Registre-se</span>
-        </p>
-      </Link>
+      <a className={styles.forgot_link}>
+        Esqueceu a <span className={styles.contrast}>senha?</span>
+      </a>
+
+      <div className={styles.submit_row}>
+        <button
+          className={styles.btnSubmit}
+          disabled={isSubmitting}
+          type="submit"
+        >
+          {isSubmitting ? <LoadingCircleSpinner /> : "Login"}
+        </button>
+      </div>
     </form>
   );
 };
