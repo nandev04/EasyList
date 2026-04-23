@@ -102,6 +102,14 @@ const findByEmail = async (email: string) => {
   return user;
 };
 
+const findByEmailNotVerified = async (email: string) => {
+  const user = await prisma.user.findUnique({
+    where: { email: email, verified: false },
+    select: { password: true, id: true, tokenVersion: true }
+  });
+  return user;
+};
+
 const incrementTokenVersion = async (id: string) => {
   await prisma.user.update({
     where: { id },
@@ -123,5 +131,6 @@ export {
   verifyUser,
   updateAvatar,
   findByEmail,
+  findByEmailNotVerified,
   incrementTokenVersion
 };
