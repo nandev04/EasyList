@@ -1,16 +1,6 @@
 name: Backend CI
 
 on:
-  push:
-    branches:
-      - "feature/**"
-      - "fix/**"
-      - "hotfix/**"
-      - "refactor/**"
-      - "chore/**"
-    paths:
-      - "backend/**"
-
   pull_request:
     branches:
       - main
