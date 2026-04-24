@@ -1,4 +1,4 @@
-import { emailOtpSchemaType } from "../schemas/EmailOtp.schema";
+import { emailOtpSchemaType } from "../schemas/emailOtp.schema";
 import {
   CreateUserBodyType,
   CreateUserResponseType,

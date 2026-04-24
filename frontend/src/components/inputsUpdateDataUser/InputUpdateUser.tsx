@@ -13,7 +13,7 @@ import * as Service from "../../services/user.service";
 import {
   emailOtpSchema,
   emailOtpSchemaType,
-} from "../../schemas/EmailOtp.schema";
+} from "../../schemas/emailOtp.schema";
 import { OTPInput } from "input-otp";
 import OtpSlots from "../OtpComponent/OtpSlots";
 import ResendOtpCodeBtn from "../resendOtpCode/ResendOtpCodeBtn";

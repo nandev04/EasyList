@@ -70,7 +70,7 @@ const loginForm = () => {
           <label className={styles.label}>Email</label>
           <input
             className={styles.input}
-            autoComplete="username"
+            autoComplete="email"
             {...register("email")}
           />
           {errors.email && (
