@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./verifyEmail.module.css";
 import { MdAlternateEmail, MdMarkEmailRead } from "react-icons/md";
 import { IoIosSend } from "react-icons/io";
@@ -8,21 +8,35 @@ import {
   emailVerifySchema,
   emailVerifySchemaType,
 } from "../../schemas/sendEmailVerify.schema";
+import { Link, useLocation } from "react-router-dom";
+import { resendLinkVerifyAccount } from "../../services/auth.service";
+import LoadingCircleSpinner from "../../components/loadingCircleSpinner/LoadingCircleSpinner";
 
 const VerifyEmail = () => {
-  const [email, setEmail] =
-    useState<React.SetStateAction<String | null>>("email");
+  const location = useLocation();
+  const [email, setEmail] = useState<string | null>(
+    location.state?.email ?? null,
+  );
+
   const {
     register,
+    setError,
     handleSubmit,
+    clearErrors,
     formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(emailVerifySchema),
   });
 
-  async function sendEmail(dataForm: emailVerifySchemaType) {
-    console.log(dataForm.email);
-    return;
+  async function sendEmail({ email }: emailVerifySchemaType) {
+    try {
+      await resendLinkVerifyAccount({ email });
+      setEmail(email);
+    } catch (err) {
+      return setError("root", {
+        message: "Ocorreu um erro com a solicitação",
+      });
+    }
   }
 
   return (
@@ -48,6 +62,11 @@ const VerifyEmail = () => {
                   autoComplete="email"
                   type="email"
                   {...register("email")}
+                  onChange={() => {
+                    if (errors.root) {
+                      clearErrors("root");
+                    }
+                  }}
                   className={styles.input}
                 />
                 <button
@@ -55,12 +74,17 @@ const VerifyEmail = () => {
                   type="submit"
                   disabled={isSubmitting}
                 >
-                  <IoIosSend />
+                  {isSubmitting ? <LoadingCircleSpinner /> : <IoIosSend />}
                 </button>
               </form>
               {errors.email && (
                 <span className={styles.error_message}>
                   {errors.email.message}
+                </span>
+              )}
+              {errors.root && (
+                <span className={styles.error_message}>
+                  {errors.root.message}
                 </span>
               )}
             </div>
@@ -73,13 +97,17 @@ const VerifyEmail = () => {
                 entrada (e a pasta de spam) e clique no link para confirmar sua
                 conta.
               </p>
-              <button
-                onClick={() => setEmail(null)}
-                className={styles.resendEmail_btn}
-              >
-                Reenviar email
-              </button>
-              <button className={styles.goToLogin_btn}>Ir para o login</button>
+              <div className={styles.actions_container}>
+                <button
+                  onClick={() => setEmail(null)}
+                  className={styles.resendEmail_btn}
+                >
+                  Reenviar email
+                </button>
+                <button className={styles.goToLogin_btn}>
+                  <Link to={"/login"}>Ir para o login</Link>
+                </button>
+              </div>
             </div>
           )}
         </div>

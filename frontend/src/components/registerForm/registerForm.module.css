@@ -63,6 +63,11 @@
   background-color: var(--primary-color-hover);
 }
 
+.submit_btn:disabled {
+  cursor: unset;
+  background-color: var(--cancel-color);
+}
+
 @media (max-width: 760px) {
   .form {
     max-width: 100%;
