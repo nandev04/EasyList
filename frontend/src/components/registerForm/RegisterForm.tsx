@@ -10,6 +10,7 @@ import { AxiosError } from "axios";
 import { useCreateUser } from "../../hooks/React/useUser";
 import useDelayLoading from "../../hooks/React/useDelayLoading";
 import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const { mutate: mutateRegisterUser, isPending } = useCreateUser();
@@ -18,14 +19,18 @@ const RegisterForm = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const { showLoading } = useDelayLoading(isPending, 150);
+  const { showLoading } = useDelayLoading(isPending, 0);
+  const navigate = useNavigate();
 
   async function registerSubmit(data: registerSchemaType) {
-    const response = mutateRegisterUser(data, {
-      onSuccess: () => registerForm.reset(),
+    mutateRegisterUser(data, {
+      onSuccess: () => {
+        navigate("/verify-email", { state: { email: "teste" } });
+        registerForm.reset();
+      },
       onError: (err: unknown) => {
         if (err instanceof AxiosError) {
-          const message = "Erro ao cadastrar";
+          const message = "Ocorreu um erro ao cadastrar";
 
           registerForm.setError("root", {
             type: "server",
@@ -42,7 +47,6 @@ const RegisterForm = () => {
         }
       },
     });
-    return response;
   }
 
   return (

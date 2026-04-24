@@ -15,6 +15,7 @@ const loginForm = () => {
   const {
     register,
     handleSubmit,
+    clearErrors,
     setError,
     formState: { errors, isSubmitting },
   } = useForm<loginSchemaType>({
@@ -70,8 +71,8 @@ const loginForm = () => {
           <label className={styles.label}>Email</label>
           <input
             className={styles.input}
-            autoComplete="username"
-            {...register("email")}
+            autoComplete="email"
+            {...register("email", { onChange: () => clearErrors("root") })}
           />
           {errors.email && (
             <span className={styles.error_message}>{errors.email.message}</span>
@@ -84,7 +85,9 @@ const loginForm = () => {
             type="password"
             autoComplete="current-password"
             className={styles.input}
-            {...register("password")}
+            {...register("password", {
+              onChange: () => clearErrors("root"),
+            })}
           />
           {errors.password && (
             <span className={styles.error_message}>
