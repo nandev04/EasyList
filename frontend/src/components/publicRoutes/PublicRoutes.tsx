@@ -3,7 +3,7 @@ import Loading from "../loading/Loading";
 import useDelayLoading from "../../hooks/React/useDelayLoading";
 import { useUserStore } from "../../store/useUserStore";
 
-const ProtectedRoutes = () => {
+const PublicRoutes = () => {
   const user = useUserStore((s) => s.user);
   const isLoading = useUserStore((s) => s.isLoading);
 
@@ -13,9 +13,9 @@ const ProtectedRoutes = () => {
 
   if (showLoading) return <Loading />;
 
-  if (!showLoading && !user) return <Navigate to="/login" replace />;
+  if (user) return <Navigate to="/" replace />;
 
   return <Outlet />;
 };
 
-export default ProtectedRoutes;
+export default PublicRoutes;

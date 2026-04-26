@@ -7,12 +7,12 @@ import DropdownHeader from "../../components/dropdownHeader/DropdownHeader";
 import { useState } from "react";
 import { StatusTask } from "../../types/task.types";
 import DropdownFilter from "../../components/dropDownFilter/DropdownFilter";
-import { useGetUser } from "../../hooks/React/useUser";
+import { useUserStore } from "../../store/useUserStore";
 import useTasks from "../../hooks/React/useTasks";
 
 const Home = () => {
-  const user = useGetUser();
-  const tasks = useTasks(!!user.data);
+  const user = useUserStore((s) => s.user);
+  const tasks = useTasks(!!user);
 
   const { showLoading } = useDelayLoading(tasks.isLoading, 300);
   const [selectedStatus, setSelectedStatus] = useState<StatusTask | null>(null);
@@ -38,7 +38,7 @@ const Home = () => {
       </header>
       <main className={styles.main}>
         <h1 className={styles.welcome_title}>
-          <span>Olá</span>, {user.data?.username}!
+          <span>Olá</span>, {user?.username}!
         </h1>
         <section className={styles.tasks_section}>
           <div className={styles.container_section}>
