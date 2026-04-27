@@ -50,3 +50,9 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 - Autenticação com JWT
 - Testes unitários com Vitest
 - Pipeline CI/CD automatizado com GitHub Actions
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT.
