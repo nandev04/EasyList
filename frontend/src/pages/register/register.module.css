@@ -40,8 +40,10 @@
 .title {
   display: flex;
   gap: 10px;
-  font-family: var(--tertiary-font);
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-family: var(--primary-font);
+  color: var(--dark-grey);
+  font-size: 40px;
+  margin-bottom: 8px;
 }
 
 .pencil_container {
@@ -54,16 +56,20 @@
 }
 
 .description {
-  font-size: clamp(0.83rem, 1.7vw, 0.9rem);
+  font-family: var(--primary-font);
+  font-size: 0.875rem;
+  color: #777;
 }
 
 .description_contrast {
   color: var(--primary-color);
-  text-decoration: underline;
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .description_contrast:hover {
-  color: var(--primary-color-hover);
+  text-decoration: underline;
 }
 
 @media (max-width: 900px) {
