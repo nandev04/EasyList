@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - "backend/**"
+  push:
+    branches:
+      - main
 
 jobs:
   install-backend-deps:
