@@ -10,3 +10,5 @@ verifyOtpPwdRoutes.post(
   validate({ body: verifyOtpPwdBodySchema }),
   Controller_VerifyOtp.verifyOtpPwd
 );
+
+export default verifyOtpPwdRoutes;
