@@ -9,6 +9,7 @@ import changePasswordRoutes from './use-cases/changePassword/changePwd.routes.js
 import resolveSessionIfExists from '../../middlewares/resolveSessionIfExists.js';
 import forgotPwdRoutes from './use-cases/passwordRecovery/requestForgot/forgotPwd.routes.js';
 import resetPwdRoutes from './use-cases/passwordRecovery/resetPassword/resetPwd.routes.js';
+import verifyOtpPwdRoutes from './use-cases/passwordRecovery/verifyOtp/verifyOtp.routes.js';
 
 const authRoutes = express.Router();
 
@@ -18,7 +19,7 @@ authRoutes.use('/verify', verifyAccRoutes);
 authRoutes.use('/refresh-token', refreshTknRoutes);
 authRoutes.use('/change-password', authenticate, requireAuth, changePasswordRoutes);
 authRoutes.use('/forgot-password', forgotPwdRoutes);
-authRoutes.use('/verify-code', forgotPwdRoutes);
+authRoutes.use('/verify-code', verifyOtpPwdRoutes);
 authRoutes.use('/reset-password', resetPwdRoutes);
 
 export default authRoutes;
