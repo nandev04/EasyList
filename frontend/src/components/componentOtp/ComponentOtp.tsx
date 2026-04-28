@@ -13,8 +13,10 @@ const ComponentOtp = () => {
     mode: "onSubmit",
   });
 
-  function onSubmit(data: otpSchemaType) {
-    console.log(data);
+  const codeSlots = otpForm.watch("code");
+
+  function onSubmit({ code }: otpSchemaType) {
+    console.log(code);
   }
 
   return (
@@ -27,7 +29,7 @@ const ComponentOtp = () => {
         Informe o código de 6 dígitos que enviamos para o seu e-mail para
         prosseguir.
       </p>
-      <form onSubmit={otpForm.handleSubmit(onSubmit)}>
+      <form className={styles.form} onSubmit={otpForm.handleSubmit(onSubmit)}>
         <div className={styles.otp_wrapper}>
           <Controller
             name="code"
@@ -60,7 +62,11 @@ const ComponentOtp = () => {
           <button type="button" className={styles.back_btn}>
             Voltar
           </button>
-          <button type="submit" className={styles.continue_btn}>
+          <button
+            disabled={codeSlots.length < 6 ? true : false}
+            type="submit"
+            className={styles.continue_btn}
+          >
             Continuar
           </button>
         </div>
