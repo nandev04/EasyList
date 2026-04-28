@@ -7,6 +7,7 @@ import Profile from "./pages/profile";
 import Register from "./pages/register";
 import VerifyAccount from "./pages/verify-account";
 import VerifyEmail from "./pages/verify-email";
+import ForgotPassword from "./pages/forgot-password";
 
 function MainRoutes() {
   return (
@@ -20,6 +21,7 @@ function MainRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/verify-account" element={<VerifyAccount />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
     </Routes>
   );

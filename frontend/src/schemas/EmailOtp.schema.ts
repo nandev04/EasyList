@@ -1,8 +1,8 @@
 import z from "zod";
 
-export type emailOtpSchemaType = z.infer<typeof emailOtpSchema>;
+export type otpSchemaType = z.infer<typeof otpSchema>;
 
-export const emailOtpSchema = z.object({
+export const otpSchema = z.object({
   code: z
     .string()
     .toUpperCase()

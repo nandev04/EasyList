@@ -1,4 +1,4 @@
-import { emailOtpSchemaType } from "../schemas/emailOtp.schema";
+import { otpSchemaType } from "../schemas/emailOtp.schema";
 import {
   CreateUserBodyType,
   CreateUserResponseType,
@@ -33,7 +33,7 @@ export async function updateUser(data: UpdateUserBodyType) {
   return response;
 }
 
-export async function verifyOtpEmailUpdate(data: emailOtpSchemaType) {
+export async function verifyOtpEmailUpdate(data: otpSchemaType) {
   const response = await privateApi.post("/email-change/verify", data);
   return response;
 }
