@@ -37,15 +37,15 @@ describe('Login Service', () => {
   const returnFindByEmail = { id: 'uuidv7-userId', password: 'testPassword', tokenVersion: 40 };
   const createdDeviceId = 10;
 
-  test('Should throw an AppError if the user email is not found with status code 404 and message error: "Usuário correspondente ao email não encontrado"', async () => {
+  test('Should throw an AppError if the user email is not found with status code 401 and message error: "Credenciais inválidas"', async () => {
     const invalidEmail = 'userNotFound@gmail.com';
     const password = 'testPassword';
 
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(null);
 
     await expect(loginUser(invalidEmail, password)).rejects.toMatchObject({
-      message: 'Usuário correspondente ao email não encontrado',
-      statusCode: 404
+      message: 'Credenciais inválidas',
+      statusCode: 401
     });
   });
 
