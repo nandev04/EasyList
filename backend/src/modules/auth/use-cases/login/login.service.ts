@@ -8,7 +8,7 @@ import { setTokenVersion } from '../../services/tokenVersion.service.js';
 
 const loginUser = async (email: string, password: string) => {
   const user = await User_Repository.findByEmail(email);
-  if (!user) throw new AppError('Usuário correspondente ao email não encontrado', 404);
+  if (!user) throw new AppError('Credenciais inválidas', 401);
 
   const verifyHash = await compareHash(password, user.password);
 
