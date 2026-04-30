@@ -7,15 +7,18 @@ import * as MailService from '../../../../../shared/services/mail.service.js';
 
 const forgotPasswordService = async (email: string) => {
   const user = await Repository_User.findByEmail(email);
-  if (!user) throw new AppError('Usuário não encontrado', 404);
 
-  const code = generateCode();
-  const hashCodeForgot = transformForHash(code);
-  const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+  if (user) {
+    const code = generateCode();
+    const hashCodeForgot = transformForHash(code);
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-  await Repository_OTP.createCodeOTP(hashCodeForgot, expiresAt, user.id);
+    await Repository_OTP.createCodeOTP(hashCodeForgot, expiresAt, user.id);
 
-  MailService.sendForgotPasswordEmail(email, code);
+    MailService.sendForgotPasswordEmail(email, code);
+  }
+
+  return { success: true };
 };
 
 export { forgotPasswordService };
