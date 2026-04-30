@@ -1,14 +1,7 @@
-import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import styles from "./forgotPassword.module.css";
-import ComponentEmailInput from "../../components/componentEmailInput/ComponentEmailInput";
-import ComponentOtp from "../../components/componentOtp/ComponentOtp";
-import ComponentResetPassword from "../../components/componentResetPassword/ComponentResetPassword";
 
-type Step = "email" | "otp" | "reset";
-
-const ForgotPassword = () => {
-  const [step, setStep] = useState<Step>("reset");
-
+const ForgotPasswordLayout = () => {
   return (
     <>
       <span className={styles.logo}>
@@ -16,13 +9,11 @@ const ForgotPassword = () => {
       </span>
       <div className={styles.base}>
         <div className={styles.general_container}>
-          {step === "email" && <ComponentEmailInput />}
-          {step === "otp" && <ComponentOtp />}
-          {step === "reset" && <ComponentResetPassword />}
+          <Outlet />
         </div>
       </div>
     </>
   );
 };
 
-export default ForgotPassword;
+export default ForgotPasswordLayout;

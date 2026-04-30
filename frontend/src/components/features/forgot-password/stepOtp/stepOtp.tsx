@@ -1,12 +1,26 @@
+import { useEffect } from "react";
 import { MdPin } from "react-icons/md";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OTPInput } from "input-otp";
-import OtpSlots from "../OtpComponent/OtpSlots";
-import styles from "./componentOtp.module.css";
-import { otpSchema, otpSchemaType } from "../../schemas/emailOtp.schema";
+import OtpSlots from "../../../OtpComponent/OtpSlots";
+import styles from "./stepOtp.module.css";
+import { otpSchema, otpSchemaType } from "../../../../schemas/emailOtp.schema";
+import { sendOtpForgotPassword } from "../../../../services/auth.service";
+import { AxiosError } from "axios";
+import LoadingCircleSpinner from "../../../loadingCircleSpinner/LoadingCircleSpinner";
 
-const ComponentOtp = () => {
+const StepOtp = ({
+  onSuccess,
+  onBack,
+  onExpired,
+  email,
+}: {
+  onSuccess: (resetToken: string) => void;
+  onBack: () => void;
+  onExpired: () => void;
+  email: string;
+}) => {
   const otpForm = useForm<otpSchemaType>({
     defaultValues: { code: "" },
     resolver: zodResolver(otpSchema),
@@ -15,8 +29,27 @@ const ComponentOtp = () => {
 
   const codeSlots = otpForm.watch("code");
 
-  function onSubmit({ code }: otpSchemaType) {
-    console.log(code);
+  useEffect(() => {
+    if (!email) onBack();
+  }, []);
+
+  async function onSubmit({ code }: otpSchemaType) {
+    try {
+      const response = await sendOtpForgotPassword({ code, email });
+
+      onSuccess(response.data);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        const status = err.response?.status;
+        if (status === 401 || status === 410) {
+          onExpired();
+          return;
+        }
+        otpForm.setError("root", { message: err.message });
+      } else {
+        otpForm.setError("root", { message: "Ocorreu um erro inesperado" });
+      }
+    }
   }
 
   return (
@@ -59,15 +92,23 @@ const ComponentOtp = () => {
           )}
         </div>
         <div className={styles.actions_container}>
-          <button type="button" className={styles.back_btn}>
+          <button
+            onClick={() => onBack()}
+            type="button"
+            className={styles.back_btn}
+          >
             Voltar
           </button>
           <button
-            disabled={codeSlots.length < 6 ? true : false}
+            disabled={codeSlots.length < 6 || otpForm.formState.isSubmitting}
             type="submit"
             className={styles.continue_btn}
           >
-            Continuar
+            {otpForm.formState.isSubmitting ? (
+              <LoadingCircleSpinner />
+            ) : (
+              "Continuar"
+            )}
           </button>
         </div>
       </form>
@@ -75,4 +116,4 @@ const ComponentOtp = () => {
   );
 };
 
-export default ComponentOtp;
+export default StepOtp;

@@ -7,7 +7,11 @@ import Profile from "./pages/profile";
 import Register from "./pages/register";
 import VerifyAccount from "./pages/verify-account";
 import VerifyEmail from "./pages/verify-email";
-import ForgotPassword from "./pages/forgot-password";
+import ForgotPasswordLayout from "./pages/forgot-password";
+import ForgotPasswordEmailPage from "./pages/forgot-password/email";
+import ForgotPasswordOtpPage from "./pages/forgot-password/otp";
+import ForgotPasswordResetPage from "./pages/forgot-password/reset";
+import ForgotPasswordSuccessPage from "./pages/forgot-password/success";
 
 function MainRoutes() {
   return (
@@ -21,7 +25,12 @@ function MainRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/verify-account" element={<VerifyAccount />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/forgot-password" element={<ForgotPasswordLayout />}>
+          <Route index element={<ForgotPasswordEmailPage />} />
+          <Route path="otp" element={<ForgotPasswordOtpPage />} />
+          <Route path="reset" element={<ForgotPasswordResetPage />} />
+          <Route path="success" element={<ForgotPasswordSuccessPage />} />
+        </Route>
       </Route>
     </Routes>
   );

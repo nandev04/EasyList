@@ -102,6 +102,7 @@
 }
 
 .error_message {
+  font-style: italic;
   display: block;
   margin: 8px 0;
   color: var(--error-message-color);
@@ -113,11 +114,16 @@
   .actions_container {
     align-items: center;
     margin: 1.5rem auto 0 auto;
-    width: 60%;
+    width: 100%;
     flex-direction: column-reverse;
   }
 
   .continue_btn {
     padding: 0.55rem 2.8rem;
+  }
+
+  .otp_wrapper {
+    --otp-slot-width: clamp(28px, 9vw, 45px);
+    --otp-slot-height: clamp(28px, 9vw, 45px);
   }
 }

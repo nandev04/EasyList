@@ -2,24 +2,16 @@
   width: 100%;
   max-width: 630px;
   display: flex;
-  gap: 12px;
+  gap: 7px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-top: -10vh;
 }
 
-.icon_box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  padding: 14px;
-}
-
-.icon_box svg {
+.image_wrapper svg {
   width: 60px;
-  height: 60px;
+  height: auto;
   color: var(--primary-color);
 }
 
@@ -41,53 +33,36 @@
 .form {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
   margin-top: 1.5rem;
 }
 
-.input_group {
+.field {
   width: 100%;
-}
-
-.label {
-  background-color: #fafafa;
-  font-family: var(--primary-font);
-  font-size: 0.83rem;
-  font-style: italic;
-  color: #888;
-  margin-left: 1rem;
 }
 
 .input {
-  width: 100%;
   font-family: var(--primary-font);
   background-color: #fdfdfd;
   border: 2px solid #bdbdbd;
+  border-right: none;
   font-size: 1rem;
   color: var(--dark-grey);
-  padding: 12px 10px;
-  margin-top: 5px;
-  border-radius: 7px;
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--primary-color);
+  padding: 10px;
+  height: 45px;
+  width: 100%;
+  border-radius: 7px 0 0 7px;
 }
 
 .submit_btn {
-  align-self: flex-end;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  border-radius: 10px;
-  padding: 0.55rem 2rem;
-  font-size: 0.95rem;
-  font-family: var(--primary-font);
-  font-weight: 600;
   background-color: var(--primary-color);
-  color: white;
-  margin-right: 12px;
+  width: 45px;
+  height: 45px;
+  padding: 10px;
+  border-radius: 0 7px 7px 0;
 }
 
 .submit_btn:hover {
@@ -99,30 +74,45 @@
   background-color: var(--cancel-color);
 }
 
+.submit_btn svg {
+  color: white;
+  width: 25px;
+  height: auto;
+}
+
+.submit_btn:disabled svg {
+  color: #f8f8f8;
+}
+
 .error_message {
   align-self: flex-start;
   font-style: italic;
   font-family: var(--primary-font);
   font-size: 0.81rem;
   color: var(--error-message-color);
-  margin-top: -12px;
-  margin-left: 8px;
+  margin-top: 5px;
+  margin-left: 7px;
 }
 
-@media (max-width: 768px) {
-  .submit_btn {
-    margin: 0;
-    align-self: center;
+@media (max-width: 648px) {
+  .form {
+    flex-direction: column;
   }
-}
 
-@media (max-width: 540px) {
-  .label {
-    font-size: 12px;
-    margin-left: 0.5rem;
+  .input_container {
+    flex-direction: column;
   }
 
   .input {
-    padding: 7px 10px;
+    margin-bottom: 2px;
+    border: 2px solid #bdbdbd;
+    border-radius: 7px;
+  }
+
+  .submit_btn {
+    align-self: flex-end;
+    border-radius: 1rem;
+    padding: 7px;
+    width: 70px;
   }
 }

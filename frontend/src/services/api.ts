@@ -30,6 +30,17 @@ export function setupInterceptors() {
       return Promise.reject(err);
     },
   );
+
+  publicApi.interceptors.response.use(
+    (res) => res,
+    (err) => {
+      err.message =
+        err.response.status === 429
+          ? "Ocorreu muitas tentativas, tente novamente mais tarde"
+          : err.response?.data?.message || "Erro inesperado";
+      return Promise.reject(err);
+    },
+  );
 }
 
 setupInterceptors();
