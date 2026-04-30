@@ -10,10 +10,7 @@ import {
 } from "../../schemas/updateUserSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Service from "../../services/user.service";
-import {
-  emailOtpSchema,
-  emailOtpSchemaType,
-} from "../../schemas/emailOtp.schema";
+import { otpSchema, otpSchemaType } from "../../schemas/emailOtp.schema";
 import { OTPInput } from "input-otp";
 import OtpSlots from "../OtpComponent/OtpSlots";
 import ResendOtpCodeBtn from "../resendOtpCode/ResendOtpCodeBtn";
@@ -52,7 +49,7 @@ const InputUpdateUser = () => {
     defaultValues: {
       code: "",
     },
-    resolver: zodResolver(emailOtpSchema),
+    resolver: zodResolver(otpSchema),
     mode: "onSubmit",
   });
 
@@ -90,7 +87,7 @@ const InputUpdateUser = () => {
     setIsEditing(false);
   }
 
-  async function onSubmitOtp(data: emailOtpSchemaType) {
+  async function onSubmitOtp(data: otpSchemaType) {
     try {
       const { data: responseData } = await Service.verifyOtpEmailUpdate(data);
       updateUser({ email: responseData.data.newEmail });

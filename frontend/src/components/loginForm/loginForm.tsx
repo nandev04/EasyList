@@ -49,7 +49,6 @@ const loginForm = () => {
           message: "Ocorreu um erro ao cadastrar o usuário",
         });
       }
-      console.log(err);
     }
   }
 
