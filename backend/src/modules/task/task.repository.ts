@@ -2,9 +2,15 @@ import prisma from '../../infra/database/prismaClient.js';
 import { createTaskInputType } from '../task/task.type.js';
 import { updateTaskSchemaBodyType } from '../task/task.schema.js';
 
-const getTasks = async (userId: string) => {
+const getTasks = async (userId: string, limit: number, cursorId?: number) => {
   const tasks = await prisma.task.findMany({
     where: { userId },
+    take: limit + 1,
+    ...(cursorId && {
+      skip: 1,
+      cursor: { id: cursorId }
+    }),
+    orderBy: [{ id: 'desc' }],
     select: {
       title: true,
       description: true,
@@ -26,15 +32,10 @@ const createTask = async ({ userId, title, description, status }: createTaskInpu
       user: {
         connect: { id: userId }
       }
-    },
-    include: {
-      user: true
     }
   });
 
   return {
-    insertId: createdTask.user.id,
-    username: createdTask.user.username,
     title: createdTask.title,
     description: createdTask.description,
     status: createdTask.status

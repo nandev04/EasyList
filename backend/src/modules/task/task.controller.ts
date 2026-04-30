@@ -1,16 +1,18 @@
 import * as Service from './task.service.js';
 import { NextFunction, Request, Response } from 'express';
 import {
-  CreateTaskSchemaType,
+  createTaskSchemaType,
   updateTaskSchemaBodyType,
   updateTaskSchemaParamsType,
-  deleteTaskSchemaParamsType
+  deleteTaskSchemaParamsType,
+  getTaskSchemaType
 } from './task.schema.js';
 
 const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { limit, cursor } = <getTaskSchemaType>req.validated!.query;
     const userId = req.userId!;
-    const tasks = await Service.getTasks(userId);
+    const tasks = await Service.getTasks(userId, limit, cursor);
     res.status(200).json(tasks);
   } catch (err) {
     next(err);
@@ -21,7 +23,7 @@ const createTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!;
 
-    const { title, description, status } = req.validated!.body as CreateTaskSchemaType;
+    const { title, description, status } = req.validated!.body as createTaskSchemaType;
     const createdTask = await Service.createTask({ title, description, status, userId });
     res.status(200).json(createdTask);
   } catch (err) {
