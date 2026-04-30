@@ -1,5 +1,4 @@
 import * as cryptoUtils from '../../../../../shared/utils/crypto.js';
-import { AppError } from '../../../../../shared/utils/error.js';
 import generateCode from '../../../../../shared/utils/generateCode.js';
 import { createUserId } from '../../../../../shared/utils/uuid.js';
 import * as User_Repository from '../../../../user/user.repository.js';
@@ -16,15 +15,14 @@ describe('forgotPasswordService', () => {
     vi.restoreAllMocks();
   });
 
-  test('Should throw an AppError if the user is not found with message: Usuário não encontrado and statusCode 404', async () => {
-    const error = new AppError('Usuário não encontrado', 404);
-
+  test('Should return an object containing "success: true" if the user is not found', async () => {
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(null);
+    vi.spyOn(ServiceMail, 'sendForgotPasswordEmail').mockResolvedValue(undefined as never);
+    vi.spyOn(Otp_Repository, 'createCodeOTP').mockResolvedValue(undefined as never);
 
-    await expect(forgotPasswordService(email)).rejects.toMatchObject({
-      message: error.message,
-      statusCode: error.statusCode
-    });
+    expect(ServiceMail.sendForgotPasswordEmail).toBeCalledTimes(0);
+    expect(Otp_Repository.createCodeOTP).toBeCalledTimes(0);
+    expect(await forgotPasswordService(email)).toEqual({ success: true });
   });
 
   test('Should call createCodeOTP function of repository and call the email service for email trigger', async () => {
