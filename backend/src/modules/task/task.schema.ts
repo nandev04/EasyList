@@ -1,9 +1,15 @@
 import { z } from 'zod';
 
-type CreateTaskSchemaType = z.infer<typeof createTaskSchema>;
+type getTaskSchemaType = z.infer<typeof getTaskSchema>;
+type createTaskSchemaType = z.infer<typeof createTaskSchema>;
 type deleteTaskSchemaParamsType = z.infer<typeof deleteTaskSchemaParams>;
 type updateTaskSchemaBodyType = z.infer<typeof updateTaskSchemaBody>;
 type updateTaskSchemaParamsType = z.infer<typeof updateTaskSchemaParams>;
+
+const getTaskSchema = z.object({
+  limit: z.coerce.number().int().positive().max(50).default(10),
+  cursor: z.coerce.number().int().positive().optional()
+});
 
 const createTaskSchema = z.object({
   title: z.string().min(1).max(255),
@@ -26,8 +32,10 @@ const updateTaskSchemaBody = z.object({
 });
 
 export {
+  getTaskSchema,
+  getTaskSchemaType,
   createTaskSchema,
-  CreateTaskSchemaType,
+  createTaskSchemaType,
   deleteTaskSchemaParams,
   deleteTaskSchemaParamsType,
   updateTaskSchemaBody,
