@@ -20,7 +20,6 @@ const findCodeOTP = async (hashCode: string, userId: string) => {
     },
     select: { userId: true, used: true, expiresAt: true, id: true }
   });
-  if (!code) throw new AppError('Código não encontrado', 404);
   return code;
 };
 
