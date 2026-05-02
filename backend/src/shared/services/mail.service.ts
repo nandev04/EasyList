@@ -1,6 +1,8 @@
 import nodemailer, { Transporter } from 'nodemailer';
 import sendgridTransport from 'nodemailer-sendgrid';
 import emailMask from '../utils/emailMask.js';
+import fs from 'fs';
+import path from 'path';
 
 const getTransporter = async () => {
   if (process.env.NODE_ENV === 'production') {
@@ -45,18 +47,10 @@ const sendVerificationMail = async (to: string, token: string) => {
 };
 
 const sendForgotPasswordEmail = async (to: string, code: string) => {
-  const template = `
-      <div style="font-family: Arial, sans-serif; text-align: center;">
-        <h2>Redefinição de Senha</h2>
-        <p>Você solicitou a redefinição de senha. Use o código abaixo para continuar:</p>
-        <p style="font-size: 24px; font-weight: bold; letter-spacing: 4px;">${code}</p>
-        <p>Este código expira em 15 minutos.</p>
-        <hr />
-        <p style="font-size: 12px; color: #888;">
-          Se você não solicitou esta ação, ignore este e-mail.
-        </p>
-      </div>
-    `;
+  // Configurar uma funcao para ler o HTML
+  const filePath = 'src/emails/templates/forgotPassword.html';
+
+  const html = fs.readFileSync(filePath, 'utf-8').replace('{{ code }}', code);
 
   const transporter: Transporter = await getTransporter();
 
@@ -64,7 +58,7 @@ const sendForgotPasswordEmail = async (to: string, code: string) => {
     from: 'no-reply@minhaempresa.com',
     to,
     subject: 'Seu código de verificação',
-    html: template
+    html: html
   });
 
   if (process.env.NODE_ENV === 'development') {
