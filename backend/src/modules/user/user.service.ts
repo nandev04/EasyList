@@ -64,7 +64,7 @@ const updateUser = async (userId: string, data: updateUserSchemaBodyType) => {
       new_email: email,
       expiresAt
     });
-    mailService.sendOTPEmail(email, code);
+    mailService.otpChangeEmail(email, code);
   }
 
   await Repository_User.updateUser({ userId, data: safeData });
@@ -86,7 +86,7 @@ const verifyOTPAndUpdateEmail = async (userId: string, code: string) => {
   await Repository_User.updateUser({ userId, data: { email: codeFound.new_email } });
   await Repository_User.markCodeAsUsed(codeFound.id);
 
-  mailService.emailChangeNotice(oldEmail, codeFound.new_email, dateNow.toLocaleDateString());
+  mailService.emailChangeNotification(oldEmail, codeFound.new_email, dateNow.toLocaleDateString());
 
   return codeFound.new_email;
 };

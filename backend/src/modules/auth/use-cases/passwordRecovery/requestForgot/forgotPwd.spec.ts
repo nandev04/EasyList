@@ -17,10 +17,10 @@ describe('forgotPasswordService', () => {
 
   test('Should return an object containing "success: true" if the user is not found', async () => {
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(null);
-    vi.spyOn(ServiceMail, 'sendForgotPasswordEmail').mockResolvedValue(undefined as never);
+    vi.spyOn(ServiceMail, 'otpForgotPassword').mockResolvedValue(undefined as never);
     vi.spyOn(Otp_Repository, 'createCodeOTP').mockResolvedValue(undefined as never);
 
-    expect(ServiceMail.sendForgotPasswordEmail).toBeCalledTimes(0);
+    expect(ServiceMail.otpForgotPassword).toBeCalledTimes(0);
     expect(Otp_Repository.createCodeOTP).toBeCalledTimes(0);
     expect(await forgotPasswordService(email)).toEqual({ success: true });
   });
@@ -40,14 +40,14 @@ describe('forgotPasswordService', () => {
     vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(hashCodeForgot);
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(user);
     vi.spyOn(Otp_Repository, 'createCodeOTP').mockResolvedValue(undefined as never);
-    vi.spyOn(ServiceMail, 'sendForgotPasswordEmail').mockResolvedValue(undefined);
+    vi.spyOn(ServiceMail, 'otpForgotPassword').mockResolvedValue(undefined);
     vi.spyOn(Date, 'now').mockReturnValue(fixedNow);
 
     await forgotPasswordService(email);
 
     expect(Otp_Repository.createCodeOTP).toBeCalledTimes(1);
     expect(Otp_Repository.createCodeOTP).toBeCalledWith(hashCodeForgot, expiresAt, user.id);
-    expect(ServiceMail.sendForgotPasswordEmail).toBeCalledTimes(1);
-    expect(ServiceMail.sendForgotPasswordEmail).toBeCalledWith(email, code);
+    expect(ServiceMail.otpForgotPassword).toBeCalledTimes(1);
+    expect(ServiceMail.otpForgotPassword).toBeCalledWith(email, code);
   });
 });

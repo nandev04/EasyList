@@ -1,26 +1,26 @@
 export type namesTemplates =
-  | 'emailChangeConfirmation'
-  | 'emailChangeNotice'
-  | 'forgotPassword'
-  | 'verifyAccount';
+  | 'otpChangeEmail'
+  | 'emailChangeNotification'
+  | 'otpForgotPassword'
+  | 'accountVerification';
 
 export type EmailTemplates = {
-  emailChangeConfirmation: {
+  otpChangeEmail: {
     email: string;
     code: string;
   };
 
-  emailChangeNotice: {
+  emailChangeNotification: {
     oldEmail: string;
     newEmail: string;
     changeDate: string;
   };
 
-  forgotPassword: {
+  otpForgotPassword: {
     code: string;
   };
 
-  verifyAccount: {
+  accountVerification: {
     verificationLink: string;
   };
 };

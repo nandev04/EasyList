@@ -1,4 +1,8 @@
-import { generateAccountToken, verifyAccountToken, resendAccountToken } from './verifyAcc.service.js';
+import {
+  generateAccountToken,
+  verifyAccountToken,
+  resendAccountToken
+} from './verifyAcc.service.js';
 import * as Respository_User from '../../../user/user.repository.js';
 import * as Repository_Auth from '../../repositories/token.repository.js';
 import * as tokenUtils from '../../../../shared/utils/TokenUtils.js';
@@ -127,14 +131,17 @@ describe('resendAccountToken', async () => {
     vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(tokenHash);
     vi.spyOn(Repository_Auth, 'createAccountVerifyToken').mockResolvedValue(tokenCreated as never);
     vi.spyOn(Repository_Auth, 'revokeAccountVerifyTokenOld').mockResolvedValue(undefined as never);
-    vi.spyOn(mailService, 'sendVerificationMail').mockReturnValue(undefined as never);
+    vi.spyOn(mailService, 'accountVerification').mockReturnValue(undefined as never);
 
     await resendAccountToken(email);
 
     expect(Respository_User.findByEmailNotVerified).toHaveBeenCalledWith(email);
     expect(cryptoUtils.generateTokenRaw).toHaveBeenCalledTimes(1);
     expect(Repository_Auth.createAccountVerifyToken).toHaveBeenCalledTimes(1);
-    expect(Repository_Auth.revokeAccountVerifyTokenOld).toHaveBeenCalledWith(userId, tokenCreated.id);
-    expect(mailService.sendVerificationMail).toHaveBeenCalledWith(email, tokenRawGenerated);
+    expect(Repository_Auth.revokeAccountVerifyTokenOld).toHaveBeenCalledWith(
+      userId,
+      tokenCreated.id
+    );
+    expect(mailService.accountVerification).toHaveBeenCalledWith(email, tokenRawGenerated);
   });
 });

@@ -15,7 +15,7 @@ const forgotPasswordService = async (email: string) => {
 
     await Repository_OTP.createCodeOTP(hashCodeForgot, expiresAt, user.id);
 
-    MailService.sendForgotPasswordEmail(email, code);
+    MailService.otpForgotPassword(email, code);
   }
 
   return { success: true };

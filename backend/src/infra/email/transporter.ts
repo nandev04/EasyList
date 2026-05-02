@@ -1,5 +1,4 @@
 import nodemailer, { Transporter } from 'nodemailer';
-import sendgridTransport from 'nodemailer-sendgrid';
 
 let cachedTransporter: Transporter | null = null;
 
