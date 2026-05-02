@@ -1,0 +1,90 @@
+<mjml>
+  <mj-head>
+    <mj-title>EasyList — Confirme a troca de e-mail</mj-title>
+    <mj-preview>Use o código abaixo para confirmar a alteração do seu e-mail.</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="Arial, Helvetica, sans-serif" />
+      <mj-text color="#52525b" font-size="15px" line-height="160%" padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f4f4f5" width="592px">
+    <mj-section padding="32px 16px">
+      <mj-column
+        background-color="#ffffff"
+        border="1px solid #e4e4e7"
+        border-radius="12px"
+        padding="32px"
+      >
+        <mj-image
+          src="https://easylist-avatars.s3.us-east-1.amazonaws.com/email-templates/logo.png"
+          alt="Logo EasyList"
+          width="40px"
+          height="40px"
+          align="center"
+          padding="0 0 20px 0"
+        />
+        <mj-include path="src/emails/partials/header.mjml" />
+
+        <mj-text
+          font-family="Tahoma, Arial, Helvetica, sans-serif"
+          font-size="22px"
+          font-weight="700"
+          color="#282828"
+          align="center"
+          padding="0 0 12px 0"
+        >
+          Confirmação de troca de e-mail
+        </mj-text>
+
+        <mj-text align="center" padding="0 0 16px 0">
+          Recebemos uma solicitação para alterar o e-mail associado à sua conta.
+        </mj-text>
+
+        <mj-text align="center" padding="0 0 4px 0"> Novo e-mail solicitado: </mj-text>
+
+        <mj-text
+          align="center"
+          font-weight="700"
+          color="#282828"
+          font-size="16px"
+          padding="0 0 20px 0"
+        >
+          {{ newEmail }}
+        </mj-text>
+
+        <mj-text align="center" padding="0 0 16px 0">
+          Para confirmar essa alteração, utilize o código de verificação abaixo:
+        </mj-text>
+
+        <mj-text
+          align="center"
+          font-size="28px"
+          font-weight="700"
+          letter-spacing="2px"
+          color="#282828"
+          padding="20px"
+        >
+          {{ code }}
+        </mj-text>
+
+        <mj-text align="center" padding="20px 0 0 0">
+          Este código expira em <strong>15 minutos</strong>.
+        </mj-text>
+
+        <mj-text
+          align="center"
+          font-size="13px"
+          color="#a1a1aa"
+          line-height="150%"
+          padding="16px 0 0 0"
+        >
+          Se você não solicitou a alteração de e-mail, ignore esta mensagem. Nenhuma mudança será
+          feita em sua conta sem a confirmação deste código.
+        </mj-text>
+
+        <mj-include path="./partials/footer.mjml" />
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

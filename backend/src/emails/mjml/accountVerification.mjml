@@ -1,0 +1,89 @@
+<mjml>
+  <mj-head>
+    <mj-title>EasyList — Confirme sua conta</mj-title>
+    <mj-preview>Bem-vindo ao EasyList! Confirme seu e-mail para ativar sua conta.</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="Arial, Helvetica, sans-serif" />
+      <mj-text color="#52525b" font-size="15px" line-height="160%" padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f4f4f5" width="592px">
+    <mj-section padding="32px 16px">
+      <mj-column
+        background-color="#ffffff"
+        border="1px solid #e4e4e7"
+        border-radius="12px"
+        padding="32px"
+      >
+        <mj-image
+          src="https://easylist-avatars.s3.us-east-1.amazonaws.com/email-templates/logo.png"
+          alt="Logo EasyList"
+          width="40px"
+          height="40px"
+          align="center"
+          padding="0 0 20px 0"
+        />
+        <mj-include path="src/emails/partials/header.mjml" />
+
+        <mj-text
+          font-family="Tahoma, Arial, Helvetica, sans-serif"
+          font-size="22px"
+          font-weight="700"
+          color="#282828"
+          align="center"
+          padding="0 0 12px 0"
+        >
+          Confirme sua conta
+        </mj-text>
+        <mj-text font-weight="500" font-size="16px" align="center" padding="0 0 15px 0">
+          Bem-vindo ao EasyList
+        </mj-text>
+        <mj-text align="center" padding="0 0 24px 0">
+          Para começar a usar sua conta, confirme seu e-mail clicando no botão abaixo:
+        </mj-text>
+
+        <mj-button
+          href="{{verificationLink}}"
+          background-color="#9684ed"
+          color="#ffffff"
+          font-size="15px"
+          font-weight="600"
+          border-radius="8px"
+          inner-padding="14px 28px"
+          padding="0 0 20px 0"
+        >
+          Verificar minha conta
+        </mj-button>
+
+        <mj-text
+          align="center"
+          font-size="13px"
+          color="#a1a1aa"
+          line-height="150%"
+          padding="0 0 8px 0"
+        >
+          Se o botão não funcionar, copie e cole o link abaixo no seu navegador:
+        </mj-text>
+
+        <mj-text align="center" font-size="13px" color="#9684ed" line-height="150%" padding="0">
+          <a href="{{verificationLink}}" style="color: #7365b9; word-break: break-all">{{
+            verificationLink
+          }}</a>
+        </mj-text>
+
+        <mj-text
+          align="center"
+          font-size="13px"
+          color="#a1a1aa"
+          line-height="150%"
+          padding="20px 0 0 0"
+        >
+          Se você não criou uma conta no EasyList, ignore este e-mail.
+        </mj-text>
+
+        <mj-include path="./partials/footer.mjml" />
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

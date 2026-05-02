@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
+    "lib": ["ESNext"],
     "types": ["vitest/globals"],
     "typeRoots": ["./types", "./node_modules/@types", "./node_modules"],
     "module": "NodeNext",

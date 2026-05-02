@@ -1,0 +1,27 @@
+<mj-text align="center" padding="0 0 16px 0">
+  <div
+    style="
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #9684ed;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      padding: 12px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 68px;
+    "
+  >
+    <img
+      src="https://easylist-avatars.s3.us-east-1.amazonaws.com/email-templates/logo.png"
+      width="44"
+      height="44"
+      style="vertical-align: middle"
+    />
+  </div>
+</mj-text>
+
+<mj-divider border-color="#e4e4e7" border-width="1px" padding="0 0 24px 0" />

@@ -10,7 +10,7 @@ const generateAccountToken = async (userId: string, email: string) => {
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
   const tokenCreated = await Repository_Auth.createAccountVerifyToken(userId, hashToken, expiresAt);
   await Repository_Auth.revokeAccountVerifyTokenOld(userId, tokenCreated.id);
-  mailService.sendVerificationMail(email, token);
+  mailService.accountVerification(email, token);
 };
 
 const verifyAccountToken = async (token: string) => {
