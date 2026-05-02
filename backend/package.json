@@ -5,7 +5,7 @@
   "packageManager": "pnpm@10.26.1",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "build:email": "mjml src/emails/* -o dist/emails",
+    "build:email": "mjml src/emails/mjml/*.mjml -o dist/emails",
     "dev": "concurrently \"npx tsc --watch --project tsconfig.build.json\" \"nodemon dist/server.js\"",
     "start": "node dist/server.js",
     "lint": "eslint 'src/**/*.ts'",
@@ -22,6 +22,7 @@
   "description": "",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.962.0",
+    "@aws-sdk/client-ses": "^3.1041.0",
     "@aws-sdk/s3-request-presigner": "^3.962.0",
     "@prisma/client": "^6",
     "api-task": "link:",
