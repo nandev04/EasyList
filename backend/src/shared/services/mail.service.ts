@@ -20,7 +20,7 @@ const accountVerification = async (to: string, token: string) => {
 
       console.log('Mensagem enviada: %s', info.messageId);
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-      return;
+      // return;
     }
 
     await sendEmail('renanlvsdv@gmail.com', 'Verificação de conta - EasyList', html);

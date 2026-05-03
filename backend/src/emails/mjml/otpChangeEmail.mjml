@@ -42,7 +42,7 @@
         </mj-text>
 
         <mj-text align="center" padding="0 0 4px 0"> Novo e-mail solicitado: </mj-text>
-
+        <!-- prettier-ignore -->
         <mj-text
           align="center"
           font-weight="700"
