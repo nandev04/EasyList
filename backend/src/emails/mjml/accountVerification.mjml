@@ -66,10 +66,9 @@
           Se o botão não funcionar, copie e cole o link abaixo no seu navegador:
         </mj-text>
 
+        <!-- prettier-ignore -->
         <mj-text align="center" font-size="13px" color="#9684ed" line-height="150%" padding="0">
-          <a href="{{verificationLink}}" style="color: #7365b9; word-break: break-all">{{
-            verificationLink
-          }}</a>
+          <a href="{{ verificationLink }}" style="color: #7365b9; word-break: break-all">{{ verificationLink }}</a>
         </mj-text>
 
         <mj-text
