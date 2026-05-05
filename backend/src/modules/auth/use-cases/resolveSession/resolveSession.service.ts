@@ -13,7 +13,7 @@ type resolveSessionTokenType = {
 export type resolveSessionTokenResultType = {
   userId?: string;
   newAccessToken?: string;
-  deviceUUID?: string;
+  deviceId?: string;
   newRefreshTokenRaw?: string;
 };
 

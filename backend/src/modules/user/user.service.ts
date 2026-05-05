@@ -1,20 +1,22 @@
 import { CreateUserBodySchemaType, updateUserSchemaBodyType } from './user.schema.js';
 import * as Repository_User from './user.repository.js';
 import { AppError } from '../../shared/utils/error.js';
-import { createHashPassword, tokenUUID, transformForHash } from '../../shared/utils/crypto.js';
+import { generateUUIDv4 } from '../../shared/utils/uuid/uuidUtils.js';
+import { createHashPassword } from '../../shared/utils/argon2/argon2Utils.js';
+import { transformForHash } from '../../shared/utils/crypto/cryptoUtils.js';
 import * as mailService from '../../shared/services/mail.service.js';
 import dotenv from 'dotenv';
-import processAvatarImage from '../../shared/utils/processAvatarImage.js';
+import { processAvatarImage } from '../../shared/utils/sharp/sharpUtils.js';
 import {
   deleteAvatarS3,
-  generateSignedUrl,
+  generateSignedUrlS3,
   getAvatarS3,
   putAvatarS3
-} from '../../shared/utils/S3ClientCommands.js';
-import generateCode from '../../shared/utils/generateCode.js';
+} from '../../shared/utils/aws/awsUtils.js';
+import { generateCode } from '../../shared/utils/crypto/cryptoUtils.js';
 import { userCreateSelect, userPublicSelect } from './user.select.js';
 import s3Client from '../../infra/aws/s3Client.js';
-import { createUserId } from '../../shared/utils/uuid.js';
+import { generateUUIDv7 } from '../../shared/utils/uuid/uuidUtils.js';
 import * as VerifyAcc_Service from '../auth/use-cases/verifyAccount/verifyAcc.service.js';
 
 dotenv.config();
@@ -26,7 +28,7 @@ const getUser = async (userId: string) => {
   const { avatarKey, ...safeUser } = user;
   if (user.avatarKey) {
     const getCommand = await getAvatarS3(user.avatarKey);
-    signedUrl = await generateSignedUrl(getCommand);
+    signedUrl = await generateSignedUrlS3(getCommand);
   }
 
   return { safeUser, signedUrl };
@@ -37,7 +39,7 @@ const createUser = async (data: CreateUserBodySchemaType) => {
     const { password, ...safeData } = data;
     const hashPassword = await createHashPassword(password);
 
-    const userId = createUserId();
+    const userId = generateUUIDv7();
     const newData = { id: userId, hashPassword, ...safeData };
     const createdUser = await Repository_User.createUser(newData, userCreateSelect);
 
@@ -97,7 +99,7 @@ const deleteUser = async (userId: string) => {
 
 const uploadAvatar = async (userId: string, file: Express.Multer.File) => {
   const timestamp = Date.now();
-  const uniqueName = `${timestamp}-${tokenUUID()}.webp`;
+  const uniqueName = `${timestamp}-${generateUUIDv4()}.webp`;
 
   const newPath = `avatars/${uniqueName}.webp`;
 
@@ -107,7 +109,7 @@ const uploadAvatar = async (userId: string, file: Express.Multer.File) => {
   await s3Client.send(putCommand);
 
   const getCommand = await getAvatarS3(newPath);
-  const signedUrlGetAvatar = await generateSignedUrl(getCommand);
+  const signedUrlGetAvatar = await generateSignedUrlS3(getCommand);
 
   const { avatarKey: oldPath } = (await Repository_User.getUser(userId, userPublicSelect)) as {
     avatarKey: string;

@@ -1,5 +1,5 @@
-import { transformForHash } from '../../../../shared/utils/crypto.js';
-import { utilJwtVerifyAccess } from '../../../../shared/utils/TokenUtils.js';
+import { transformForHash } from '../../../../shared/utils/crypto/cryptoUtils.js';
+import { utilJwtVerifyAccess } from '../../../../shared/utils/jwt/accessToken.js';
 import * as Repository_Token from '../../repositories/token.repository.js';
 import { AppError } from '../../../../shared/utils/error.js';
 import { getTokenVersion } from '../../services/tokenVersion.service.js';
@@ -23,7 +23,7 @@ const tryResolveByAccessToken = async (
   return {
     ...payloadAccess,
     ...(refreshTokenSearched && {
-      deviceUUID: refreshTokenSearched.device.deviceUUID
+      deviceId: refreshTokenSearched.device.deviceUUID
     })
   };
 };

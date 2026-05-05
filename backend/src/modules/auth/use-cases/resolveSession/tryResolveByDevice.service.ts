@@ -1,12 +1,9 @@
-import {
-  generateAccessToken,
-  generateRefreshExpirationDate,
-  generateRefreshToken
-} from '../../../../shared/utils/TokenUtils.js';
+import { generateAccessToken } from '../../../../shared/utils/jwt/accessToken.js';
+import { generateToken, transformForHash } from '../../../../shared/utils/crypto/cryptoUtils.js';
 import * as Repository_Device from '../../../device/device.repository.js';
-import * as Repository_user from '../../../user/user.repository.js';
 import * as Repository_Token from '../../repositories/token.repository.js';
 import { getTokenVersion } from '../../services/tokenVersion.service.js';
+import { generateRefreshExpirationDate } from '../../../../shared/utils/ms/msUtils.js';
 
 const tryResolveByDevice = async (deviceUUID: string) => {
   const deviceUUIDRecovered = await Repository_Device.verifyDeviceUUID(deviceUUID);
@@ -21,14 +18,15 @@ const tryResolveByDevice = async (deviceUUID: string) => {
     return {
       userId: deviceUUIDRecovered.userId,
       newAccessToken,
-      deviceUUID: deviceUUIDRecovered.deviceUUID,
+      deviceId: deviceUUIDRecovered.deviceUUID,
       newRefreshTokenRaw
     };
   }
 };
 
 const createRefreshTokenFromDeviceUUID = async (userId: string, deviceId: number) => {
-  const { hashRefreshToken, refreshTokenRaw } = generateRefreshToken();
+  const refreshTokenRaw = generateToken();
+  const hashRefreshToken = transformForHash(refreshTokenRaw);
   const { expirationDate } = generateRefreshExpirationDate();
   await Repository_Token.createRefreshToken({
     hashRefreshToken,

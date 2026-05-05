@@ -1,6 +1,5 @@
-import * as cryptoUtils from '../../../../../shared/utils/crypto.js';
-import generateCode from '../../../../../shared/utils/generateCode.js';
-import { createUserId } from '../../../../../shared/utils/uuid.js';
+import * as cryptoUtils from '../../../../../shared/utils/crypto/cryptoUtils.js';
+import { generateUUIDv7 } from '../../../../../shared/utils/uuid/uuidUtils.js';
 import * as User_Repository from '../../../../user/user.repository.js';
 import * as Otp_Repository from '../../../repositories/codeOTP.repository.js';
 import * as ServiceMail from '../../../../../shared/services/mail.service.js';
@@ -27,16 +26,16 @@ describe('forgotPasswordService', () => {
 
   test('Should call createCodeOTP function of repository and call the email service for email trigger', async () => {
     const user: Awaited<ReturnType<typeof User_Repository.findByEmail>> = {
-      id: createUserId(),
+      id: generateUUIDv7(),
       password: 'test-password',
       tokenVersion: 30
     };
-    const code = generateCode();
+    const code = cryptoUtils.generateCode();
     const hashCodeForgot = 'hash-Code-forgot';
     const fixedNow = 1704067200000;
     const expiresAt = new Date(fixedNow + 15 * 60 * 1000);
 
-    vi.mocked(generateCode).mockReturnValue(code);
+    vi.spyOn(cryptoUtils, 'generateCode').mockReturnValue(code);
     vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(hashCodeForgot);
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(user);
     vi.spyOn(Otp_Repository, 'createCodeOTP').mockResolvedValue(undefined as never);

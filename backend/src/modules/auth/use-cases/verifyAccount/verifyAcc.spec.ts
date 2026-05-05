@@ -5,9 +5,8 @@ import {
 } from './verifyAcc.service.js';
 import * as Respository_User from '../../../user/user.repository.js';
 import * as Repository_Auth from '../../repositories/token.repository.js';
-import * as tokenUtils from '../../../../shared/utils/TokenUtils.js';
-import { createUserId } from '../../../../shared/utils/uuid.js';
-import * as cryptoUtils from '../../../../shared/utils/crypto.js';
+import { generateUUIDv7 } from '../../../../shared/utils/uuid/uuidUtils.js';
+import * as cryptoUtils from '../../../../shared/utils/crypto/cryptoUtils.js';
 import * as mailService from '../../../../shared/services/mail.service.js';
 
 const tokenRaw = 'tokenRawTeste';
@@ -16,7 +15,7 @@ describe('verifyAccountToken', async () => {
   test('Should successfully verify token and call verifyUser function.', async () => {
     const tokenHash = 'tokenHashTeste';
     const tokenSearched = {
-      userId: createUserId(),
+      userId: generateUUIDv7(),
       expiresAt: new Date(Date.now() * 999999),
       id: 3123,
       revokedAt: null,
@@ -52,7 +51,7 @@ describe('verifyAccountToken', async () => {
   test('Should throw an AppError with status code 400 and message: "Token inválido ou expirado" if the token is revoked', async () => {
     const tokenHash = 'tokenHashTeste';
     const tokenSearched = {
-      userId: createUserId(),
+      userId: generateUUIDv7(),
       expiresAt: new Date(Date.now() * 999999),
       id: 3123,
       revokedAt: new Date(Date.now() - 999999999),
@@ -71,7 +70,7 @@ describe('verifyAccountToken', async () => {
   test('Should throw an AppError with status code 400 and message: "Token inválido ou expirado" if the token is expired', async () => {
     const tokenHash = 'tokenHashTeste';
     const tokenSearched = {
-      userId: createUserId(),
+      userId: generateUUIDv7(),
       expiresAt: new Date(Date.now() - 999999),
       id: 3123,
       revokedAt: null,
@@ -90,7 +89,7 @@ describe('verifyAccountToken', async () => {
   test('Should throw an AppError with status code 400 and message: "Token inválido ou expirado" if the token is used', async () => {
     const tokenHash = 'tokenHashTeste';
     const tokenSearched = {
-      userId: createUserId(),
+      userId: generateUUIDv7(),
       expiresAt: new Date(Date.now() + 999999),
       id: 3123,
       revokedAt: null,
@@ -120,14 +119,14 @@ describe('resendAccountToken', async () => {
   });
 
   test('Should generate token, revoke old tokens and send verification mail when user exists', async () => {
-    const userId = createUserId();
+    const userId = generateUUIDv7();
     const user = { id: userId, email };
     const tokenRawGenerated = 'tokenRawGenerated';
     const tokenHash = 'tokenHashGenerated';
     const tokenCreated = { id: 9999, userId };
 
     vi.spyOn(Respository_User, 'findByEmailNotVerified').mockResolvedValue(user as never);
-    vi.spyOn(cryptoUtils, 'generateTokenRaw').mockReturnValue(tokenRawGenerated);
+    vi.spyOn(cryptoUtils, 'generateToken').mockReturnValue(tokenRawGenerated);
     vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(tokenHash);
     vi.spyOn(Repository_Auth, 'createAccountVerifyToken').mockResolvedValue(tokenCreated as never);
     vi.spyOn(Repository_Auth, 'revokeAccountVerifyTokenOld').mockResolvedValue(undefined as never);
@@ -136,7 +135,7 @@ describe('resendAccountToken', async () => {
     await resendAccountToken(email);
 
     expect(Respository_User.findByEmailNotVerified).toHaveBeenCalledWith(email);
-    expect(cryptoUtils.generateTokenRaw).toHaveBeenCalledTimes(1);
+    expect(cryptoUtils.generateToken).toHaveBeenCalledTimes(1);
     expect(Repository_Auth.createAccountVerifyToken).toHaveBeenCalledTimes(1);
     expect(Repository_Auth.revokeAccountVerifyTokenOld).toHaveBeenCalledWith(
       userId,

@@ -1,4 +1,4 @@
-import { createHashPassword } from '../../../../../shared/utils/crypto.js';
+import { createHashPassword } from '../../../../../shared/utils/argon2/argon2Utils.js';
 import { AppError } from '../../../../../shared/utils/error.js';
 import * as Repository_User from '../../../../user/user.repository.js';
 import * as Repository_Token from '../../../repositories/token.repository.js';

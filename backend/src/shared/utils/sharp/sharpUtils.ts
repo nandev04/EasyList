@@ -9,4 +9,4 @@ const processAvatarImage = async (fileBuffer: Buffer) => {
     .toBuffer();
 };
 
-export default processAvatarImage;
+export { processAvatarImage };

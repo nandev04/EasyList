@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { AppError } from '../../../../shared/utils/error.js';
-import { generateAccessToken } from '../../../../shared/utils/TokenUtils.js';
+import { generateAccessToken } from '../../../../shared/utils/jwt/accessToken.js';
 
 const refreshToken = async (token: string) => {
   try {

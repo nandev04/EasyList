@@ -5,7 +5,9 @@ import {
   HeadObjectCommand
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import s3Client from '../../infra/aws/s3Client.js';
+import s3Client from '../../../infra/aws/s3Client.js';
+import { SendEmailCommand } from '@aws-sdk/client-ses';
+import { sesClient } from '../../../infra/aws/sesClient.js';
 
 const getAvatarS3 = async (filePath: string) => {
   return new GetObjectCommand({
@@ -31,8 +33,29 @@ const deleteAvatarS3 = async (filePath: string) => {
   });
 };
 
-const generateSignedUrl = async (command: HeadObjectCommand) => {
+const generateSignedUrlS3 = async (command: HeadObjectCommand) => {
   return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
 };
 
-export { generateSignedUrl, getAvatarS3, putAvatarS3, deleteAvatarS3 };
+const sendEmailSES = async (to: string, subject: string, html: string) => {
+  const command = new SendEmailCommand({
+    Source: process.env.SES_EMAIL_FROM!,
+    Destination: {
+      ToAddresses: [to]
+    },
+    Message: {
+      Subject: {
+        Data: subject
+      },
+      Body: {
+        Html: {
+          Data: html
+        }
+      }
+    }
+  });
+
+  return await sesClient.send(command);
+};
+
+export { generateSignedUrlS3, getAvatarS3, putAvatarS3, deleteAvatarS3, sendEmailSES };

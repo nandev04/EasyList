@@ -1,14 +1,14 @@
 import { AppError } from '../../shared/utils/error.js';
-import * as cryptoUtils from '../../shared/utils/crypto.js';
 import * as VerifyAcc_Service from '../auth/use-cases/verifyAccount/verifyAcc.service.js';
 import * as Repository_User from './user.repository.js';
 import * as Service_User from './user.service.js';
 import { userCreateSelect, userPublicSelect } from './user.select.js';
-import * as s3CommandsUtils from '../../shared/utils/S3ClientCommands.js';
-import * as uuidUtils from '../../shared/utils/uuid.js';
+import * as awsUtils from '../../shared/utils/aws/awsUtils.js';
+import * as argon2Utils from '../../shared/utils/argon2/argon2Utils.js';
+import * as uuidUtils from '../../shared/utils/uuid/uuidUtils.js';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 
-const userIdMock = uuidUtils.createUserId();
+const userIdMock = uuidUtils.generateUUIDv7();
 describe('Get User flow', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -37,16 +37,16 @@ describe('Get User flow', () => {
     };
 
     vi.spyOn(Repository_User, 'getUser').mockResolvedValue(returnGetUser);
-    vi.spyOn(s3CommandsUtils, 'getAvatarS3').mockResolvedValue(
+    vi.spyOn(awsUtils, 'getAvatarS3').mockResolvedValue(
       new GetObjectCommand({ Bucket: 'test', Key: 'test' })
     );
-    vi.spyOn(s3CommandsUtils, 'generateSignedUrl').mockResolvedValue('signedUrlTest');
+    vi.spyOn(awsUtils, 'generateSignedUrlS3').mockResolvedValue('signedUrlTest');
 
     await Service_User.getUser(userIdMock);
 
-    expect(s3CommandsUtils.getAvatarS3).toHaveBeenCalledTimes(1);
-    expect(s3CommandsUtils.getAvatarS3).toHaveBeenCalledWith(returnGetUser.avatarKey);
-    expect(s3CommandsUtils.generateSignedUrl).toHaveBeenCalledTimes(1);
+    expect(awsUtils.getAvatarS3).toHaveBeenCalledTimes(1);
+    expect(awsUtils.getAvatarS3).toHaveBeenCalledWith(returnGetUser.avatarKey);
+    expect(awsUtils.generateSignedUrlS3).toHaveBeenCalledTimes(1);
 
     expect(Repository_User.getUser).toHaveBeenCalledWith(userIdMock, userPublicSelect);
     expect(Repository_User.getUser).toHaveBeenCalledTimes(1);
@@ -76,10 +76,10 @@ describe('Create user flow', () => {
   };
 
   test('Should create a user and request email verification.', async () => {
-    vi.spyOn(cryptoUtils, 'createHashPassword').mockResolvedValue(hashPassword);
+    vi.spyOn(argon2Utils, 'createHashPassword').mockResolvedValue(hashPassword);
     vi.spyOn(Repository_User, 'createUser').mockResolvedValue(result);
     vi.spyOn(VerifyAcc_Service, 'generateAccountToken').mockResolvedValue(undefined);
-    vi.spyOn(uuidUtils, 'createUserId').mockReturnValue(userIdMock);
+    vi.spyOn(uuidUtils, 'generateUUIDv7').mockReturnValue(userIdMock);
 
     const { password, ...safeInput } = testInput;
 
@@ -90,8 +90,8 @@ describe('Create user flow', () => {
     };
     const createdUser = await Service_User.createUser(testInput);
 
-    expect(cryptoUtils.createHashPassword).toHaveBeenCalledWith(testInput.password);
-    expect(uuidUtils.createUserId).toHaveBeenCalledBefore(vi.mocked(Repository_User.createUser));
+    expect(argon2Utils.createHashPassword).toHaveBeenCalledWith(testInput.password);
+    expect(uuidUtils.generateUUIDv7).toHaveBeenCalledBefore(vi.mocked(Repository_User.createUser));
 
     expect(Repository_User.createUser).toHaveBeenCalledWith(dataCreate, userCreateSelect);
     expect(VerifyAcc_Service.generateAccountToken).toHaveBeenCalledWith(
@@ -105,7 +105,7 @@ describe('Create user flow', () => {
 
   test('Should throw AppError if hash fails', async () => {
     const error = new AppError('Senha inválida', 400);
-    vi.spyOn(cryptoUtils, 'createHashPassword').mockRejectedValue(error);
+    vi.spyOn(argon2Utils, 'createHashPassword').mockRejectedValue(error);
 
     await expect(Service_User.createUser(testInput)).rejects.toBe(error);
   });

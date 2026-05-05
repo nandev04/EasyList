@@ -18,8 +18,8 @@ const applyAuthCookies = (res: Response, result: resolveSessionTokenResultType) 
     });
   }
 
-  if (result.deviceUUID) {
-    res.cookie('deviceId', result.deviceUUID, {
+  if (result.deviceId) {
+    res.cookie('deviceId', result.deviceId, {
       httpOnly: true,
       signed: true,
       secure: process.env.NODE_ENV === 'production'
