@@ -6,10 +6,6 @@ import { AppError } from '../../../shared/utils/error.js';
 
 const createTokens = async (userId: string, tokenVersion: number) => {
   try {
-    if (!process.env.JWT_ACCESS_SECRET) throw new AppError('JWT_ACCESS_SECRET não definido!', 500);
-    if (!process.env.JWT_REFRESH_SECRET)
-      throw new AppError('JWT_REFRESH_SECRET não definido!', 500);
-
     const deviceUUID = generateUUIDv4();
     const accessToken = generateAccessToken(userId, tokenVersion);
     const refreshTokenRaw = generateToken();
