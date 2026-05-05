@@ -13,6 +13,7 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 
 - ⚛️ [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
 - 🔗 [React Router](https://reactrouter.com/) (navegação)
+- 🔄 [React Query](https://tanstack.com/query/latest) (gerenciamento de estado servidor e cache de requisições)
 - ✅ [Zod](https://zod.dev/) (validação de dados)
 - 🐻 [Zustand](https://zustand-demo.pmnd.rs/) (gerenciamento de estado global)
 - ⚡ [Vite](https://vitejs.dev/) (build e desenvolvimento)
@@ -45,7 +46,7 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 ## ✅ Funcionalidades
 
 - Cadastro e login de usuário
-- Confirmação de cadastro via email (SendGrid)
+- Confirmação de cadastro via email (AWS SES)
 - Criação, listagem, edição e exclusão de tarefas
 - Autenticação com JWT
 - Testes unitários com Vitest
