@@ -1,13 +1,13 @@
 import { AppError } from '../../../../../shared/utils/error.js';
 import { verifyCodeService } from './verifyOtp.service.js';
-import * as cryptoUtils from '../../../../../shared/utils/crypto.js';
+import * as cryptoUtils from '../../../../../shared/utils/crypto/cryptoUtils.js';
 import * as OtpCode_Repository from '../../../repositories/codeOTP.repository.js';
 import * as Token_Repository from '../../../repositories/token.repository.js';
 import * as User_Repository from '../../../../user/user.repository.js';
-import { createUserId } from '../../../../../shared/utils/uuid.js';
+import * as uuidUtils from '../../../../../shared/utils/uuid/uuidUtils.js';
 
 describe('verifyOtpService', () => {
-  const idUser = createUserId();
+  const idUser = uuidUtils.generateUUIDv7();
   const codeFetched = {
     id: 313,
     userId: idUser,
@@ -84,7 +84,7 @@ describe('verifyOtpService', () => {
       expiresAt: new Date(Date.now() + 9999)
     });
     vi.spyOn(OtpCode_Repository, 'markCodeAsUsed').mockReturnValue(undefined as never);
-    vi.spyOn(cryptoUtils, 'tokenUUID').mockReturnValue(tokenReset);
+    vi.spyOn(uuidUtils, 'generateUUIDv4').mockReturnValue(tokenReset);
     vi.spyOn(Token_Repository, 'createTokenUUID').mockResolvedValue(undefined as never);
 
     expect(await verifyCodeService(code, email)).toEqual(tokenReset);

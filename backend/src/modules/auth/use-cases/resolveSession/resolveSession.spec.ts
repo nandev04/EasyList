@@ -1,21 +1,18 @@
 import { AppError } from '../../../../shared/utils/error.js';
-import generateDeviceId from '../../../../shared/utils/generateDeviceId.js';
-import { utilJwtVerifyAccess } from '../../../../shared/utils/TokenUtils.js';
-import { createUserId } from '../../../../shared/utils/uuid.js';
-import renewAccessToken from './renewAccessToken.service.js';
+import { generateUUIDv4 } from '../../../../shared/utils/uuid/uuidUtils.js';
+import { generateUUIDv7 } from '../../../../shared/utils/uuid/uuidUtils.js';
 import { resolveSessionToken } from './resolveSession.service.js';
-import tryResolveByDevice from './tryResolveByDevice.service.js';
+import * as accessTokenUtils from '../../../../shared/utils/jwt/accessToken.js';
+import * as Service_RenewAccessToken from './renewAccessToken.service.js';
+import * as Service_ResolveByDevice from './tryResolveByDevice.service.js';
 
-vi.mock('../../../../shared/utils/TokenUtils.js');
-vi.mock('./tryResolveByDevice.service.js');
-vi.mock('./renewAccessToken.service.js');
 vi.mock('../../../../infra/cache/cache.service.js', () => ({
   getCache: vi.fn()
 }));
 
 describe('resolveSessionToken', () => {
   test('Should throw an AppError if an invalid access token with status code 401 is encountered.', async () => {
-    vi.mocked(utilJwtVerifyAccess).mockRejectedValueOnce(
+    vi.spyOn(accessTokenUtils, 'utilJwtVerifyAccess').mockRejectedValueOnce(
       new AppError('Token de acesso inválido', 401)
     );
 
@@ -26,19 +23,19 @@ describe('resolveSessionToken', () => {
   });
 
   test('Should validate the deviceId and create news tokens', async () => {
-    const deviceUUID = generateDeviceId();
-    const tryResolveByDeviceReturn: Awaited<ReturnType<typeof tryResolveByDevice>> = {
-      userId: createUserId(),
-      deviceUUID,
+    const deviceId = generateUUIDv4();
+    const tryResolveByDeviceReturn: Awaited<ReturnType<typeof Service_ResolveByDevice.default>> = {
+      userId: generateUUIDv7(),
+      deviceId,
       newAccessToken: 'accessTokenTest',
       newRefreshTokenRaw: 'refreshTokenTest'
     };
 
-    vi.mocked(tryResolveByDevice).mockResolvedValue(tryResolveByDeviceReturn);
+    vi.spyOn(Service_ResolveByDevice, 'default').mockResolvedValue(tryResolveByDeviceReturn);
 
-    const result = await resolveSessionToken({ deviceId: deviceUUID });
+    const result = await resolveSessionToken({ deviceId });
 
-    expect(tryResolveByDevice).toBeCalledTimes(1);
+    expect(Service_ResolveByDevice.default).toBeCalledTimes(1);
     expect(result).toEqual(tryResolveByDeviceReturn);
   });
 
@@ -52,17 +49,16 @@ describe('resolveSessionToken', () => {
   });
 
   test('Should access token be created successfully.', async () => {
-    const REDIS_URL = 'testt';
-    const renewAccessTokenReturn: Awaited<ReturnType<typeof renewAccessToken>> = {
-      deviceUUID: generateDeviceId(),
+    const renewAccessTokenReturn: Awaited<ReturnType<typeof Service_RenewAccessToken.default>> = {
+      deviceId: generateUUIDv4(),
       newAccessToken: 'accessToken-test',
-      userId: createUserId()
+      userId: generateUUIDv7()
     };
-    vi.mocked(renewAccessToken).mockResolvedValue(renewAccessTokenReturn);
+    vi.spyOn(Service_RenewAccessToken, 'default').mockResolvedValue(renewAccessTokenReturn);
 
     const result = await resolveSessionToken({ refreshToken: 'refreshTokenTest' });
 
-    expect(renewAccessToken).toBeCalledTimes(1);
+    expect(Service_RenewAccessToken.default).toBeCalledTimes(1);
     expect(result).toEqual(renewAccessTokenReturn);
   });
 });

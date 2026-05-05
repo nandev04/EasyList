@@ -1,6 +1,6 @@
-import * as cryptoUtils from '../../../../../shared/utils/crypto.js';
+import * as argon2Utils from '../../../../../shared/utils/argon2/argon2Utils.js';
 import { AppError } from '../../../../../shared/utils/error.js';
-import { createUserId } from '../../../../../shared/utils/uuid.js';
+import { generateUUIDv7 } from '../../../../../shared/utils/uuid/uuidUtils.js';
 import * as Token_Repository from '../../../repositories/token.repository.js';
 import * as User_Repository from '../../../../user/user.repository.js';
 import { resetPassword } from './resetPwd.service.js';
@@ -9,7 +9,7 @@ describe('resetPassword', () => {
   const fixedNow = 1704067200000;
   const resultValidateTokenResetPassword = {
     id: 31321,
-    userId: createUserId(),
+    userId: generateUUIDv7(),
     expiresAt: new Date(Date.now() + fixedNow),
     used: false
   };
@@ -74,7 +74,7 @@ describe('resetPassword', () => {
       resultValidateTokenResetPassword
     );
     const spyCrypto = vi
-      .spyOn(cryptoUtils, 'createHashPassword')
+      .spyOn(argon2Utils, 'createHashPassword')
       .mockResolvedValue(hashNewPassword);
     vi.spyOn(User_Repository, 'changePassword').mockResolvedValue(undefined as never);
     vi.spyOn(Token_Repository, 'markTokenAsUsed').mockResolvedValue(undefined as never);

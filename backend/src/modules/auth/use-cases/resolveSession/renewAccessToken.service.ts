@@ -1,6 +1,6 @@
-import { transformForHash } from '../../../../shared/utils/crypto.js';
+import { transformForHash } from '../../../../shared/utils/crypto/cryptoUtils.js';
 import { AppError } from '../../../../shared/utils/error.js';
-import { generateAccessToken } from '../../../../shared/utils/TokenUtils.js';
+import { generateAccessToken } from '../../../../shared/utils/jwt/accessToken.js';
 import * as Token_Repository from '../../repositories/token.repository.js';
 import { getTokenVersion } from '../../services/tokenVersion.service.js';
 
@@ -16,7 +16,7 @@ const renewAccessToken = async (refreshToken: string) => {
 
   const newAccessToken = generateAccessToken(tokenData.userId, tokenVersion);
 
-  return { newAccessToken, userId: tokenData.userId, deviceUUID: tokenData.device.deviceUUID };
+  return { newAccessToken, userId: tokenData.userId, deviceId: tokenData.device.deviceUUID };
 };
 
 export default renewAccessToken;

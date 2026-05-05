@@ -2,7 +2,7 @@ import nodemailer, { Transporter } from 'nodemailer';
 import emailMask from '../utils/emailMask.js';
 import { renderTemplate } from '../../emails/template.service.js';
 import { getTransporter } from '../../infra/email/transporter.js';
-import { sendEmail } from '../utils/SESCommands.js';
+import { sendEmailSES } from '../utils/aws/awsUtils.js';
 
 const accountVerification = async (to: string, token: string) => {
   try {
@@ -23,7 +23,7 @@ const accountVerification = async (to: string, token: string) => {
       // return;
     }
 
-    await sendEmail('renanlvsdv@gmail.com', 'Verificação de conta - EasyList', html);
+    await sendEmailSES('renanlvsdv@gmail.com', 'Verificação de conta - EasyList', html);
   } catch (err) {
     console.error(err);
   }
@@ -48,7 +48,7 @@ const otpForgotPassword = async (to: string, code: string) => {
       }
       return;
     }
-    await sendEmail('renanlvsdv@gmail.com', 'ForgotPassword - EasyList', html);
+    await sendEmailSES('renanlvsdv@gmail.com', 'ForgotPassword - EasyList', html);
   } catch (err) {
     console.error(err);
   }
@@ -74,7 +74,7 @@ const otpChangeEmail = async (to: string, code: string) => {
       return;
     }
 
-    await sendEmail('renanlvsdv@gmail.com', 'Change email OTP Confirmation - EasyList', html);
+    await sendEmailSES('renanlvsdv@gmail.com', 'Change email OTP Confirmation - EasyList', html);
   } catch (err) {
     console.error(err);
   }
@@ -104,7 +104,7 @@ const emailChangeNotification = async (oldEmail: string, newEmail: string, chang
       return;
     }
 
-    await sendEmail('renanlvsdv@gmail.com', 'Change email notice - EasyList', html);
+    await sendEmailSES('renanlvsdv@gmail.com', 'Change email notice - EasyList', html);
   } catch (err) {
     console.error(err);
   }

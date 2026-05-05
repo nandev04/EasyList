@@ -2,10 +2,10 @@ import { AppError } from '../../../../shared/utils/error.js';
 import * as Repository_User from '../../../user/user.repository.js';
 import * as Repository_Auth from '../../repositories/token.repository.js';
 import * as mailService from '../../../../shared/services/mail.service.js';
-import { generateTokenRaw, transformForHash } from '../../../../shared/utils/crypto.js';
+import { generateToken, transformForHash } from '../../../../shared/utils/crypto/cryptoUtils.js';
 
 const generateAccountToken = async (userId: string, email: string) => {
-  const token = generateTokenRaw();
+  const token = generateToken();
   const hashToken = transformForHash(token);
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
   const tokenCreated = await Repository_Auth.createAccountVerifyToken(userId, hashToken, expiresAt);

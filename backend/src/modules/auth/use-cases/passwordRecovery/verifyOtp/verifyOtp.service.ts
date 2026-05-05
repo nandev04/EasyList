@@ -1,4 +1,5 @@
-import { tokenUUID, transformForHash } from '../../../../../shared/utils/crypto.js';
+import { transformForHash } from '../../../../../shared/utils/crypto/cryptoUtils.js';
+import { generateUUIDv4 } from '../../../../../shared/utils/uuid/uuidUtils.js';
 import { AppError } from '../../../../../shared/utils/error.js';
 import * as User_Repository from '../../../../user/user.repository.js';
 import * as Otp_Repository from '../../../repositories/codeOTP.repository.js';
@@ -20,7 +21,7 @@ const verifyCodeService = async (code: string, email: string) => {
 
   await Otp_Repository.markCodeAsUsed(codeFetched.id);
 
-  const tokenResetPassword = tokenUUID();
+  const tokenResetPassword = generateUUIDv4();
 
   await Token_Repository.createTokenUUID(codeFetched.userId, tokenResetPassword);
 

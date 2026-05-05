@@ -1,10 +1,10 @@
 import * as User_Repository from '../../../user/user.repository.js';
-import * as cryptoUtils from '../../../../shared/utils/crypto.js';
+import * as Argon2 from '../../../../shared/utils/argon2/argon2Utils.js';
 import * as Token_Repository from '../../repositories/token.repository.js';
 import * as Device_Repository from '../../../device/device.repository.js';
 import { loginUser } from './login.service.js';
 import * as Auth_Service from '../../services/createTokens.service.js';
-import { createUserId } from '../../../../shared/utils/uuid.js';
+import { generateUUIDv7 } from '../../../../shared/utils/uuid/uuidUtils.js';
 import * as TokenVersion_Service from '../../services/tokenVersion.service.js';
 
 beforeEach(() => {
@@ -27,7 +27,7 @@ describe('Login Service', () => {
     {
       id: 313,
       createdAt: new Date(),
-      userId: createUserId(),
+      userId: generateUUIDv7(),
       deviceId: 3132,
       expiresAt: new Date(),
       token: 'tokenTeste',
@@ -51,7 +51,7 @@ describe('Login Service', () => {
 
   test('It should throw a 401 error in case of an invalid password, with the message: Credenciais inválidas.', async () => {
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(returnFindByEmail);
-    vi.spyOn(cryptoUtils, 'compareHash').mockResolvedValue(false);
+    vi.spyOn(Argon2, 'compareHashPassword').mockResolvedValue(false);
 
     await expect(loginUser).rejects.toMatchObject({
       message: 'Credenciais inválidas',
@@ -61,7 +61,7 @@ describe('Login Service', () => {
 
   test('Should successfully find the user and create their data for cookies.', async () => {
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(returnFindByEmail);
-    vi.spyOn(cryptoUtils, 'compareHash').mockResolvedValue(true);
+    vi.spyOn(Argon2, 'compareHashPassword').mockResolvedValue(true);
     vi.spyOn(Auth_Service, 'createTokens').mockResolvedValue(resultCreateTokens);
     vi.spyOn(Device_Repository, 'createDevice').mockResolvedValue({ id: createdDeviceId });
     vi.spyOn(Token_Repository, 'createRefreshToken').mockResolvedValue(resultCreateRefreshToken);
@@ -80,7 +80,7 @@ describe('Login Service', () => {
     });
 
     expect(User_Repository.findByEmail).toBeCalledWith(emailTeste);
-    expect(cryptoUtils.compareHash).toBeCalledTimes(1);
+    expect(Argon2.compareHashPassword).toBeCalledTimes(1);
     expect(Auth_Service.createTokens).toBeCalledWith(
       returnFindByEmail.id,
       returnFindByEmail.tokenVersion
