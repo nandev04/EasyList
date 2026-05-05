@@ -53,6 +53,18 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 
 ---
 
+## 🎨 Design
+
+As telas do projeto estão disponíveis na pasta [`designs/`](./designs).
+
+### Principais telas
+
+| Login                       | Register                          | Tasks Page                            |
+| --------------------------- | --------------------------------- | ------------------------------------- |
+| ![Login](designs/login.png) | ![Register](designs/register.png) | ![Tasks Page](designs/tasks-page.png) |
+
+---
+
 ## 📄 Licença
 
 Este projeto está sob a licença MIT.
