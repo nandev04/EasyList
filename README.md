@@ -59,9 +59,9 @@ As telas do projeto estão disponíveis na pasta [`designs/`](./designs).
 
 ### Principais telas
 
-| Login                       | Register                          | Tasks Page                            |
-| --------------------------- | --------------------------------- | ------------------------------------- |
-| ![Login](designs/login.png) | ![Register](designs/register.png) | ![Tasks Page](designs/tasks-page.png) |
+| Login                      | Register                         | Tasks Page                           |
+| -------------------------- | -------------------------------- | ------------------------------------ |
+| ![Login](design/login.png) | ![Register](design/register.png) | ![Tasks Page](design/tasks-page.png) |
 
 ---
 
