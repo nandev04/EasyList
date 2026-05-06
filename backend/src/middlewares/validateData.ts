@@ -11,7 +11,7 @@ type Schemas = {
 };
 
 const validate = (schema: Schemas) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, _res: Response, next: NextFunction) => {
     try {
       const validated: Record<string, unknown> = {};
 

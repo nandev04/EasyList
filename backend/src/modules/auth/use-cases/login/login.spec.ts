@@ -6,10 +6,12 @@ import { loginUser } from './login.service.js';
 import * as Auth_Service from '../../services/createTokens.service.js';
 import { generateUUIDv7 } from '../../../../shared/utils/uuid/uuidUtils.js';
 import * as TokenVersion_Service from '../../services/tokenVersion.service.js';
+import { env } from '../../../../config/env.js';
 
 beforeEach(() => {
   vi.clearAllMocks();
 });
+
 describe('Login Service', () => {
   vi.mock('../../../../infra/cache/cache.service.js', () => ({
     getCache: vi.fn()
@@ -88,7 +90,7 @@ describe('Login Service', () => {
     expect(Device_Repository.createDevice).toBeCalledWith({
       deviceUUID: resultCreateTokens.deviceUUID,
       userId: returnFindByEmail.id,
-      maxDevicePerUser: Number(process.env.MAX_DEVICES_PER_USER)
+      maxDevicePerUser: Number(env.MAX_DEVICES_PER_USER)
     });
     expect(Token_Repository.createRefreshToken).toBeCalledWith({
       hashRefreshToken: resultCreateTokens.hashRefreshToken,

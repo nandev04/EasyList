@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
+import { env } from './config/env.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import taskRoutes from './modules/task/task.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
@@ -14,7 +14,7 @@ import * as Rate_Limit from './middlewares/rateLimit.js';
 
 const app = express();
 
-if (process.env.NODE_ENV === 'development') {
+if (env.NODE_ENV === 'development') {
   app.use(
     cors({
       origin: 'http://localhost:5173',
@@ -25,14 +25,13 @@ if (process.env.NODE_ENV === 'development') {
 
 app.set('trust proxy', true);
 
-dotenv.config();
 resetPasswordCodeCleanup();
 refreshTokenCleanup();
 oldDevicesCleanup();
 updateEmailCodeCleanup();
 
 app.use(express.json());
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(env.COOKIE_SECRET));
 app.use('/auth', Rate_Limit.auth, authRoutes);
 app.use(userRoutes);
 app.use(taskRoutes);

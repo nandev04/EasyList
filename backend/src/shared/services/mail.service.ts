@@ -3,12 +3,13 @@ import emailMask from '../utils/emailMask.js';
 import { renderTemplate } from '../../emails/template.service.js';
 import { getTransporter } from '../../infra/email/transporter.js';
 import { sendEmailSES } from '../utils/aws/awsUtils.js';
+import { env } from '../../config/env.js';
 
 const accountVerification = async (to: string, token: string) => {
   try {
-    const verificationLink = `${process.env.FRONTEND_URL}/confirm-email?token=${token}`;
+    const verificationLink = `${env.FRONTEND_URL}/confirm-email?token=${token}`;
     const html = await renderTemplate('accountVerification', { verificationLink });
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       const transporter: Transporter = await getTransporter();
 
       const info = await transporter.sendMail({
@@ -32,7 +33,7 @@ const accountVerification = async (to: string, token: string) => {
 const otpForgotPassword = async (to: string, code: string) => {
   try {
     const html = await renderTemplate('otpForgotPassword', { code });
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       const transporter: Transporter = await getTransporter();
 
       const info = await transporter.sendMail({
@@ -42,7 +43,7 @@ const otpForgotPassword = async (to: string, code: string) => {
         html: html
       });
 
-      if (process.env.NODE_ENV === 'development') {
+      if (env.NODE_ENV === 'development') {
         console.log('Mensagem enviada: %s', info.messageId);
         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
       }
@@ -59,7 +60,7 @@ const otpChangeEmail = async (to: string, code: string) => {
     const email = emailMask(to);
     const html = await renderTemplate('otpChangeEmail', { email, code });
 
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       const transporter: Transporter = await getTransporter();
 
       const info = await transporter.sendMail({
@@ -89,7 +90,7 @@ const emailChangeNotification = async (oldEmail: string, newEmail: string, chang
       changeDate
     });
 
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       const transporter: Transporter = await getTransporter();
 
       const info = await transporter.sendMail({

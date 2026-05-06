@@ -1,8 +1,4 @@
-import {
-  generateAccountToken,
-  verifyAccountToken,
-  resendAccountToken
-} from './verifyAcc.service.js';
+import { verifyAccountToken, resendAccountToken } from './verifyAcc.service.js';
 import * as Respository_User from '../../../user/user.repository.js';
 import * as Repository_Auth from '../../repositories/token.repository.js';
 import { generateUUIDv7 } from '../../../../shared/utils/uuid/uuidUtils.js';
