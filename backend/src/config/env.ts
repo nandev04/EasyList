@@ -33,9 +33,9 @@ const envSchema = z.object({
   AWS_SECRET_ACCESS_KEY: z.string().min(1),
   AWS_S3_REGION: z.string().min(1),
   AWS_SES_REGION: z.string().min(1),
-  S3_BUCKET_AVATARS: z.string().min(1),
-  S3_URL_AVATARS: z.url(),
-  SES_EMAIL_FROM: z.email(),
+  AWS_S3_BUCKET: z.string().min(1),
+  AWS_S3_BUCKET_URL: z.url(),
+  AWS_SES_EMAIL_FROM: z.email(),
 
   MAX_DEVICES_PER_USER: z.coerce.number().default(5)
 });

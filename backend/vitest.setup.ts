@@ -12,9 +12,9 @@ vi.mock('./src/config/env.js', () => ({
     AWS_SES_REGION: 'us-east-1',
     AWS_ACCESS_KEY_ID: 'mock-access-key',
     AWS_SECRET_ACCESS_KEY: 'mock-secret-key',
-    S3_BUCKET_AVATARS: 'mock-bucket',
-    S3_URL_AVATARS: 'http://mock-s3.com',
-    SES_EMAIL_FROM: 'noreply@mock.com',
+    AWS_S3_BUCKET: 'mock-bucket',
+    AWS_S3_BUCKET_URL: 'http://mock-s3.com',
+    AWS_SES_EMAIL_FROM: 'noreply@mock.com',
     MAX_DEVICES_PER_USER: 5
   }
 }));

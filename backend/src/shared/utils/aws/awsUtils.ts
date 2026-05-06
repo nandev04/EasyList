@@ -12,14 +12,14 @@ import { env } from '../../../config/env.js';
 
 const getAvatarS3 = async (filePath: string) => {
   return new GetObjectCommand({
-    Bucket: env.S3_BUCKET_AVATARS,
+    Bucket: env.AWS_S3_BUCKET,
     Key: filePath
   });
 };
 
 const putAvatarS3 = async (filePath: string, processedImageBuffer: Buffer) => {
   return new PutObjectCommand({
-    Bucket: env.S3_BUCKET_AVATARS,
+    Bucket: env.AWS_S3_BUCKET,
     Key: filePath,
     Body: processedImageBuffer,
     ContentType: 'image/webp',
@@ -29,7 +29,7 @@ const putAvatarS3 = async (filePath: string, processedImageBuffer: Buffer) => {
 
 const deleteAvatarS3 = async (filePath: string) => {
   return new DeleteObjectCommand({
-    Bucket: env.S3_BUCKET_AVATARS,
+    Bucket: env.AWS_S3_BUCKET,
     Key: filePath
   });
 };
@@ -40,7 +40,7 @@ const generateSignedUrlS3 = async (command: HeadObjectCommand) => {
 
 const sendEmailSES = async (to: string, subject: string, html: string) => {
   const command = new SendEmailCommand({
-    Source: env.SES_EMAIL_FROM,
+    Source: env.AWS_SES_EMAIL_FROM,
     Destination: {
       ToAddresses: [to]
     },
