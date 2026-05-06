@@ -8,17 +8,18 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import s3Client from '../../../infra/aws/s3Client.js';
 import { SendEmailCommand } from '@aws-sdk/client-ses';
 import { sesClient } from '../../../infra/aws/sesClient.js';
+import { env } from '../../../config/env.js';
 
 const getAvatarS3 = async (filePath: string) => {
   return new GetObjectCommand({
-    Bucket: process.env.S3_BUCKET_AVATARS!,
+    Bucket: env.S3_BUCKET_AVATARS,
     Key: filePath
   });
 };
 
 const putAvatarS3 = async (filePath: string, processedImageBuffer: Buffer) => {
   return new PutObjectCommand({
-    Bucket: process.env.S3_BUCKET_AVATARS!,
+    Bucket: env.S3_BUCKET_AVATARS,
     Key: filePath,
     Body: processedImageBuffer,
     ContentType: 'image/webp',
@@ -28,7 +29,7 @@ const putAvatarS3 = async (filePath: string, processedImageBuffer: Buffer) => {
 
 const deleteAvatarS3 = async (filePath: string) => {
   return new DeleteObjectCommand({
-    Bucket: process.env.S3_BUCKET_AVATARS!,
+    Bucket: env.S3_BUCKET_AVATARS,
     Key: filePath
   });
 };
@@ -39,7 +40,7 @@ const generateSignedUrlS3 = async (command: HeadObjectCommand) => {
 
 const sendEmailSES = async (to: string, subject: string, html: string) => {
   const command = new SendEmailCommand({
-    Source: process.env.SES_EMAIL_FROM!,
+    Source: env.SES_EMAIL_FROM,
     Destination: {
       ToAddresses: [to]
     },

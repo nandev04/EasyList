@@ -5,6 +5,7 @@ import * as Device_Repository from '../../../device/device.repository.js';
 import { compareHashPassword } from '../../../../shared/utils/argon2/argon2Utils.js';
 import * as Auth_Service from '../../services/createTokens.service.js';
 import { setTokenVersion } from '../../services/tokenVersion.service.js';
+import { env } from '../../../../config/env.js';
 
 const loginUser = async (email: string, password: string) => {
   const user = await User_Repository.findByEmail(email);
@@ -17,7 +18,7 @@ const loginUser = async (email: string, password: string) => {
   const { accessToken, refreshTokenRaw, expiresMs, deviceUUID, expirationDate, hashRefreshToken } =
     await Auth_Service.createTokens(user.id, user.tokenVersion);
 
-  const maxDevicePerUser = Number(process.env.MAX_DEVICES_PER_USER);
+  const maxDevicePerUser = Number(env.MAX_DEVICES_PER_USER);
   const { id } = await Device_Repository.createDevice({
     deviceUUID,
     userId: user.id,

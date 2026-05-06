@@ -3,6 +3,8 @@ import * as Service_Login from './login.service.js';
 import ms from 'ms';
 import cookieUser from '../../../../shared/constants/cookieUser.js';
 import { loginUserBodySchemaType } from './login.schema.js';
+import { env } from '../../../../config/env.js';
+import { generateRefreshExpirationDate } from '../../../../shared/utils/ms/msUtils.js';
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -13,8 +15,8 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       password
     );
 
-    const refreshTokenMaxAge = ms(process.env.TOKEN_REFRESH_EXPIRES_IN as ms.StringValue);
-    const accessTokenMaxAge = ms(process.env.JWT_ACCESS_EXPIRES_IN as ms.StringValue);
+    const { expiresMs: refreshTokenMaxAge } = generateRefreshExpirationDate();
+    const accessTokenMaxAge = ms(env.JWT_ACCESS_EXPIRES_IN);
 
     // DeviceID
     res.cookie('deviceId', deviceUUID, {
