@@ -96,6 +96,10 @@
   box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.2);
 }
 
+.button_close_avatar:hover {
+  background-color: var(--primary-color-hover);
+}
+
 .button_close_avatar svg {
   color: white;
   width: 100%;
