@@ -3,11 +3,11 @@ import * as Service_Task from './task.service.js';
 
 const userIdMock = 'user-uuid-mock';
 
-const makeTask = (id: number) => ({
+const makeTask = (id: number, status: 'PENDING' | 'COMPLETED' | 'IN_PROGRESS' = 'PENDING') => ({
   id,
   title: `Task ${id}`,
   description: `Description ${id}`,
-  status: 'PENDING' as const,
+  status,
   createdAt: new Date(),
   updatedAt: new Date()
 });
@@ -19,12 +19,12 @@ describe('getTasks flow', () => {
 
   test('Should call repository with correct arguments including cursorId', async () => {
     const limit = 10;
-    const cursorId = 5;
+    const cursor = 5;
     vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue([]);
 
-    await Service_Task.getTasks(userIdMock, limit, cursorId);
+    await Service_Task.getTasks({ userId: userIdMock, limit, cursor });
 
-    expect(Repository_Task.getTasks).toHaveBeenCalledWith(userIdMock, limit, cursorId);
+    expect(Repository_Task.getTasks).toHaveBeenCalledWith({ userId: userIdMock, limit, cursor, status: undefined });
     expect(Repository_Task.getTasks).toHaveBeenCalledTimes(1);
   });
 
@@ -32,9 +32,9 @@ describe('getTasks flow', () => {
     const limit = 10;
     vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue([]);
 
-    await Service_Task.getTasks(userIdMock, limit);
+    await Service_Task.getTasks({ userId: userIdMock, limit });
 
-    expect(Repository_Task.getTasks).toHaveBeenCalledWith(userIdMock, limit, undefined);
+    expect(Repository_Task.getTasks).toHaveBeenCalledWith({ userId: userIdMock, limit, cursor: undefined, status: undefined });
   });
 
   test('Should return hasNextPage true and data sliced to limit when repository returns limit + 1 items', async () => {
@@ -42,7 +42,7 @@ describe('getTasks flow', () => {
     const tasks = [makeTask(4), makeTask(3), makeTask(2), makeTask(1)];
     vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue(tasks);
 
-    const result = await Service_Task.getTasks(userIdMock, limit);
+    const result = await Service_Task.getTasks({ userId: userIdMock, limit });
 
     expect(result.pagination.hasNextPage).toBe(true);
     expect(result.data).toHaveLength(limit);
@@ -54,7 +54,7 @@ describe('getTasks flow', () => {
     const tasks = [makeTask(4), makeTask(3), makeTask(2), makeTask(1)];
     vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue(tasks);
 
-    const result = await Service_Task.getTasks(userIdMock, limit);
+    const result = await Service_Task.getTasks({ userId: userIdMock, limit });
 
     expect(result.pagination.nextCursor).toEqual(tasks[limit - 1].id);
   });
@@ -64,7 +64,7 @@ describe('getTasks flow', () => {
     const tasks = [makeTask(3), makeTask(2), makeTask(1)];
     vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue(tasks);
 
-    const result = await Service_Task.getTasks(userIdMock, limit);
+    const result = await Service_Task.getTasks({ userId: userIdMock, limit });
 
     expect(result.pagination.hasNextPage).toBe(false);
     expect(result.data).toHaveLength(limit);
@@ -76,7 +76,7 @@ describe('getTasks flow', () => {
     const tasks = [makeTask(2), makeTask(1)];
     vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue(tasks);
 
-    const result = await Service_Task.getTasks(userIdMock, limit);
+    const result = await Service_Task.getTasks({ userId: userIdMock, limit });
 
     expect(result.pagination.hasNextPage).toBe(false);
     expect(result.pagination.nextCursor).toBeNull();
@@ -87,10 +87,52 @@ describe('getTasks flow', () => {
     const limit = 10;
     vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue([]);
 
-    const result = await Service_Task.getTasks(userIdMock, limit);
+    const result = await Service_Task.getTasks({ userId: userIdMock, limit });
 
     expect(result.data).toHaveLength(0);
     expect(result.pagination.hasNextPage).toBe(false);
     expect(result.pagination.nextCursor).toBeNull();
+  });
+
+  describe('status filter', () => {
+    test('Should call repository with status when provided', async () => {
+      const limit = 10;
+      vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue([]);
+
+      await Service_Task.getTasks({ userId: userIdMock, limit, status: 'COMPLETED' });
+
+      expect(Repository_Task.getTasks).toHaveBeenCalledWith({ userId: userIdMock, limit, cursor: undefined, status: 'COMPLETED' });
+    });
+
+    test('Should call repository without status when not provided', async () => {
+      const limit = 10;
+      vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue([]);
+
+      await Service_Task.getTasks({ userId: userIdMock, limit });
+
+      expect(Repository_Task.getTasks).toHaveBeenCalledWith(expect.objectContaining({ status: undefined }));
+    });
+
+    test('Should paginate only over filtered tasks when status is provided', async () => {
+      const limit = 2;
+      const tasks = [makeTask(5, 'COMPLETED'), makeTask(3, 'COMPLETED'), makeTask(1, 'COMPLETED')];
+      vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue(tasks);
+
+      const result = await Service_Task.getTasks({ userId: userIdMock, limit, status: 'COMPLETED' });
+
+      expect(result.pagination.hasNextPage).toBe(true);
+      expect(result.data).toHaveLength(limit);
+      expect(result.pagination.nextCursor).toBe(tasks[limit - 1].id);
+    });
+
+    test('Should pass cursor and status together for filtered pagination', async () => {
+      const limit = 10;
+      const cursor = 5;
+      vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue([]);
+
+      await Service_Task.getTasks({ userId: userIdMock, limit, cursor, status: 'IN_PROGRESS' });
+
+      expect(Repository_Task.getTasks).toHaveBeenCalledWith({ userId: userIdMock, limit, cursor, status: 'IN_PROGRESS' });
+    });
   });
 });
