@@ -1,9 +1,14 @@
 import * as Repository_Task from './task.repository.js';
-import { updateTaskSchemaBodyType } from '../task/task.schema.js';
+import { getTaskSchemaType, updateTaskSchemaBodyType } from '../task/task.schema.js';
 import { createTaskInputType } from './task.type.js';
 
-const getTasks = async (userId: string, limit: number, cursorId?: number) => {
-  const returnedTasks = await Repository_Task.getTasks(userId, limit, cursorId);
+const getTasks = async ({
+  userId,
+  limit,
+  cursor,
+  status
+}: { userId: string } & getTaskSchemaType) => {
+  const returnedTasks = await Repository_Task.getTasks({ userId, limit, cursor, status });
   const hasNextPage = returnedTasks.length > limit;
   const data = hasNextPage ? returnedTasks.slice(0, limit) : returnedTasks;
 

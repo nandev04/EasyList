@@ -8,7 +8,8 @@ type updateTaskSchemaParamsType = z.infer<typeof updateTaskSchemaParams>;
 
 const getTaskSchema = z.object({
   limit: z.coerce.number().int().positive().max(50).default(10),
-  cursor: z.coerce.number().int().positive().optional()
+  cursor: z.coerce.number().int().positive().optional(),
+  status: z.enum(['PENDING', 'COMPLETED', 'IN_PROGRESS']).optional()
 });
 
 const createTaskSchema = z.object({
