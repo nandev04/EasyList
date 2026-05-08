@@ -132,3 +132,8 @@ button {
   box-sizing: border-box;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
+
+.global-toast {
+  font-family: var(--tertiary-font);
+  font-size: 14px;
+}
