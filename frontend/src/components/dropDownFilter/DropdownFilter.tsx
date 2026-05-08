@@ -15,13 +15,13 @@ import {
 import { StatusTask } from "../../types/task.types";
 
 const DropdownFilter = ({
-  selectedStatus,
-  setSelectedStatus,
+  filterStatus,
+  setfilterStatus,
   statusLabel,
   filter,
 }: {
-  selectedStatus: StatusTask | null;
-  setSelectedStatus: React.Dispatch<SetStateAction<StatusTask | null>>;
+  filterStatus: StatusTask | null;
+  setfilterStatus: React.Dispatch<SetStateAction<StatusTask | null>>;
   statusLabel: Record<StatusTask, string>;
   filter: StatusTask[];
 }) => {
@@ -35,8 +35,8 @@ const DropdownFilter = ({
         <MenuItems className={styles.menu} anchor="bottom end">
           <div className={styles.group_container}>
             <RadioGroup
-              value={selectedStatus}
-              onChange={(value) => setSelectedStatus(value)}
+              value={filterStatus}
+              onChange={(value) => setfilterStatus(value)}
               aria-label="Server size"
               className={styles.group}
             >
@@ -45,9 +45,9 @@ const DropdownFilter = ({
                   key={status}
                   className={styles.field}
                   onClick={(e) => {
-                    if (selectedStatus === status) {
+                    if (filterStatus === status) {
                       e.preventDefault();
-                      setSelectedStatus(null);
+                      setfilterStatus(null);
                     }
                   }}
                 >

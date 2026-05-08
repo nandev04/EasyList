@@ -8,7 +8,7 @@ type UserDTO = {
   verified: boolean;
   createdAt: Date;
   updatedAt: Date;
-  avatarKey: string | null;
+  signedUrlAvatar: string | null;
 };
 
 type CreateUserBodyType = registerSchemaType;

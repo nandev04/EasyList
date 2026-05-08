@@ -10,12 +10,18 @@ type OptionsStatusTask = {
 };
 
 type GetTaskResponse = {
-  id: number;
-  title: string;
-  description: string | undefined;
-  status: StatusTask;
-  createdAt: Date;
-  updatedAt: Date;
+  data: {
+    id: number;
+    title: string;
+    description: string | undefined;
+    status: StatusTask;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+  pagination: {
+    nextCursor: null;
+    hasNextPage: number | null;
+  };
 };
 
 type CreateTaskPayload = {

@@ -8,9 +8,9 @@ import { useGetUser } from "../../hooks/React/useUser";
 
 const ProfileOverview = () => {
   const { data: user } = useGetUser();
+
   const [openAvatarDialog, setOpenAvatarDialog] = useState(false);
   const [openUpdateAvatarDialog, setOpenUpdateAvatarDialog] = useState(false);
-  const S3_URL_AVATARS = false;
 
   return (
     <>
@@ -20,11 +20,7 @@ const ProfileOverview = () => {
             <button onClick={() => setOpenAvatarDialog(true)}>
               <img
                 className={styles.avatar_image}
-                src={
-                  user?.avatarKey && S3_URL_AVATARS
-                    ? S3_URL_AVATARS + user.avatarKey
-                    : "/assets/user-image.jpg"
-                }
+                src={user?.signedUrlAvatar ?? "/assets/user-image.jpg"}
                 alt="Foto de perfil do usuário"
               />
             </button>
@@ -44,11 +40,7 @@ const ProfileOverview = () => {
             <div className={styles.container_avatar_full}>
               <img
                 className={styles.avatar_image_full}
-                src={
-                  user?.avatarKey && S3_URL_AVATARS
-                    ? S3_URL_AVATARS + user.avatarKey
-                    : "/assets/user-image.jpg"
-                }
+                src={user?.signedUrlAvatar ?? "/assets/user-image.jpg"}
                 alt="Foto de perfil do usuário"
               />
               <button

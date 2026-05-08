@@ -3,9 +3,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { BiImageAdd } from "react-icons/bi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import styles from "./uploadAvatar.module.css";
-import { updateAvatar } from "../../services/user.service";
-
-// CONFIGURAR PREVIEW DE FOTO(LAYOUT), IMPLEMENTAR VALIDAÇÃO COM ZOD DE INPUT, IMPLEMENTAR LÓGICA DE PATCH AVATAR
+import { useUpdateAvatar } from "../../hooks/Query/useUserMutation";
 
 const UploadAvatar = ({
   setStateDialog,
@@ -19,6 +17,7 @@ const UploadAvatar = ({
     formState: { errors },
     watch,
   } = useForm();
+  const { mutateAsync } = useUpdateAvatar();
 
   const image = watch("image");
 
@@ -48,14 +47,14 @@ const UploadAvatar = ({
   async function onSubmit(data: FieldValues) {
     try {
       const formData = new FormData();
-      console.log(data.image);
-      if (errors) console.log(errors);
 
       const file = data.image[0];
 
       formData.append("avatar", file);
 
-      await updateAvatar(formData);
+      await mutateAsync(formData, {
+        onSuccess: () => setStateDialog(false),
+      });
 
       reset();
     } catch (err) {
@@ -124,7 +123,7 @@ const UploadAvatar = ({
             disabled={!image?.length}
             className={styles.submit_btn}
           >
-            Enviar
+            Salvar
           </button>
         </div>
       </form>

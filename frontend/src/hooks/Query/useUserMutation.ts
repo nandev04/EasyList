@@ -1,5 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import { createUser, updateUser } from "../../services/user.service";
+import {
+  createUser,
+  updateAvatar,
+  updateUser,
+} from "../../services/user.service";
 import { queryClient } from "../../lib/reactQuery";
 import toast from "react-hot-toast";
 import { CreateUserBodyType } from "../../types/user.types";
@@ -23,4 +27,13 @@ const useUpdateUserMutation = () =>
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["user"] }),
   });
 
-export { useCreateUserMutation, useUpdateUserMutation };
+const useUpdateAvatar = () =>
+  useMutation({
+    mutationFn: (formData: FormData) => updateAvatar(formData),
+    onSuccess: () => {
+      (queryClient.invalidateQueries({ queryKey: ["user"] }),
+        toast.success("Avatar atualizado !"));
+    },
+  });
+
+export { useCreateUserMutation, useUpdateUserMutation, useUpdateAvatar };

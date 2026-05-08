@@ -1,4 +1,4 @@
-import { otpSchemaType } from "../schemas/emailOtp.schema";
+import { otpSchemaType } from "../schemas/EmailOtp.schema";
 import {
   CreateUserBodyType,
   CreateUserResponseType,
@@ -24,7 +24,7 @@ export async function getUser() {
 }
 
 export async function updateAvatar(formData: FormData) {
-  const response = await privateApi.post("/avatar/upload", formData);
+  const response = await privateApi.patch("/avatar/upload", formData);
   return response;
 }
 

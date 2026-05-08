@@ -8,7 +8,7 @@ const ContainerTask = ({
   title,
   description,
   status,
-}: CreateTaskPayload & { taskId: number; updateAt: number }) => {
+}: CreateTaskPayload & { taskId: number }) => {
   const statusColorMap: Record<StatusTask, string> = {
     [StatusTask.COMPLETED]: "var(--task-completed)",
     [StatusTask.IN_PROGRESS]: "var(--task-inProgress)",

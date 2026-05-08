@@ -3,12 +3,11 @@ import styles from "./dropdownHeader.module.css";
 import { useState } from "react";
 import LogoutBtn from "../logoutBtn/LogoutBtn";
 import ProfileBtn from "../profileBtn/ProfileBtn";
-import { useGetUser } from "../../hooks/React/useUser";
+import { useUserStore } from "../../store/useUserStore";
 
 const DropdownHeader = () => {
-  const { data: user } = useGetUser();
+  const user = useUserStore((s) => s.user);
   const [open, setOpen] = useState(false);
-  const S3_URL_AVATARS = import.meta.env.VITE_S3_URL_AVATARS;
 
   return (
     <div className={styles.header_container}>
@@ -20,11 +19,7 @@ const DropdownHeader = () => {
           onClick={() => setOpen(!open)}
         >
           <img
-            src={
-              user?.avatarKey
-                ? S3_URL_AVATARS + user?.avatarKey
-                : "/assets/user-image.jpg"
-            }
+            src={user?.signedUrlAvatar ?? "/assets/user-image.jpg"}
             onError={(e) => (e.currentTarget.src = "/assets/user-image.jpg")}
             alt="User avatar"
             className={styles.avatar}
