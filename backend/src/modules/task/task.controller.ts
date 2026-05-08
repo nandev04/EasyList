@@ -12,7 +12,7 @@ const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!;
     const { limit, cursor, status } = <getTaskSchemaType>req.validated!.query;
-    const tasks = await Service.getTasks({ userId, limit, cursor });
+    const tasks = await Service.getTasks({ userId, limit, cursor, status });
     res.status(200).json(tasks);
   } catch (err) {
     next(err);
