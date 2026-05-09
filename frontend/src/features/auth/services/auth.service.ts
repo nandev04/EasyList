@@ -4,9 +4,9 @@ import { privateApi, publicApi } from "../../../services/api.ts";
 import { changePasswordSchemaType } from "../../../components/DialogChangePassword/change-password.schema.ts";
 import { verifyAccountType } from "../../../shared/types/auth.types.ts";
 import { emailVerifySchemaType } from "../../../schemas/sendEmailVerify.schema.ts";
-import { emailForgotPwdSchemaType } from "../../../schemas/emailForgotPwd.ts";
-import { verifyOtpForgotPwdSchemaType } from "../../../schemas/verifyOtpForgotPwd.ts";
-import { newPasswordForgotSchemaType } from "../../../schemas/newPasswordForgot.ts";
+import { newPasswordForgotSchemaType } from "../forgot-password/schema/newPassword.schema.ts";
+import { emailValidateSchemaType } from "../../../shared/schema/email.schema.ts";
+import { otpSchemaType } from "../../../shared/schema/otpCode.schema.ts";
 
 const BASE_ENDPOINT = "/auth";
 
@@ -31,12 +31,12 @@ export async function resendLinkVerifyAccount(body: emailVerifySchemaType) {
   return await privateApi.post(`${BASE_ENDPOINT}/verify/resend`, body);
 }
 
-export async function sendEmailForgotPassword(body: emailForgotPwdSchemaType) {
+export async function sendEmailForgotPassword(body: emailValidateSchemaType) {
   return await publicApi.post(`${BASE_ENDPOINT}/forgot-password`, body);
 }
 
 export async function sendOtpForgotPassword(
-  body: verifyOtpForgotPwdSchemaType,
+  body: otpSchemaType & emailVerifySchemaType,
 ) {
   return await publicApi.post(`${BASE_ENDPOINT}/verify-code`, body);
 }
