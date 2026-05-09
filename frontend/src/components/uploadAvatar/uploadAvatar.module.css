@@ -18,11 +18,12 @@
 
 .wrapper_preview {
   position: relative;
+  width: min(256px, 100%);
 }
 
 .avatar_preview {
-  width: 256px;
-  height: 256px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 7px;
   border: 2px solid var(--primary-color);
@@ -85,12 +86,16 @@
   gap: 20px;
 }
 
-.actions * {
+.actions > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   font-weight: 600;
   padding: 8px 25px;
   border-radius: 7px;
   font-size: 0.9rem;
+  min-width: 110px;
 }
 
 .submit_btn {
@@ -102,6 +107,11 @@
   background-color: var(--primary-color-hover);
 }
 
+.submit_btn:disabled {
+  cursor: unset;
+  background-color: var(--cancel-color);
+}
+
 .cancel_btn {
   border: 2px solid var(--primary-color);
   color: var(--primary-color);
@@ -109,4 +119,23 @@
 
 .cancel_btn:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 480px) {
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .actions > * {
+    width: 100%;
+  }
+}
+
+.error_message {
+  font-family: var(--primary-font);
+  font-size: 0.865rem;
+  font-style: italic;
+  margin-top: 12px;
+  margin-right: 8px;
+  color: var(--error-message-color);
 }

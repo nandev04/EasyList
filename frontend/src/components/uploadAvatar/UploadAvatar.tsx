@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { BiImageAdd } from "react-icons/bi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import styles from "./uploadAvatar.module.css";
 import { useUpdateAvatar } from "../../hooks/Query/useUserMutation";
+import {
+  uploadAvatarSchema,
+  UploadAvatarSchemaType,
+} from "../../schemas/uploadAvatarSchema";
+import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
 
 const UploadAvatar = ({
   setStateDialog,
@@ -14,10 +20,14 @@ const UploadAvatar = ({
     register,
     reset,
     handleSubmit,
+    setError,
     formState: { errors },
     watch,
-  } = useForm();
-  const { mutateAsync } = useUpdateAvatar();
+  } = useForm<UploadAvatarSchemaType>({
+    resolver: zodResolver(uploadAvatarSchema),
+    mode: "onChange",
+  });
+  const { mutateAsync, isPending } = useUpdateAvatar();
 
   const image = watch("image");
 
@@ -44,7 +54,7 @@ const UploadAvatar = ({
     return URL.revokeObjectURL(urlImage);
   }
 
-  async function onSubmit(data: FieldValues) {
+  async function onSubmit(data: UploadAvatarSchemaType) {
     try {
       const formData = new FormData();
 
@@ -58,7 +68,10 @@ const UploadAvatar = ({
 
       reset();
     } catch (err) {
-      console.log(err);
+      setError("root", {
+        type: "server",
+        message: "Ocorreu um erro ao enviar imagem",
+      });
     }
   }
 
@@ -120,12 +133,18 @@ const UploadAvatar = ({
           </button>
           <button
             type="submit"
-            disabled={!image?.length}
+            disabled={!image?.length || !!errors.image || isPending}
             className={styles.submit_btn}
           >
-            Salvar
+            {isPending ? <LoadingCircleSpinner /> : "Salvar"}
           </button>
         </div>
+        {errors.image && (
+          <p className={styles.error_message}>{errors.image.message}</p>
+        )}
+        {errors.root && (
+          <p className={styles.error_message}>{errors.root.message}</p>
+        )}
       </form>
     </div>
   );
