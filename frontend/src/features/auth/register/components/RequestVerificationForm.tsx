@@ -2,13 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import styles from "./requestVerificationForm.module.css";
-import {
-  emailVerifySchema,
-  emailVerifySchemaType,
-} from "../../../../schemas/sendEmailVerify.schema";
 import { resendLinkVerifyAccount } from "../../services/auth.service";
 import LoadingCircleSpinner from "../../../../shared/components/ui/LoadingCircleSpinner";
 import { IoIosSend } from "react-icons/io";
+import {
+  emailValidateSchema,
+  emailValidateSchemaType,
+} from "../../../../shared/schema/email.schema";
 
 const RequestVerificationForm = ({
   setEmail,
@@ -22,10 +22,10 @@ const RequestVerificationForm = ({
     clearErrors,
     formState: { isSubmitting, errors },
   } = useForm({
-    resolver: zodResolver(emailVerifySchema),
+    resolver: zodResolver(emailValidateSchema),
   });
 
-  async function sendEmail({ email }: emailVerifySchemaType) {
+  async function sendEmail({ email }: emailValidateSchemaType) {
     try {
       await resendLinkVerifyAccount({ email });
       setEmail(email);

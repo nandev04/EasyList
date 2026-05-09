@@ -3,10 +3,10 @@ import { loginSchemaType } from "../login/schema/login.schema.ts";
 import { privateApi, publicApi } from "../../../services/api.ts";
 import { changePasswordSchemaType } from "../../../components/DialogChangePassword/change-password.schema.ts";
 import { verifyAccountType } from "../../../shared/types/auth.types.ts";
-import { emailVerifySchemaType } from "../../../schemas/sendEmailVerify.schema.ts";
 import { newPasswordForgotSchemaType } from "../forgot-password/schema/newPassword.schema.ts";
 import { emailValidateSchemaType } from "../../../shared/schema/email.schema.ts";
 import { otpSchemaType } from "../../../shared/schema/otpCode.schema.ts";
+import { emailVerifySchemaType } from "../../../schemas/sendEmailVerify.schema.ts";
 
 const BASE_ENDPOINT = "/auth";
 
@@ -27,7 +27,7 @@ export async function verifyAccount(body: verifyAccountType) {
   return await privateApi.patch(`${BASE_ENDPOINT}/verify`, body);
 }
 
-export async function resendLinkVerifyAccount(body: emailVerifySchemaType) {
+export async function resendLinkVerifyAccount(body: emailValidateSchemaType) {
   return await privateApi.post(`${BASE_ENDPOINT}/verify/resend`, body);
 }
 
