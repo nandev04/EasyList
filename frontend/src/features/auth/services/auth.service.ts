@@ -6,7 +6,6 @@ import { verifyAccountType } from "../../../shared/types/auth.types.ts";
 import { newPasswordForgotSchemaType } from "../forgot-password/schema/newPassword.schema.ts";
 import { emailValidateSchemaType } from "../../../shared/schema/email.schema.ts";
 import { otpSchemaType } from "../../../shared/schema/otpCode.schema.ts";
-import { emailVerifySchemaType } from "../../../schemas/sendEmailVerify.schema.ts";
 
 const BASE_ENDPOINT = "/auth";
 
@@ -36,7 +35,7 @@ export async function sendEmailForgotPassword(body: emailValidateSchemaType) {
 }
 
 export async function sendOtpForgotPassword(
-  body: otpSchemaType & emailVerifySchemaType,
+  body: otpSchemaType & emailValidateSchemaType,
 ) {
   return await publicApi.post(`${BASE_ENDPOINT}/verify-code`, body);
 }
