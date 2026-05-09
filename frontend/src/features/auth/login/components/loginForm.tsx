@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { CiLogin } from "react-icons/ci";
 import { AxiosError } from "axios";
-import LoadingCircleSpinner from "../../../../components/loadingCircleSpinner/LoadingCircleSpinner";
+import LoadingCircleSpinner from "../../../../shared/components/ui/loadingCircleSpinner";
 
 const loginForm = () => {
   const queryClient = useQueryClient();

@@ -10,7 +10,7 @@ import {
 } from "../../schemas/sendEmailVerify.schema";
 import { Link, useLocation } from "react-router-dom";
 import { resendLinkVerifyAccount } from "../../features/auth/services/auth.service";
-import LoadingCircleSpinner from "../../components/loadingCircleSpinner/LoadingCircleSpinner";
+import LoadingCircleSpinner from "../../shared/components/ui/loadingCircleSpinner";
 
 const VerifyEmail = () => {
   const location = useLocation();

@@ -1,15 +1,15 @@
 import CreateTaskBtn from "../../components/createTaskBtn/CreateTaskBtn";
 import ContainerTask from "../../components/taskCard/ContainerTask";
 import styles from "./home.module.css";
-import useDelayLoading from "../../hooks/React/useDelayLoading";
+import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
 import LoadingTask from "../../components/loadingTask/LoadingTask";
 import DropdownHeader from "../../components/dropdownHeader/DropdownHeader";
 import { useMemo, useState } from "react";
-import { StatusTask } from "../../types/task.types";
+import { StatusTask } from "../../shared/types/task.types";
 import DropdownFilter from "../../components/dropDownFilter/DropdownFilter";
-import { useUserStore } from "../../store/useUserStore";
+import { useUserStore } from "../../shared/store/useUserStore";
 import useTasks from "../../hooks/Query/useTasks";
-import LoadingInfiniteScroll from "../../components/loadingInfiniteScroll/LoadingInfiniteScroll";
+import LoadingInfiniteScroll from "../../shared/components/ui/loadingInfiniteScroll";
 import useObserverInfiniteScroll from "../../hooks/React/useObserverInfiniteScroll";
 
 const Home = () => {

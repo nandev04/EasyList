@@ -1,5 +1,5 @@
 import styles from "./containerTask.module.css";
-import { CreateTaskPayload, StatusTask } from "../../types/task.types";
+import { CreateTaskPayload, StatusTask } from "../../shared/types/task.types";
 import EditTaskBtn from "../editTaskBtn/EditTaskBtn";
 import DeleteTaskBtn from "../deleteTaskBtn/DeleteTaskBtn";
 

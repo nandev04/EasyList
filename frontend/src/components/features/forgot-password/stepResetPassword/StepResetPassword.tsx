@@ -9,7 +9,7 @@ import {
 } from "../../../../schemas/newPasswordForgot";
 import { sendNewPasswordForgot } from "../../../../features/auth/services/auth.service";
 import { AxiosError } from "axios";
-import LoadingCircleSpinner from "../../../loadingCircleSpinner/LoadingCircleSpinner";
+import LoadingCircleSpinner from "../../../../shared/components/ui/loadingCircleSpinner";
 
 const StepResetPassword = ({
   onSuccess,

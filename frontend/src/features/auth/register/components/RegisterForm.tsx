@@ -1,19 +1,15 @@
 import { useForm } from "react-hook-form";
 import styles from "./registerForm.module.css";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  registerSchema,
-  registerSchemaType,
-} from "../../schemas/register.schema";
+import { registerSchema, registerSchemaType } from "../schema/register.schema";
 import { AxiosError } from "axios";
-
-import { useCreateUser } from "../../hooks/React/useUser";
-import useDelayLoading from "../../hooks/React/useDelayLoading";
-import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
+import useDelayLoading from "../../../../shared/hooks/react/useDelayLoading";
+import LoadingCircleSpinner from "../../../../shared/components/ui/loadingCircleSpinner";
 import { useNavigate } from "react-router-dom";
+import { useCreateUserMutation } from "../hooks/register.mutation";
 
 const RegisterForm = () => {
-  const { mutate: mutateRegisterUser, isPending } = useCreateUser();
+  const { mutate, isPending } = useCreateUserMutation();
   const registerForm = useForm({
     mode: "onSubmit",
     resolver: zodResolver(registerSchema),
@@ -23,12 +19,12 @@ const RegisterForm = () => {
   const navigate = useNavigate();
 
   async function registerSubmit(data: registerSchemaType) {
-    mutateRegisterUser(data, {
+    mutate(data, {
       onSuccess: () => {
         navigate("/verify-email", { state: { email: "teste" } });
         registerForm.reset();
       },
-      onError: (err: unknown) => {
+      onError: (err) => {
         if (err instanceof AxiosError) {
           const message = "Ocorreu um erro ao cadastrar";
 

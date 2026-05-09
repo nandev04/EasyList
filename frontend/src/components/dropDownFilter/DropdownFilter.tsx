@@ -12,7 +12,7 @@ import {
   Radio,
   RadioGroup,
 } from "@headlessui/react";
-import { StatusTask } from "../../types/task.types";
+import { StatusTask } from "../../shared/types/task.types";
 
 const DropdownFilter = ({
   filterStatus,

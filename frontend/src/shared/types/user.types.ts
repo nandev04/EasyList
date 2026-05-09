@@ -1,4 +1,4 @@
-import { registerSchemaType } from "../schemas/register.schema";
+import { registerSchemaType } from "../../features/auth/register/schema/register.schema";
 
 type UserDTO = {
   firstname: string;
@@ -11,7 +11,6 @@ type UserDTO = {
   signedUrlAvatar: string | null;
 };
 
-type CreateUserBodyType = registerSchemaType;
 type CreateUserResponseType = { message: string };
 
 type UpdateUserBodyType = {
@@ -21,9 +20,4 @@ type UpdateUserBodyType = {
   email?: string;
 };
 
-export type {
-  UserDTO,
-  CreateUserBodyType,
-  CreateUserResponseType,
-  UpdateUserBodyType,
-};
+export type { UserDTO, CreateUserResponseType, UpdateUserBodyType };

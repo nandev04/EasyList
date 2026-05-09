@@ -1,25 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
-import {
-  createUser,
-  updateAvatar,
-  updateUser,
-} from "../../services/user.service";
-import { queryClient } from "../../lib/reactQuery";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateAvatar, updateUser } from "../../services/user.service";
 import toast from "react-hot-toast";
-import { CreateUserBodyType } from "../../types/user.types";
 
-const useCreateUserMutation = () =>
-  useMutation({
-    mutationFn: (data: CreateUserBodyType) => createUser(data),
-    onSuccess: () => {
-      toast.success(
-        "Conta criada com sucesso, verifique o email registrado para confirmar sua conta!",
-      );
-    },
-    onError: () => {
-      toast.error("Ocorreu um erro ao criar a conta");
-    },
-  });
+const queryClient = useQueryClient();
 
 const useUpdateUserMutation = () =>
   useMutation({
@@ -36,4 +19,4 @@ const useUpdateAvatar = () =>
     },
   });
 
-export { useCreateUserMutation, useUpdateUserMutation, useUpdateAvatar };
+export { useUpdateUserMutation, useUpdateAvatar };

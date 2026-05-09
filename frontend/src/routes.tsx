@@ -4,7 +4,7 @@ import Login from "./features/auth/login/pages/LoginPage";
 import ProtectedRoutes from "./components/protectedRoutes/ProtectedRoutes";
 import PublicRoutes from "./components/publicRoutes/PublicRoutes";
 import Profile from "./pages/profile";
-import Register from "./pages/register";
+import Register from "./features/auth/register/pages/registerPage";
 import VerifyAccount from "./pages/verify-account";
 import VerifyEmail from "./pages/verify-email";
 import ForgotPasswordLayout from "./pages/forgot-password";

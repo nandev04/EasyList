@@ -9,7 +9,7 @@ import {
 } from "../../../../schemas/emailForgotPwd";
 import { sendEmailForgotPassword } from "../../../../features/auth/services/auth.service";
 import { AxiosError } from "axios";
-import LoadingCircleSpinner from "../../../loadingCircleSpinner/LoadingCircleSpinner";
+import LoadingCircleSpinner from "../../../../shared/components/ui/loadingCircleSpinner";
 
 const StepEmail = ({
   onSuccess,

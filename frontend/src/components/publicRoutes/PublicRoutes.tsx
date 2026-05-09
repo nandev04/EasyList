@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import Loading from "../loading/Loading";
-import useDelayLoading from "../../hooks/React/useDelayLoading";
-import { useUserStore } from "../../store/useUserStore";
+import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
+import { useUserStore } from "../../shared/store/useUserStore";
 
 const PublicRoutes = () => {
   const user = useUserStore((s) => s.user);

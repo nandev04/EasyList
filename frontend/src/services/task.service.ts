@@ -3,7 +3,7 @@ import {
   GetTaskQueryParams,
   getTaskQuerySchema,
 } from "../schemas/taskSchema";
-import { EditTaskPayload, GetTaskResponse } from "../types/task.types";
+import { EditTaskPayload, GetTaskResponse } from "../shared/types/task.types";
 import { privateApi } from "./api";
 
 export async function getTasks(

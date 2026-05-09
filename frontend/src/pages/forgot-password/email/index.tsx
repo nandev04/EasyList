@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import StepEmail from "../../../components/features/forgot-password/stepEmail/stepEmail";
-import { useForgotPasswordStore } from "../../../store/useForgotPasswordStore";
+import { useForgotPasswordStore } from "../../../shared/store/useForgotPasswordStore";
 
 const ForgotPasswordEmailPage = () => {
   const navigate = useNavigate();

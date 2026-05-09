@@ -1,9 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "../../services/user.service";
-import {
-  useCreateUserMutation,
-  useUpdateUserMutation,
-} from "../Query/useUserMutation";
+import { useUpdateUserMutation } from "../Query/useUserMutation";
 
 const useGetUser = () =>
   useQuery({
@@ -12,8 +9,6 @@ const useGetUser = () =>
     retry: false,
   });
 
-const useCreateUser = () => useCreateUserMutation();
-
 const useUpdateUser = () => useUpdateUserMutation();
 
-export { useGetUser, useCreateUser, useUpdateUser };
+export { useGetUser, useUpdateUser };

@@ -4,7 +4,7 @@ import {
   CreateUserResponseType,
   UpdateUserBodyType,
   UserDTO,
-} from "../types/user.types";
+} from "../shared/types/user.types";
 import { privateApi } from "./api";
 
 export async function createUser(formData: CreateUserBodyType) {

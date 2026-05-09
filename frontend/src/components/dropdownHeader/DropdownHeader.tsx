@@ -3,7 +3,7 @@ import styles from "./dropdownHeader.module.css";
 import { useState } from "react";
 import LogoutBtn from "../logoutBtn/LogoutBtn";
 import ProfileBtn from "../profileBtn/ProfileBtn";
-import { useUserStore } from "../../store/useUserStore";
+import { useUserStore } from "../../shared/store/useUserStore";
 
 const DropdownHeader = () => {
   const user = useUserStore((s) => s.user);

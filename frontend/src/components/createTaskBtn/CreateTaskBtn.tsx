@@ -5,10 +5,10 @@ import { RiAddFill } from "react-icons/ri";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema, taskSchemaType } from "../../schemas/taskSchema";
-import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
-import useDelayLoading from "../../hooks/React/useDelayLoading";
+import LoadingCircleSpinner from "../../shared/components/ui/loadingCircleSpinner";
+import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
 import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
-import { OptionsStatusTask } from "../../types/task.types";
+import { OptionsStatusTask } from "../../shared/types/task.types";
 import { useCreateTaskMutation } from "../../hooks/Query/useTaskMutation";
 import CloseDialogBtn from "../closeDialogBtn/CloseDialogBtn";
 const CreateTaskBtn = () => {

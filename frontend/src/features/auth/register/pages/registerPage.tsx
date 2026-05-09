@@ -2,7 +2,7 @@ import { GiNotebook } from "react-icons/gi";
 import { FaPencilAlt } from "react-icons/fa";
 import styles from "./register.module.css";
 import { Link } from "react-router-dom";
-import RegisterForm from "../../components/registerForm/RegisterForm";
+import RegisterForm from "../components/RegisterForm";
 
 const Register = () => {
   return (
