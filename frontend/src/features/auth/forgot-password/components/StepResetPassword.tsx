@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   newPasswordForgotSchema,
   newPasswordForgotSchemaType,
-} from "../../../../schemas/newPasswordForgot";
+} from "../schema/newPassword.schema";
 import { sendNewPasswordForgot } from "../../../../features/auth/services/auth.service";
 import { AxiosError } from "axios";
 import LoadingCircleSpinner from "../../../../shared/components/ui/LoadingCircleSpinner";

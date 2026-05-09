@@ -10,8 +10,8 @@ import VerifyEmail from "./features/auth/register/pages/RequestVerificationPage"
 import FPLayoutPage from "./features/auth/forgot-password/pages/FPLayouPage";
 import FPEmailPage from "./features/auth/forgot-password/pages/FPEmailPage";
 import FPOtpCodePage from "./features/auth/forgot-password/pages/FPOtpCode";
-import FPResetPage from "./pages/forgot-password/reset";
-import FPSuccessPage from "./pages/forgot-password/success";
+import FPResetPage from "./features/auth/forgot-password/pages/FPResetPage";
+import FPSuccessPage from "./features/auth/forgot-password/pages/FPSuccessPage";
 
 function MainRoutes() {
   return (

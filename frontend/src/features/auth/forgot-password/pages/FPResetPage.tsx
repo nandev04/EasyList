@@ -1,8 +1,8 @@
+import { useForgotPasswordStore } from "../store/useForgotPassword.store";
+import StepResetPassword from "../components/StepResetPassword";
 import { useNavigate } from "react-router-dom";
-import StepResetPassword from "../../../components/features/forgot-password/stepResetPassword/StepResetPassword";
-import { useForgotPasswordStore } from "../../../features/auth/forgot-password/store/useForgotPassword.store";
 
-const ForgotPasswordResetPage = () => {
+const FPResetPage = () => {
   const navigate = useNavigate();
   const { resetToken, clear } = useForgotPasswordStore();
 
@@ -19,4 +19,4 @@ const ForgotPasswordResetPage = () => {
   );
 };
 
-export default ForgotPasswordResetPage;
+export default FPResetPage;

@@ -3,13 +3,14 @@ import { IoIosSend } from "react-icons/io";
 import styles from "./stepEmail.module.css";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  emailForgotPwdSchema,
-  emailForgotPwdSchemaType,
-} from "../../../../schemas/emailForgotPwd";
+
 import { sendEmailForgotPassword } from "../../services/auth.service";
 import { AxiosError } from "axios";
 import LoadingCircleSpinner from "../../../../shared/components/ui/LoadingCircleSpinner";
+import {
+  emailValidateSchema,
+  emailValidateSchemaType,
+} from "../../../../shared/schema/email.schema";
 
 const StepEmail = ({
   onSuccess,
@@ -25,10 +26,10 @@ const StepEmail = ({
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: { email: initialEmail ?? "" },
-    resolver: zodResolver(emailForgotPwdSchema),
+    resolver: zodResolver(emailValidateSchema),
   });
 
-  async function submitEmail({ email }: emailForgotPwdSchemaType) {
+  async function submitEmail({ email }: emailValidateSchemaType) {
     try {
       await sendEmailForgotPassword({ email });
       onSuccess(email);

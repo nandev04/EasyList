@@ -1,6 +1,6 @@
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
-import styles from "./stepPasswordSuccess.module.css";
+import styles from "./stepSuccess.module.css";
 
 const StepPasswordSuccess = () => {
   return (
