@@ -6,7 +6,7 @@ import useDelayLoading from "../../../../shared/hooks/react/useDelayLoading";
 import TokenError from "../components/TokenError";
 import TokenSuccess from "../components/TokenSuccess";
 import TokenNotFound from "../components/TokenNotFound";
-import { useVerifyAccountMutation } from "../hooks/verifyAccount.mutation";
+import { useVerifyAccountMutation } from "../hooks/useVerifyAccount.mutation";
 
 const VerifyAccount = () => {
   const [searchParams] = useSearchParams();

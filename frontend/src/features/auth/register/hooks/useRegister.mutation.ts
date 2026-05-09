@@ -1,7 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { createUser } from "../../../../services/user.service";
+
 import toast from "react-hot-toast";
 import { registerSchemaType } from "../schema/register.schema";
+import { createUser } from "../../services/auth.service";
 
 const useCreateUserMutation = () =>
   useMutation({

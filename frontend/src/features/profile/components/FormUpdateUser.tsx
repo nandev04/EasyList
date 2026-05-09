@@ -1,26 +1,28 @@
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import styles from "./inputUpdateUser.module.css";
+import { useForm } from "react-hook-form";
+import styles from "./formUpdateUser.module.css";
 import { MdEdit } from "react-icons/md";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { GoAlert } from "react-icons/go";
 import {
   updateUserSchema,
   updateUserSchemaType,
-} from "../../schemas/updateUserSchema";
+} from "../schema/updateUserSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as Service from "../../services/user.service";
-import { otpSchema, otpSchemaType } from "../../schemas/emailOtp.schema";
-import { OTPInput } from "input-otp";
-import OtpSlots from "../OtpComponent/OtpSlots";
-import ResendOtpCodeBtn from "../resendOtpCode/ResendOtpCodeBtn";
-import DialogChangePassword from "../DialogChangePassword/DialogChangePassword";
-import CloseDialogBtn from "../closeDialogBtn/CloseDialogBtn";
-import { useGetUser, useUpdateUser } from "../../hooks/React/useUser";
+import DialogChangePassword from "./DialogChangePassword";
+import CloseDialogBtn from "../../../shared/components/ui/CloseDialogBtn";
+import {
+  otpSchema,
+  otpSchemaType,
+} from "../../../shared/schema/otpCode.schema";
+import { useUserStore } from "../../../shared/store/useUserStore";
+import { useUpdateUserMutation } from "../hooks/useUser.mutation";
+import FormConfirmEmailOtp from "./FormConfirmEmailOtp";
+import * as Service from "../services/user.service";
 
-const InputUpdateUser = () => {
-  const { data: user } = useGetUser();
-  const { mutate: updateUser } = useUpdateUser();
+const FormUpdateUser = () => {
+  const user = useUserStore((s) => s.user);
+  const { mutateAsync: updateUser } = useUpdateUserMutation();
 
   const [isEditing, setIsEditing] = useState(false);
   const [openOtpDialog, setIsOpenOtpDialog] = useState(false);
@@ -73,7 +75,7 @@ const InputUpdateUser = () => {
         data[key as keyof updateUserSchemaType];
     }
 
-    await Service.updateUser(changedData);
+    await updateUser(changedData);
 
     const { email: emailData, ...restData } = changedData;
 
@@ -103,7 +105,6 @@ const InputUpdateUser = () => {
         return otpForm.setError("root", {
           message: err.message,
         });
-      console.log(err);
     }
   }
 
@@ -200,51 +201,12 @@ const InputUpdateUser = () => {
                 para confirmar a alteração.
               </p>
 
-              <div className={styles.container_inputOtp}>
-                <form onSubmit={otpForm.handleSubmit(onSubmitOtp)}>
-                  <Controller
-                    name="code"
-                    control={otpForm.control}
-                    render={({ field }) => (
-                      <OTPInput
-                        name="code"
-                        maxLength={6}
-                        value={field.value}
-                        onChange={(value) => {
-                          (field.onChange(value), otpForm.clearErrors("root"));
-                        }}
-                        render={({ slots }) => <OtpSlots slots={slots} />}
-                      />
-                    )}
-                  />
-                  {otpForm.formState.errors.code && (
-                    <span
-                      style={{ display: "block", margin: "7px 0" }}
-                      className={styles.error_message}
-                    >
-                      {otpForm.formState.errors.code.message}
-                    </span>
-                  )}
-                  {otpForm.formState.errors.root && (
-                    <span
-                      style={{ display: "block", margin: "7px 0" }}
-                      className={styles.error_message}
-                    >
-                      {otpForm.formState.errors.root.message}
-                    </span>
-                  )}
-                  <div className={styles.actionsOTP_container}>
-                    <button className={styles.submit_otp} type="submit">
-                      Enviar código
-                    </button>
-                    <ResendOtpCodeBtn
-                      callback={() => Service.updateUser({ email: emailInput })}
-                    >
-                      Reenviar
-                    </ResendOtpCodeBtn>
-                  </div>
-                </form>
-              </div>
+              <FormConfirmEmailOtp
+                otpUseForm={otpForm}
+                callbackOtp={onSubmitOtp}
+                callbackResend={onSubmitUpdate}
+                emailInput={emailInput}
+              />
               <CloseDialogBtn
                 resetForm={updateUserForm.reset}
                 setIsOpenDialog={setIsOpenOtpDialog}
@@ -261,4 +223,4 @@ const InputUpdateUser = () => {
   );
 };
 
-export default InputUpdateUser;
+export default FormUpdateUser;

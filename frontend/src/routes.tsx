@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import Login from "./features/auth/login/pages/LoginPage";
 import ProtectedRoutes from "./components/protectedRoutes/ProtectedRoutes";
 import PublicRoutes from "./components/publicRoutes/PublicRoutes";
-import Profile from "./pages/profile";
+import Profile from "./features/profile/pages/ProfilePage";
 import Register from "./features/auth/register/pages/RegisterPage";
 import VerifyAccount from "./features/auth/register/pages/VerifyAccountPage";
 import VerifyEmail from "./features/auth/register/pages/RequestVerificationPage";

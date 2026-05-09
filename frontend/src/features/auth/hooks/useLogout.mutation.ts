@@ -1,15 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import {
-  logoutUser,
-  verifyAccount,
-} from "../../features/auth/services/auth.service";
-import toast from "react-hot-toast";
-import { queryClient } from "../../lib/reactQuery";
-import { AxiosError } from "axios";
+import { logoutUser } from "../services/auth.service";
 
 const useLogoutMutation = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({

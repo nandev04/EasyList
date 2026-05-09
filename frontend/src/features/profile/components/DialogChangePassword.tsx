@@ -1,16 +1,16 @@
 import styles from "./dialogChangePassword.module.css";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { SetStateAction } from "react";
-import CloseDialogBtn from "../closeDialogBtn/CloseDialogBtn";
+import CloseDialogBtn from "../../../shared/components/ui/CloseDialogBtn";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   changePasswordSchema,
   changePasswordSchemaType,
-} from "./change-password.schema";
-import LoadingCircleSpinner from "../../shared/components/ui/LoadingCircleSpinner";
-import * as Service from "../../features/auth/services/auth.service";
-import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
+} from "../schema/changePassword.schema";
+import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
+import * as Service from "../../auth/services/auth.service";
+import useDelayLoading from "../../../shared/hooks/react/useDelayLoading";
 
 const DialogChangePassword = ({
   openDialog,

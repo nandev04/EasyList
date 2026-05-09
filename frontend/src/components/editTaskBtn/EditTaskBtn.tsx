@@ -17,7 +17,7 @@ import {
 } from "../../shared/types/task.types";
 import { Controller, useForm } from "react-hook-form";
 import { useEditTaskMutation } from "../../hooks/Query/useTaskMutation";
-import CloseDialogBtn from "../closeDialogBtn/CloseDialogBtn";
+import CloseDialogBtn from "../../shared/components/ui/CloseDialogBtn";
 
 const EditTaskBtn = ({
   data,

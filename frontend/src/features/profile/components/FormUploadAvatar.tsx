@@ -3,15 +3,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BiImageAdd } from "react-icons/bi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
-import styles from "./uploadAvatar.module.css";
-import { useUpdateAvatar } from "../../hooks/Query/useUserMutation";
-import {
-  uploadAvatarSchema,
-  UploadAvatarSchemaType,
-} from "../../schemas/uploadAvatarSchema";
-import LoadingCircleSpinner from "../../shared/components/ui/LoadingCircleSpinner";
+import styles from "./formUploadAvatar.module.css";
+import { avatarSchema, avatarSchemaType } from "../schema/avatar.schema";
+import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
+import { useUpdateAvatarMutation } from "../hooks/useUser.mutation";
 
-const UploadAvatar = ({
+const FormUploadAvatar = ({
   setStateDialog,
 }: {
   setStateDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,11 +20,11 @@ const UploadAvatar = ({
     setError,
     formState: { errors },
     watch,
-  } = useForm<UploadAvatarSchemaType>({
-    resolver: zodResolver(uploadAvatarSchema),
+  } = useForm({
+    resolver: zodResolver(avatarSchema),
     mode: "onChange",
   });
-  const { mutateAsync, isPending } = useUpdateAvatar();
+  const { mutateAsync, isPending } = useUpdateAvatarMutation();
 
   const image = watch("image");
 
@@ -54,7 +51,7 @@ const UploadAvatar = ({
     return URL.revokeObjectURL(urlImage);
   }
 
-  async function onSubmit(data: UploadAvatarSchemaType) {
+  async function onSubmit(data: avatarSchemaType) {
     try {
       const formData = new FormData();
 
@@ -150,4 +147,4 @@ const UploadAvatar = ({
   );
 };
 
-export default UploadAvatar;
+export default FormUploadAvatar;

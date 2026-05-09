@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useGetUser } from "./useUser";
-import { useUserStore } from "../../shared/store/useUserStore";
+import { useUserStore } from "../../../shared/store/useUserStore";
+import { useGetUser } from "./useUser.mutation";
 
 const useUserSync = () => {
   const { data, isLoading } = useGetUser();

@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 import useDelayLoading from "../../../../shared/hooks/react/useDelayLoading";
 import LoadingCircleSpinner from "../../../../shared/components/ui/LoadingCircleSpinner";
 import { useNavigate } from "react-router-dom";
-import { useCreateUserMutation } from "../hooks/register.mutation";
+import { useCreateUserMutation } from "../hooks/useRegister.mutation";
 
 const RegisterForm = () => {
   const { mutate, isPending } = useCreateUserMutation();

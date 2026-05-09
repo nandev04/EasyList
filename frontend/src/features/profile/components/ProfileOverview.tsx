@@ -3,12 +3,11 @@ import styles from "./profileOverview.module.css";
 import { MdOutlineFlipCameraIos } from "react-icons/md";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { RiCloseFill } from "react-icons/ri";
-import UploadAvatar from "../uploadAvatar/UploadAvatar";
-import { useGetUser } from "../../hooks/React/useUser";
+import FormUploadAvatar from "./FormUploadAvatar";
+import { useUserStore } from "../../../shared/store/useUserStore";
 
 const ProfileOverview = () => {
-  const { data: user } = useGetUser();
-
+  const user = useUserStore((s) => s.user);
   const [openAvatarDialog, setOpenAvatarDialog] = useState(false);
   const [openUpdateAvatarDialog, setOpenUpdateAvatarDialog] = useState(false);
 
@@ -59,7 +58,7 @@ const ProfileOverview = () => {
       >
         <div style={{ padding: "40px" }} className="overlay">
           <DialogPanel className={styles.panel_update}>
-            <UploadAvatar setStateDialog={setOpenUpdateAvatarDialog} />
+            <FormUploadAvatar setStateDialog={setOpenUpdateAvatarDialog} />
           </DialogPanel>
         </div>
       </Dialog>

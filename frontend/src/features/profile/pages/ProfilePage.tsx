@@ -1,7 +1,7 @@
-import InputUpdateUser from "../../components/inputsUpdateDataUser/InputUpdateUser";
-import ProfileOverview from "../../components/profileOverview/ProfileOverview";
+import FormUpdateUser from "../components/FormUpdateUser";
+import ProfileOverview from "../components/ProfileOverview";
 import { IoArrowBackOutline } from "react-icons/io5";
-import styles from "./profile.module.css";
+import styles from "./profilePage.module.css";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -36,7 +36,7 @@ const Profile = () => {
             <span className={styles.decorator}></span>
           </div>
           <div className={styles.container_inputs}>
-            <InputUpdateUser />
+            <FormUpdateUser />
           </div>
         </section>
       </main>
