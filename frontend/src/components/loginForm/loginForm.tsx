@@ -46,7 +46,7 @@ const loginForm = () => {
       } else {
         setError("root", {
           type: "server",
-          message: "Ocorreu um erro ao cadastrar o usuário",
+          message: "Não foi possível fazer login no momento.",
         });
       }
     }
