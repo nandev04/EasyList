@@ -7,9 +7,9 @@ import {
   emailForgotPwdSchema,
   emailForgotPwdSchemaType,
 } from "../../../../schemas/emailForgotPwd";
-import { sendEmailForgotPassword } from "../../../../features/auth/services/auth.service";
+import { sendEmailForgotPassword } from "../../services/auth.service";
 import { AxiosError } from "axios";
-import LoadingCircleSpinner from "../../../../shared/components/ui/loadingCircleSpinner";
+import LoadingCircleSpinner from "../../../../shared/components/ui/LoadingCircleSpinner";
 
 const StepEmail = ({
   onSuccess,

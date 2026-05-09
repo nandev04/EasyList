@@ -5,7 +5,7 @@ import { RiAddFill } from "react-icons/ri";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema, taskSchemaType } from "../../schemas/taskSchema";
-import LoadingCircleSpinner from "../../shared/components/ui/loadingCircleSpinner";
+import LoadingCircleSpinner from "../../shared/components/ui/LoadingCircleSpinner";
 import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
 import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 import { OptionsStatusTask } from "../../shared/types/task.types";

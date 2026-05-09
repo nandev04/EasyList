@@ -9,7 +9,7 @@ import {
   uploadAvatarSchema,
   UploadAvatarSchemaType,
 } from "../../schemas/uploadAvatarSchema";
-import LoadingCircleSpinner from "../../shared/components/ui/loadingCircleSpinner";
+import LoadingCircleSpinner from "../../shared/components/ui/LoadingCircleSpinner";
 
 const UploadAvatar = ({
   setStateDialog,

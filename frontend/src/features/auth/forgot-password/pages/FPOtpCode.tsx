@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import StepOtp from "../../../components/features/forgot-password/stepOtp/stepOtp";
-import { useForgotPasswordStore } from "../../../shared/store/useForgotPasswordStore";
+import StepOtp from "../components/StepOtp";
+import { useForgotPasswordStore } from "../store/useForgotPassword.store";
 
-const ForgotPasswordOtpPage = () => {
+const OtpCodePage = () => {
   const navigate = useNavigate();
   const { email, resetToken, setResetToken, clear } = useForgotPasswordStore();
 
@@ -28,4 +28,4 @@ const ForgotPasswordOtpPage = () => {
   );
 };
 
-export default ForgotPasswordOtpPage;
+export default OtpCodePage;

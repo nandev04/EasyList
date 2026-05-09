@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import styles from "./forgotPassword.module.css";
+import styles from "./FPLayoutPage.module.css";
 
 const ForgotPasswordLayout = () => {
   return (

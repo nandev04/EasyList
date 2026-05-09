@@ -1,7 +1,7 @@
 import styles from "./verifyAccount.module.css";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import LoadingCircleSpinner from "../../../../shared/components/ui/loadingCircleSpinner";
+import LoadingCircleSpinner from "../../../../shared/components/ui/LoadingCircleSpinner";
 import useDelayLoading from "../../../../shared/hooks/react/useDelayLoading";
 import TokenError from "../components/TokenError";
 import TokenSuccess from "../components/TokenSuccess";

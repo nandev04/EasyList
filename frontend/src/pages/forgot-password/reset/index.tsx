@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import StepResetPassword from "../../../components/features/forgot-password/stepResetPassword/StepResetPassword";
-import { useForgotPasswordStore } from "../../../shared/store/useForgotPasswordStore";
+import { useForgotPasswordStore } from "../../../features/auth/forgot-password/store/useForgotPassword.store";
 
 const ForgotPasswordResetPage = () => {
   const navigate = useNavigate();

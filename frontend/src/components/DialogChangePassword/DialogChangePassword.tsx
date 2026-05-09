@@ -8,7 +8,7 @@ import {
   changePasswordSchema,
   changePasswordSchemaType,
 } from "./change-password.schema";
-import LoadingCircleSpinner from "../../shared/components/ui/loadingCircleSpinner";
+import LoadingCircleSpinner from "../../shared/components/ui/LoadingCircleSpinner";
 import * as Service from "../../features/auth/services/auth.service";
 import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
 

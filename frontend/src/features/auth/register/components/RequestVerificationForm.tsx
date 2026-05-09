@@ -7,7 +7,7 @@ import {
   emailVerifySchemaType,
 } from "../../../../schemas/sendEmailVerify.schema";
 import { resendLinkVerifyAccount } from "../../services/auth.service";
-import LoadingCircleSpinner from "../../../../shared/components/ui/loadingCircleSpinner";
+import LoadingCircleSpinner from "../../../../shared/components/ui/LoadingCircleSpinner";
 import { IoIosSend } from "react-icons/io";
 
 const RequestVerificationForm = ({

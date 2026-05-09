@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./editTaskBtn.module.css";
 import { MdEdit } from "react-icons/md";
 import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
-import LoadingCircleSpinner from "../../shared/components/ui/loadingCircleSpinner";
+import LoadingCircleSpinner from "../../shared/components/ui/LoadingCircleSpinner";
 import {
   Dialog,
   DialogPanel,

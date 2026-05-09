@@ -1,7 +1,7 @@
 import style from "./loading.module.css";
 import { GiNotebook } from "react-icons/gi";
 
-const Loading = () => {
+const LoadingScreen = () => {
   return (
     <div className={style.container_loading}>
       <div className={style.wrapper_loading}>
@@ -16,4 +16,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default LoadingScreen;

@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import Loading from "../loading/Loading";
+import Loading from "../../shared/components/ui/LoadingScreen";
 import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
 import { useUserStore } from "../../shared/store/useUserStore";
 
