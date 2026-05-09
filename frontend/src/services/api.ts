@@ -1,5 +1,5 @@
 import axios from "axios";
-import { logoutUser } from "./auth.service";
+import { logoutUser } from "../features/auth/services/auth.service";
 
 export const privateApi = axios.create({
   baseURL: import.meta.env.VITE_API_URL,

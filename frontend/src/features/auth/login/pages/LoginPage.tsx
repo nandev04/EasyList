@@ -1,4 +1,4 @@
-import LoginForm from "../../components/loginForm/loginForm";
+import LoginForm from "../components/loginForm";
 import styles from "./login.module.css";
 import { IoLogIn } from "react-icons/io5";
 

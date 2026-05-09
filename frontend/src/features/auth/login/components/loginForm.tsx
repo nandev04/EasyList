@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import styles from "./loginform.module.css";
-import { loginSchema, loginSchemaType } from "../../schemas/loginSchema";
+import { loginSchema, loginSchemaType } from "../schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "../../services/auth.service";
 import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { CiLogin } from "react-icons/ci";
 import { AxiosError } from "axios";
-import LoadingCircleSpinner from "../loadingCircleSpinner/LoadingCircleSpinner";
+import LoadingCircleSpinner from "../../../../components/loadingCircleSpinner/LoadingCircleSpinner";
 
 const loginForm = () => {
   const queryClient = useQueryClient();

@@ -7,7 +7,7 @@ import {
   newPasswordForgotSchema,
   newPasswordForgotSchemaType,
 } from "../../../../schemas/newPasswordForgot";
-import { sendNewPasswordForgot } from "../../../../services/auth.service";
+import { sendNewPasswordForgot } from "../../../../features/auth/services/auth.service";
 import { AxiosError } from "axios";
 import LoadingCircleSpinner from "../../../loadingCircleSpinner/LoadingCircleSpinner";
 

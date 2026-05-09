@@ -1,12 +1,12 @@
-import { UserDTO } from "../types/user.types.ts";
-import { loginSchemaType } from "../schemas/loginSchema";
-import { privateApi, publicApi } from "./api";
-import { changePasswordSchemaType } from "../components/DialogChangePassword/change-password.schema.ts";
-import { verifyAccountType } from "../types/auth.types.ts";
-import { emailVerifySchemaType } from "../schemas/sendEmailVerify.schema.ts";
-import { emailForgotPwdSchemaType } from "../schemas/emailForgotPwd.ts";
-import { verifyOtpForgotPwdSchemaType } from "../schemas/verifyOtpForgotPwd.ts";
-import { newPasswordForgotSchemaType } from "../schemas/newPasswordForgot.ts";
+import { UserDTO } from "../../../types/user.types.ts";
+import { loginSchemaType } from "../login/schema/login.schema.ts";
+import { privateApi, publicApi } from "../../../services/api.ts";
+import { changePasswordSchemaType } from "../../../components/DialogChangePassword/change-password.schema.ts";
+import { verifyAccountType } from "../../../types/auth.types.ts";
+import { emailVerifySchemaType } from "../../../schemas/sendEmailVerify.schema.ts";
+import { emailForgotPwdSchemaType } from "../../../schemas/emailForgotPwd.ts";
+import { verifyOtpForgotPwdSchemaType } from "../../../schemas/verifyOtpForgotPwd.ts";
+import { newPasswordForgotSchemaType } from "../../../schemas/newPasswordForgot.ts";
 
 const BASE_ENDPOINT = "/auth";
 

@@ -7,7 +7,7 @@ import {
   emailForgotPwdSchema,
   emailForgotPwdSchemaType,
 } from "../../../../schemas/emailForgotPwd";
-import { sendEmailForgotPassword } from "../../../../services/auth.service";
+import { sendEmailForgotPassword } from "../../../../features/auth/services/auth.service";
 import { AxiosError } from "axios";
 import LoadingCircleSpinner from "../../../loadingCircleSpinner/LoadingCircleSpinner";
 

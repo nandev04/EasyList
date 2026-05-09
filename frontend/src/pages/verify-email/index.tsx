@@ -9,7 +9,7 @@ import {
   emailVerifySchemaType,
 } from "../../schemas/sendEmailVerify.schema";
 import { Link, useLocation } from "react-router-dom";
-import { resendLinkVerifyAccount } from "../../services/auth.service";
+import { resendLinkVerifyAccount } from "../../features/auth/services/auth.service";
 import LoadingCircleSpinner from "../../components/loadingCircleSpinner/LoadingCircleSpinner";
 
 const VerifyEmail = () => {
