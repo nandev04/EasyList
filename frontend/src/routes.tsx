@@ -4,7 +4,7 @@ import ProtectedRoutes from "./shared/components/ProtectedRoutes";
 import PublicRoutes from "./shared/components/PublicRoutes";
 import Home from "./features/tasks/pages/HomePage";
 import Profile from "./features/profile/pages/ProfilePage";
-import Register from "./features/auth/register/pages/RegisterPage";
+import Register from "./features/auth/register/pages/registerPage";
 import VerifyAccount from "./features/auth/register/pages/VerifyAccountPage";
 import VerifyEmail from "./features/auth/register/pages/RequestVerificationPage";
 import FPLayoutPage from "./features/auth/forgot-password/pages/FPLayouPage";
