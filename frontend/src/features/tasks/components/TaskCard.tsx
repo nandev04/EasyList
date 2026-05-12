@@ -1,9 +1,9 @@
-import styles from "./containerTask.module.css";
-import { CreateTaskPayload, StatusTask } from "../../shared/types/task.types";
-import EditTaskBtn from "../editTaskBtn/EditTaskBtn";
-import DeleteTaskBtn from "../deleteTaskBtn/DeleteTaskBtn";
+import styles from "./taskCard.module.css";
+import { CreateTaskPayload, StatusTask } from "../types/task.types";
+import EditTaskBtn from "./EditTaskBtn";
+import DeleteTaskBtn from "./DeleteTaskBtn";
 
-const ContainerTask = ({
+const TaskCard = ({
   taskId,
   title,
   description,
@@ -31,4 +31,4 @@ const ContainerTask = ({
   );
 };
 
-export default ContainerTask;
+export default TaskCard;

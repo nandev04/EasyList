@@ -16,7 +16,7 @@ import {
   otpSchemaType,
 } from "../../../shared/schema/otpCode.schema";
 import { useUserStore } from "../../../shared/store/useUserStore";
-import { useUpdateUserMutation } from "../hooks/useUser.mutation";
+import { useUpdateUserMutation } from "../hooks/useUser.query";
 import FormConfirmEmailOtp from "./FormConfirmEmailOtp";
 import * as Service from "../services/user.service";
 

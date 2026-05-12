@@ -3,7 +3,7 @@ import { MdPin } from "react-icons/md";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OTPInput } from "input-otp";
-import OtpSlots from "../../../../components/OtpComponent/OtpSlots";
+import OtpSlots from "../../../../shared/components/ui/OtpComponents/OtpSlots";
 import styles from "./stepOtp.module.css";
 import { sendOtpForgotPassword } from "../../services/auth.service";
 import { AxiosError } from "axios";

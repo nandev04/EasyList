@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import Login from "./features/auth/login/pages/LoginPage";
-import ProtectedRoutes from "./components/protectedRoutes/ProtectedRoutes";
-import PublicRoutes from "./components/publicRoutes/PublicRoutes";
+import ProtectedRoutes from "./shared/components/ProtectedRoutes";
+import PublicRoutes from "./shared/components/PublicRoutes";
+import Home from "./features/tasks/pages/HomePage";
 import Profile from "./features/profile/pages/ProfilePage";
 import Register from "./features/auth/register/pages/RegisterPage";
 import VerifyAccount from "./features/auth/register/pages/VerifyAccountPage";

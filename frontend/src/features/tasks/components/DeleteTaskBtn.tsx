@@ -1,0 +1,62 @@
+import { useState } from "react";
+import styles from "./DeleteTaskBtn.module.css";
+import { BiSolidTrash } from "react-icons/bi";
+import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
+import useDelayLoading from "../../../shared/hooks/useDelayLoading";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import { useDeleteTaskMutation } from "../hooks/useTask.query";
+
+const DeleteTaskBtn = ({ taskId }: { taskId: number }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { mutate, isPending, isError } = useDeleteTaskMutation();
+  const { showLoading } = useDelayLoading(isPending, 100);
+
+  async function onDeleteTask() {
+    mutate(taskId, {
+      onSuccess: () => setIsOpen(false),
+    });
+  }
+
+  return (
+    <>
+      <div className={styles.wrapper_button}>
+        <button className={styles.button} onClick={() => setIsOpen(true)}>
+          <BiSolidTrash />
+        </button>
+      </div>
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+        <div className={styles.overlay}>
+          <DialogPanel className={styles.panel}>
+            <div className={styles.general_container}>
+              <DialogTitle className={styles.title_dialog}>
+                Tem certeza que deseja deletar essa tarefa?
+              </DialogTitle>
+              <div className={styles.actions}>
+                <button
+                  className={styles.button_delete}
+                  disabled={isPending}
+                  onClick={onDeleteTask}
+                >
+                  {showLoading ? <LoadingCircleSpinner /> : "Deletar"}
+                </button>
+                <button
+                  className={`${styles.button_cancel} ${styles.cancel}`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+            {isError && (
+              <p className={styles.error_message}>
+                Ocorreu um erro ao deletar tarefa
+              </p>
+            )}
+          </DialogPanel>
+        </div>
+      </Dialog>
+    </>
+  );
+};
+
+export default DeleteTaskBtn;

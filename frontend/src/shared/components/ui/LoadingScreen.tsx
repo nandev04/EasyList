@@ -1,4 +1,4 @@
-import style from "./loading.module.css";
+import style from "./loadingScreen.module.css";
 import { GiNotebook } from "react-icons/gi";
 
 const LoadingScreen = () => {

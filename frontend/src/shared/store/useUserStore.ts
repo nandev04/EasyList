@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { UserDTO } from "../types/user.types";
+import { UserDTO } from "../types/user.dto";
 
 type UserStore = {
   user: UserDTO | null;

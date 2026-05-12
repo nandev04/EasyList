@@ -68,17 +68,18 @@
 }
 
 .filter_button {
+  color: var(--dark-grey);
   cursor: pointer;
   font-family: var(--primary-font);
-  font-size: 1rem;
-  background-color: #e7e7e7;
+  font-size: 0.9rem;
+  background-color: #eeeeee;
   font-weight: 800;
-  padding: 10px 20px;
-  border-radius: 7px;
+  padding: 10px 16px;
+  border-radius: 10px;
 }
 
 .filter_button:hover {
-  background-color: #c8c8c8;
+  background-color: #dfdfdf;
 }
 
 .active {
@@ -115,7 +116,7 @@
 .more_guidance {
   display: inline-block;
   color: var(--dark-grey);
-  background-color: #e7e7e7;
+  background-color: #eeeeee;
   padding: 1px 10px;
   border-radius: 0.3em;
 }

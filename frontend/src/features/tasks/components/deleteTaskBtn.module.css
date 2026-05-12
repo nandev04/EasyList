@@ -44,16 +44,12 @@
   padding: 40px 48px;
   box-sizing: border-box;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
 }
 
-.actions {
-  margin-top: 30px;
+.general_container {
   display: flex;
-  gap: 16px;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 2.5rem;
 }
 
 .title_dialog {
@@ -63,14 +59,24 @@
   font-weight: 600;
 }
 
+.actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+.actions button {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
 .button_cancel {
   font-family: var(--primary-font);
-  padding: 8px 16px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  background-color: var(--cancel-color-hover);
+  background-color: var(--cancel-color);
   color: var(--dark-grey);
 }
 
@@ -80,15 +86,25 @@
 
 .button_delete {
   font-family: var(--primary-font);
-  padding: 8px 16px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  background-color: #e53434;
+  background-color: var(--error-message-color);
   color: white;
 }
 
 .button_delete:hover {
-  background-color: #b02c2c;
+  background-color: #ba2b2b;
+}
+
+.error_message {
+  margin-right: 16px;
+  margin-top: 1rem;
+  width: 100%;
+  align-self: flex-start;
+  font-family: var(--primary-font);
+  font-size: 0.875rem;
+  color: var(--error-message-color);
+  text-align: right;
 }

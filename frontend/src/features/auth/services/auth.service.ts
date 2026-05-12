@@ -1,8 +1,7 @@
-import { UserDTO } from "../../../shared/types/user.types.ts";
+import { UserDTO } from "../../../shared/types/user.dto.ts";
 import { loginSchemaType } from "../login/schema/login.schema.ts";
 import { privateApi, publicApi } from "../../../shared/services/axiosApi.ts";
 import { changePasswordSchemaType } from "../../profile/schema/changePassword.schema.ts";
-import { verifyAccountType } from "../../../shared/types/auth.types.ts";
 import { newPasswordForgotSchemaType } from "../forgot-password/schema/newPassword.schema.ts";
 import { emailValidateSchemaType } from "../../../shared/schema/email.schema.ts";
 import { otpSchemaType } from "../../../shared/schema/otpCode.schema.ts";
@@ -31,6 +30,7 @@ export async function changePassword(body: changePasswordSchemaType) {
   return await privateApi.patch(`${BASE_ENDPOINT}/change-password`, body);
 }
 
+export type verifyAccountType = { token: string };
 export async function verifyAccount(body: verifyAccountType) {
   return await privateApi.patch(`${BASE_ENDPOINT}/verify`, body);
 }

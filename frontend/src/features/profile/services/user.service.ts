@@ -1,6 +1,6 @@
 import { otpSchemaType } from "../../../shared/schema/otpCode.schema";
 import { privateApi } from "../../../shared/services/axiosApi";
-import { UpdateUserBodyType, UserDTO } from "../../../shared/types/user.types";
+import { UserDTO } from "../../../shared/types/user.dto";
 
 export async function getUser() {
   const user = await privateApi.get<UserDTO>("/user");
@@ -10,6 +10,12 @@ export async function getUser() {
   };
 }
 
+type UpdateUserBodyType = {
+  firstname?: string;
+  lastname?: string;
+  username?: string;
+  email?: string;
+};
 export async function updateUser(data: UpdateUserBodyType) {
   const response = await privateApi.patch("/user", data);
   return response;

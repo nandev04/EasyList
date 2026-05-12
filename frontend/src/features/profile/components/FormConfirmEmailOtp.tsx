@@ -1,6 +1,6 @@
 import { Controller, UseFormReturn } from "react-hook-form";
 import { OTPInput } from "input-otp";
-import OtpSlots from "../../../components/OtpComponent/OtpSlots";
+import OtpSlots from "../../../shared/components/ui/OtpComponents/OtpSlots";
 import ResendOtpCodeBtn from "./ResendOtpCodeBtn";
 import styles from "./FormConfirmEmailOtp.module.css";
 

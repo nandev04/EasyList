@@ -2,9 +2,9 @@ import {
   taskSchemaType,
   GetTaskQueryParams,
   getTaskQuerySchema,
-} from "../schemas/taskSchema";
-import { EditTaskPayload, GetTaskResponse } from "../shared/types/task.types";
-import { privateApi } from "../shared/services/axiosApi";
+} from "../schema/task.schema";
+import { EditTaskPayload, GetTaskResponse } from "../types/task.types";
+import { privateApi } from "../../../shared/services/axiosApi";
 
 export async function getTasks(
   params: GetTaskQueryParams,

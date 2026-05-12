@@ -6,7 +6,7 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import styles from "./formUploadAvatar.module.css";
 import { avatarSchema, avatarSchemaType } from "../schema/avatar.schema";
 import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
-import { useUpdateAvatarMutation } from "../hooks/useUser.mutation";
+import { useUpdateAvatarMutation } from "../hooks/useUser.query";
 
 const FormUploadAvatar = ({
   setStateDialog,

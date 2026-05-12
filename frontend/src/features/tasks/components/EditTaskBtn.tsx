@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styles from "./editTaskBtn.module.css";
 import { MdEdit } from "react-icons/md";
-import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
-import LoadingCircleSpinner from "../../shared/components/ui/LoadingCircleSpinner";
+import useDelayLoading from "../../../shared/hooks/useDelayLoading";
+import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
 import {
   Dialog,
   DialogPanel,
@@ -11,13 +11,10 @@ import {
   Radio,
   RadioGroup,
 } from "@headlessui/react";
-import {
-  EditTaskPayload,
-  OptionsStatusTask,
-} from "../../shared/types/task.types";
+import { EditTaskPayload, OptionsStatusTask } from "../types/task.types";
 import { Controller, useForm } from "react-hook-form";
-import { useEditTaskMutation } from "../../hooks/Query/useTaskMutation";
-import CloseDialogBtn from "../../shared/components/ui/CloseDialogBtn";
+import { useEditTaskMutation } from "../hooks/useTask.query";
+import CloseDialogBtn from "../../../shared/components/ui/CloseDialogBtn";
 
 const EditTaskBtn = ({
   data,

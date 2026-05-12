@@ -1,24 +1,22 @@
-import CreateTaskBtn from "../../components/createTaskBtn/CreateTaskBtn";
-import ContainerTask from "../../components/taskCard/ContainerTask";
-import styles from "./home.module.css";
-import useDelayLoading from "../../shared/hooks/react/useDelayLoading";
-import LoadingTask from "../../components/loadingTask/LoadingTask";
-import DropdownHeader from "../../components/dropdownHeader/DropdownHeader";
+import CreateTaskBtn from "../components/CreateTaskBtn";
+import TaskCard from "../components/TaskCard";
+import styles from "./homePage.module.css";
+import DropdownHeader from "../components/DropdownHeader";
 import { useMemo, useState } from "react";
-import { StatusTask } from "../../shared/types/task.types";
-import DropdownFilter from "../../components/dropDownFilter/DropdownFilter";
-import { useUserStore } from "../../shared/store/useUserStore";
-import useTasks from "../../hooks/Query/useTasks";
-import LoadingInfiniteScroll from "../../shared/components/ui/loadingInfiniteScroll";
-import useObserverInfiniteScroll from "../../hooks/React/useObserverInfiniteScroll";
+import { StatusTask } from "../types/task.types";
+import useDelayLoading from "../../../shared/hooks/useDelayLoading";
+import LoadingTask from "../components/LoadingTask";
+import DropdownFilter from "../components/DropdownFilter";
+import { useUserStore } from "../../../shared/store/useUserStore";
+import { useGetTasks } from "../hooks/useTask.query";
+import LoadingInfiniteScroll from "../../../shared/components/ui/LoadingInfiniteScroll";
+import useObserverInfiniteScroll from "../../../shared/hooks/useObserverInfiniteScroll";
 
 const Home = () => {
   const user = useUserStore((s) => s.user);
   const [filterStatus, setfilterStatus] = useState<StatusTask | null>(null);
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetching } = useTasks(
-    !!user,
-    { status: filterStatus ?? undefined },
-  );
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetching } =
+    useGetTasks(!!user, { status: filterStatus ?? undefined });
 
   const { sentinelRef } = useObserverInfiniteScroll({
     fetchNextPage,
@@ -30,7 +28,9 @@ const Home = () => {
     [data],
   );
 
-  const { showLoading } = useDelayLoading(isLoading, 300);
+  const { showLoading: showLoadingTask } = useDelayLoading(isLoading, 300);
+  const { showLoading: showLoadingFetching } = useDelayLoading(isFetching, 200);
+
   const statusLabel: Record<StatusTask, string> = {
     [StatusTask.PENDING]: "Pendente",
     [StatusTask.IN_PROGRESS]: "Em progresso",
@@ -81,7 +81,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            {isLoading && showLoading && <LoadingTask />}
+            {isLoading && showLoadingTask && <LoadingTask />}
             {!isLoading && hasNoTasksAtAll && (
               <div className={styles.container_guidance}>
                 <p className={styles.newTask_guidance}>
@@ -103,7 +103,7 @@ const Home = () => {
 
             {!isLoading &&
               tasks.map((task) => (
-                <ContainerTask
+                <TaskCard
                   key={task.id}
                   taskId={task.id}
                   title={task.title}
@@ -112,7 +112,7 @@ const Home = () => {
                 />
               ))}
             <span ref={sentinelRef}>
-              {isFetching && <LoadingInfiniteScroll />}
+              {showLoadingFetching && <LoadingInfiniteScroll />}
             </span>
           </div>
         </section>
