@@ -1,0 +1,69 @@
+import { useState } from "react";
+import styles from "./profileOverview.module.css";
+import { MdOutlineFlipCameraIos } from "react-icons/md";
+import { Dialog, DialogPanel } from "@headlessui/react";
+import { RiCloseFill } from "react-icons/ri";
+import FormUploadAvatar from "./FormUploadAvatar";
+import { useUserStore } from "../../../shared/store/useUserStore";
+
+const ProfileOverview = () => {
+  const user = useUserStore((s) => s.user);
+  const [openAvatarDialog, setOpenAvatarDialog] = useState(false);
+  const [openUpdateAvatarDialog, setOpenUpdateAvatarDialog] = useState(false);
+
+  return (
+    <>
+      <div className={styles.container_avatar}>
+        <div className={styles.updateAvatar_wrapper}>
+          <div className={styles.avatar_container}>
+            <button onClick={() => setOpenAvatarDialog(true)}>
+              <img
+                className={styles.avatar_image}
+                src={user?.signedUrlAvatar ?? "/assets/user-image.jpg"}
+                alt="Foto de perfil do usuário"
+              />
+            </button>
+            <button onClick={() => setOpenUpdateAvatarDialog(true)}>
+              <MdOutlineFlipCameraIos className={styles.camera_icon} />
+            </button>
+          </div>
+        </div>
+      </div>
+      <h2 className={styles.username}>{user?.username}</h2>
+      <Dialog
+        open={openAvatarDialog}
+        onClose={() => setOpenAvatarDialog(false)}
+      >
+        <div className={styles.overlay_avatar}>
+          <DialogPanel className={styles.panel_avatar}>
+            <div className={styles.container_avatar_full}>
+              <img
+                className={styles.avatar_image_full}
+                src={user?.signedUrlAvatar ?? "/assets/user-image.jpg"}
+                alt="Foto de perfil do usuário"
+              />
+              <button
+                className={styles.button_close_avatar}
+                onClick={() => setOpenAvatarDialog(false)}
+              >
+                <RiCloseFill strokeWidth={0.5} />
+              </button>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
+      <Dialog
+        open={openUpdateAvatarDialog}
+        onClose={() => setOpenUpdateAvatarDialog(false)}
+      >
+        <div style={{ padding: "40px" }} className="overlay">
+          <DialogPanel className={styles.panel_update}>
+            <FormUploadAvatar setStateDialog={setOpenUpdateAvatarDialog} />
+          </DialogPanel>
+        </div>
+      </Dialog>
+    </>
+  );
+};
+
+export default ProfileOverview;

@@ -1,7 +1,7 @@
 import MainRoutes from "./routes";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
-import useUserSync from "./hooks/React/useUserSync";
+import useUserSync from "./features/profile/hooks/useUserSync";
 
 export default function App() {
   useUserSync();

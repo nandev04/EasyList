@@ -1,0 +1,132 @@
+.header {
+  margin: 0 auto;
+  box-sizing: border-box;
+  max-width: 1600px;
+  height: 7rem;
+  padding: 32px 2rem;
+  padding-bottom: 1rem;
+}
+
+.username {
+  align-self: center;
+  font-family: var(--primary-font);
+  color: white;
+  font-weight: 3300;
+}
+
+.btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.icon {
+  width: 10px;
+}
+
+.main {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 32px 2rem;
+  padding-top: 0;
+}
+
+.welcome_title {
+  font-family: var(--primary-font);
+  font-weight: 800;
+  font-size: clamp(1rem, 9vw, 3.5rem);
+  color: var(--dark-grey);
+}
+
+.welcome_title > span {
+  color: var(--primary-color);
+}
+
+.tasks_section {
+  max-width: 90%;
+  margin: 0 auto;
+  margin-top: 40px;
+}
+
+.container_section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.actions_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter_buttons_container {
+  display: flex;
+  gap: 20px;
+}
+
+.filter_button {
+  color: var(--dark-grey);
+  cursor: pointer;
+  font-family: var(--primary-font);
+  font-size: 0.9rem;
+  background-color: #eeeeee;
+  font-weight: 800;
+  padding: 10px 16px;
+  border-radius: 10px;
+}
+
+.filter_button:hover {
+  background-color: #dfdfdf;
+}
+
+.active {
+  color: white;
+  background-color: var(--primary-color);
+}
+
+.active:hover {
+  background-color: var(--primary-color-hover);
+}
+
+.dropdown_filter_container {
+  display: none;
+  width: min(56px, 60vw);
+  height: min(56px, 60vh);
+}
+
+.container_guidance {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  max-width: 30rem;
+  font-family: var(--primary-font);
+  margin: 0;
+  padding: 0;
+  font-weight: 800;
+}
+
+.newTask_guidance {
+  margin: 0;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+}
+
+.more_guidance {
+  display: inline-block;
+  color: var(--dark-grey);
+  background-color: #eeeeee;
+  padding: 1px 10px;
+  border-radius: 0.3em;
+}
+
+@media (max-width: 1100px) {
+  .filter_buttons_container {
+    display: none;
+  }
+
+  .dropdown_filter_container {
+    display: block;
+  }
+}
