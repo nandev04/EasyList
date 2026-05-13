@@ -49,7 +49,8 @@ const DialogChangePassword = ({
     <Dialog
       open={openDialog}
       onClose={() => {
-        (reset(), setOpenDialog(false));
+        reset();
+        setOpenDialog(false);
       }}
     >
       <div className="overlay">
@@ -102,7 +103,8 @@ const DialogChangePassword = ({
                 <button
                   type="button"
                   onClick={() => {
-                    (reset(), setOpenDialog(false));
+                    reset();
+                    setOpenDialog(false);
                   }}
                   className={styles.cancel_btn}
                 >

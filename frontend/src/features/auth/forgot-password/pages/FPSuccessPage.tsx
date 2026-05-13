@@ -7,7 +7,7 @@ const FPSuccessPage = () => {
 
   useEffect(() => {
     clear();
-  }, []);
+  }, [clear]);
 
   return <StepPasswordSuccess />;
 };

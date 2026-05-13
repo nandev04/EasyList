@@ -18,8 +18,6 @@ const useObserverInfiniteScroll = ({
   hasNextPage,
 }: ObserverType) => {
   const sentinelRef = useRef(null);
-  const hasNextPageRef = useRef(hasNextPage);
-  hasNextPageRef.current = hasNextPage;
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -27,7 +25,7 @@ const useObserverInfiniteScroll = ({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && hasNextPageRef.current) {
+        if (entry.isIntersecting && hasNextPage) {
           fetchNextPage();
         }
       },
@@ -36,7 +34,7 @@ const useObserverInfiniteScroll = ({
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, []);
+  }, [fetchNextPage, hasNextPage]);
 
   return {
     sentinelRef,

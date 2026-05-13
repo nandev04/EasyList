@@ -33,7 +33,7 @@ const StepResetPassword = ({
 
   useEffect(() => {
     if (!resetToken) onBack();
-  }, []);
+  }, [onBack, resetToken]);
 
   async function sendNewPassword({ newPassword }: newPasswordForgotSchemaType) {
     try {

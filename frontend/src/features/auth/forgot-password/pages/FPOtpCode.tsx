@@ -10,7 +10,7 @@ const OtpCodePage = () => {
   useEffect(() => {
     if (!email) navigate("/forgot-password", { replace: true });
     if (resetToken) navigate("/forgot-password/reset", { replace: true });
-  }, []);
+  }, [email, navigate, resetToken]);
 
   return (
     <StepOtp

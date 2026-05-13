@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { MdPin } from "react-icons/md";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OTPInput } from "input-otp";
 import OtpSlots from "../../../../shared/components/ui/OtpComponents/OtpSlots";
@@ -30,11 +30,14 @@ const StepOtp = ({
     mode: "onSubmit",
   });
 
-  const codeSlots = otpForm.watch("code");
+  const codeSlots = useWatch<otpSchemaType, "code">({
+    control: otpForm.control,
+    name: "code",
+  });
 
   useEffect(() => {
     if (!email) onBack();
-  }, []);
+  }, [onBack, email]);
 
   async function onSubmit({ code }: otpSchemaType) {
     try {

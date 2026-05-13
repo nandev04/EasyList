@@ -4,17 +4,15 @@ const useDelayLoading = (loading: boolean, delayMs: number) => {
   const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
-    let delayLoading: ReturnType<typeof setTimeout>;
-    if (loading) {
-      delayLoading = setTimeout(() => {
-        setShowLoading(true);
-      }, delayMs);
-    } else {
-      setShowLoading(false);
-    }
+    const timeout = setTimeout(
+      () => {
+        setShowLoading(loading);
+      },
+      loading ? delayMs : 0,
+    );
 
-    return () => clearTimeout(delayLoading);
-  }, [loading]);
+    return () => clearTimeout(timeout);
+  }, [loading, delayMs]);
 
   return { showLoading };
 };

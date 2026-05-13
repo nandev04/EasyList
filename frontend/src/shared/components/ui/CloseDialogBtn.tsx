@@ -15,7 +15,8 @@ const CloseDialogBtn = <T extends FieldValues>({
     <button
       className={styles.button_close}
       onClick={() => {
-        (resetForm(), setIsOpenDialog(false));
+        resetForm();
+        setIsOpenDialog(false);
       }}
     >
       <IoCloseSharp />

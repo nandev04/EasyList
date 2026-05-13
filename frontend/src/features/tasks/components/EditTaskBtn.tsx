@@ -52,14 +52,15 @@ const EditTaskBtn = ({
     if (isOpen && data) {
       reset({ ...data });
     }
-  }, [isOpen && data]);
+  }, [isOpen, data, reset]);
 
   async function onSubmit(data: EditTaskPayload): Promise<void> {
     mutate(
       { taskId, data },
       {
         onSuccess: () => {
-          (setIsOpen(false), reset());
+          setIsOpen(false);
+          reset();
         },
         onError: (err) => console.log(err),
       },
@@ -76,7 +77,8 @@ const EditTaskBtn = ({
       <Dialog
         open={isOpen}
         onClose={() => {
-          (reset(), setIsOpen(false));
+          reset();
+          setIsOpen(false);
         }}
         className={styles.root}
       >
