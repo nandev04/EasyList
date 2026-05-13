@@ -7,8 +7,9 @@ const useLogoutMutation = () => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: async () => await logoutUser(),
-    onSuccess: () => {
+    mutationFn: logoutUser,
+    onSuccess: async () => {
+      await queryClient.resetQueries({ queryKey: ["user"] });
       queryClient.clear();
       navigate("/login");
     },

@@ -10,7 +10,7 @@ import useDelayLoading from "../../../shared/hooks/useDelayLoading";
 import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 import { OptionsStatusTask } from "../types/task.types";
 import { useCreateTaskMutation } from "../hooks/useTask.query";
-import CloseDialogBtn from "../../../shared/components/ui/CloseDialogBtn";
+import CloseDialogBtn from "../../../shared/components/CloseDialogBtn";
 const CreateTaskBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
   const {

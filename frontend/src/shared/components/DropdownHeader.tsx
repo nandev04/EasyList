@@ -1,9 +1,9 @@
 import styles from "./dropdownHeader.module.css";
 import { MenuSeparator, Popover, PopoverPanel } from "@headlessui/react";
 import { useState } from "react";
-import { useUserStore } from "../../../shared/store/useUserStore";
-import ProfileBtn from "../../../shared/components/ui/ProfileBtn";
-import LogoutBtn from "../../../shared/components/ui/LogoutBtn";
+import { useUserStore } from "../store/useUserStore";
+import ProfileBtn from "./ProfileBtn";
+import LogoutBtn from "./LogoutBtn";
 
 const DropdownHeader = () => {
   const user = useUserStore((s) => s.user);
