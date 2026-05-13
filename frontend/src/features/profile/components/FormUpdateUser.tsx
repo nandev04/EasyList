@@ -10,7 +10,7 @@ import {
 } from "../schema/updateUserSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DialogChangePassword from "./DialogChangePassword";
-import CloseDialogBtn from "../../../shared/components/ui/CloseDialogBtn";
+import CloseDialogBtn from "../../../shared/components/CloseDialogBtn";
 import {
   otpSchema,
   otpSchemaType,

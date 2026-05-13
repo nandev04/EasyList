@@ -1,7 +1,7 @@
 import styles from "./dialogChangePassword.module.css";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { SetStateAction } from "react";
-import CloseDialogBtn from "../../../shared/components/ui/CloseDialogBtn";
+import CloseDialogBtn from "../../../shared/components/CloseDialogBtn";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

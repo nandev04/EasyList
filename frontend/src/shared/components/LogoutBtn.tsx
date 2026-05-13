@@ -1,5 +1,5 @@
 import { FiLogOut } from "react-icons/fi";
-import { useLogoutMutation } from "../../../features/auth/hooks/useLogout.query";
+import { useLogoutMutation } from "../../features/auth/hooks/useLogout.query";
 
 const LogoutBtn = () => {
   const { mutate: logout } = useLogoutMutation();
