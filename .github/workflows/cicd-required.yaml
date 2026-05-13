@@ -37,9 +37,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
-          cache-dependency-path: backend/pnpm-lock.yaml
-      - run: cd backend && pnpm install --frozen-lockfile --ignore-workspace
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-backend-${{ hashFiles('backend/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-backend-
+      - run: cd backend && pnpm install --frozen-lockfile
 
   lint-backend:
     needs: install-backend-deps
@@ -53,9 +56,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
-          cache-dependency-path: backend/pnpm-lock.yaml
-      - run: cd backend && pnpm install --frozen-lockfile --ignore-workspace
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-backend-${{ hashFiles('backend/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-backend-
+      - run: cd backend && pnpm install --frozen-lockfile
       - run: cd backend && pnpm lint
 
   typecheck-backend:
@@ -70,9 +76,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
-          cache-dependency-path: backend/pnpm-lock.yaml
-      - run: cd backend && pnpm install --frozen-lockfile --ignore-workspace
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-backend-${{ hashFiles('backend/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-backend-
+      - run: cd backend && pnpm install --frozen-lockfile
       - run: cd backend && pnpm type-check
 
   run-tests-backend:
@@ -87,9 +96,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
-          cache-dependency-path: backend/pnpm-lock.yaml
-      - run: cd backend && pnpm install --frozen-lockfile --ignore-workspace
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-backend-${{ hashFiles('backend/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-backend-
+      - run: cd backend && pnpm install --frozen-lockfile
       - run: cd backend && pnpm test
 
   install-frontend-deps:
@@ -104,9 +116,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
-          cache-dependency-path: frontend/pnpm-lock.yaml
-      - run: cd frontend && pnpm install --frozen-lockfile --ignore-workspace
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-frontend-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-frontend-
+      - run: cd frontend && pnpm install --frozen-lockfile
 
   lint-frontend:
     needs: install-frontend-deps
@@ -120,9 +135,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
-          cache-dependency-path: frontend/pnpm-lock.yaml
-      - run: cd frontend && pnpm install --frozen-lockfile --ignore-workspace
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-frontend-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-frontend-
+      - run: cd frontend && pnpm install --frozen-lockfile
       - run: cd frontend && pnpm lint
 
   typecheck-frontend:
@@ -137,9 +155,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
-          cache-dependency-path: frontend/pnpm-lock.yaml
-      - run: cd frontend && pnpm install --frozen-lockfile --ignore-workspace
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-frontend-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-frontend-
+      - run: cd frontend && pnpm install --frozen-lockfile
       - run: cd frontend && pnpm type-check
 
   ci-required:
