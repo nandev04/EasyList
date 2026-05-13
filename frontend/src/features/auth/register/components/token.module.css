@@ -37,3 +37,7 @@
   padding: 8px 25px;
   border-radius: 10px;
 }
+
+.btn:hover {
+  background-color: var(--primary-color-hover);
+}
