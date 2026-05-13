@@ -64,7 +64,27 @@ jobs:
       - run: cd backend && pnpm install --frozen-lockfile
       - run: cd backend && pnpm lint
 
-  run-tests:
+  typecheck-backend:
+    needs: install-backend-deps
+    runs-on: ubuntu-latest
+    if: needs.install-backend-deps.result == 'success'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('backend/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
+      - run: cd backend && pnpm install --frozen-lockfile
+      - run: cd backend && pnpm type-check
+
+  run-tests-backend:
     needs: install-backend-deps
     runs-on: ubuntu-latest
     if: needs.install-backend-deps.result == 'success'
@@ -99,7 +119,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('backend/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-pnpm-
       - run: cd frontend && pnpm install --frozen-lockfile
 
@@ -122,26 +142,6 @@ jobs:
           restore-keys: ${{ runner.os }}-pnpm-
       - run: cd frontend && pnpm install --frozen-lockfile
       - run: cd frontend && pnpm lint
-
-  typecheck-backend:
-    needs: install-backend-deps
-    runs-on: ubuntu-latest
-    if: needs.install-backend-deps.result == 'success'
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 9
-      - uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('backend/pnpm-lock.yaml') }}
-          restore-keys: ${{ runner.os }}-pnpm-
-      - run: cd backend && pnpm install --frozen-lockfile
-      - run: cd backend && pnpm type-check
 
   typecheck-frontend:
     needs: install-frontend-deps
@@ -169,7 +169,7 @@ jobs:
         changes,
         install-backend-deps,
         lint-backend,
-        run-tests,
+        run-tests-backend,
         typecheck-backend,
         install-frontend-deps,
         lint-frontend,
