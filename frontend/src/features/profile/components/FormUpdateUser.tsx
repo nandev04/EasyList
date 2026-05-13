@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import styles from "./formUpdateUser.module.css";
 import { MdEdit } from "react-icons/md";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
@@ -55,7 +55,7 @@ const FormUpdateUser = () => {
     mode: "onSubmit",
   });
 
-  const updateUserForm = useForm({
+  const updateUserForm = useForm<updateUserSchemaType>({
     defaultValues: {
       firstname: user?.firstname,
       lastname: user?.lastname,
@@ -66,7 +66,10 @@ const FormUpdateUser = () => {
     mode: "onSubmit",
   });
 
-  const emailInput = updateUserForm.watch("email");
+  const emailInput = useWatch<updateUserSchemaType, "email">({
+    control: updateUserForm.control,
+    name: "email",
+  });
 
   async function onSubmitUpdate(data: updateUserSchemaType) {
     const changedData: Partial<updateUserSchemaType> = {};
@@ -163,7 +166,8 @@ const FormUpdateUser = () => {
               <button
                 className={styles.cancel_btn}
                 onClick={() => {
-                  (updateUserForm.reset(), setIsEditing(false));
+                  updateUserForm.reset();
+                  setIsEditing(false);
                 }}
               >
                 Cancelar alterações

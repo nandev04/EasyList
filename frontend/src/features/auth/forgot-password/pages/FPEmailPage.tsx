@@ -11,7 +11,7 @@ const ForgotPasswordEmailPage = () => {
     if (email && resetToken)
       navigate("/forgot-password/reset", { replace: true });
     else if (email) navigate("/forgot-password/otp", { replace: true });
-  }, []);
+  }, [email, navigate, resetToken]);
 
   return (
     <StepEmail

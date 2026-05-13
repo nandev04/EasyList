@@ -37,7 +37,8 @@ const FormConfirmEmailOtp = ({
               maxLength={6}
               value={field.value}
               onChange={(value) => {
-                (field.onChange(value), otpUseForm.clearErrors("root"));
+                field.onChange(value);
+                otpUseForm.clearErrors("root");
               }}
               render={({ slots }) => <OtpSlots slots={slots} />}
             />

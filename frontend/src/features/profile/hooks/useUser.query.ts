@@ -26,8 +26,8 @@ const useUpdateAvatarMutation = () => {
   return useMutation({
     mutationFn: (formData: FormData) => updateAvatar(formData),
     onSuccess: () => {
-      (queryClient.invalidateQueries({ queryKey: ["user"] }),
-        toast.success("Avatar atualizado !"));
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      toast.success("Avatar atualizado !");
     },
   });
 };

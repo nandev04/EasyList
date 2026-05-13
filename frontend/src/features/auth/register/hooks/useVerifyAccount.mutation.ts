@@ -10,7 +10,8 @@ const useVerifyAccountMutation = () => {
   return useMutation({
     mutationFn: (token: string) => verifyAccount({ token }),
     onSuccess: () => {
-      (toast.success("Conta verificada com sucesso!"), navigate("/login"));
+      toast.success("Conta verificada com sucesso!");
+      navigate("/login");
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

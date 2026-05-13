@@ -9,7 +9,7 @@ import { CiLogin } from "react-icons/ci";
 import { AxiosError } from "axios";
 import LoadingCircleSpinner from "../../../../shared/components/ui/LoadingCircleSpinner";
 
-const loginForm = () => {
+const LoginForm = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const {
@@ -117,4 +117,4 @@ const loginForm = () => {
   );
 };
 
-export default loginForm;
+export default LoginForm;

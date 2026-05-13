@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useEffectEvent, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BiImageAdd } from "react-icons/bi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
@@ -18,38 +18,32 @@ const FormUploadAvatar = ({
     reset,
     handleSubmit,
     setError,
+    control,
     formState: { errors },
-    watch,
   } = useForm({
     resolver: zodResolver(avatarSchema),
     mode: "onChange",
   });
   const { mutateAsync, isPending } = useUpdateAvatarMutation();
 
-  const image = watch("image");
+  const image = useWatch({ control, name: "image" });
 
   const [preview, setPreview] = useState<string | null>(null);
   const [visibleDeleteIcon, setVisibleDeleteIcon] = useState(false);
 
+  const updatePreview = useEffectEvent(setPreview);
+
   useEffect(() => {
     if (!image || image.length === 0) {
-      setPreview(null);
+      updatePreview(null);
       return;
     }
 
-    const file = image[0];
-    const URL_IMAGE = URL.createObjectURL(file);
+    const url = URL.createObjectURL(image[0]);
+    updatePreview(url);
 
-    setPreview(URL_IMAGE);
-
-    return () => {
-      revokeImage(URL_IMAGE);
-    };
+    return () => URL.revokeObjectURL(url);
   }, [image]);
-
-  function revokeImage(urlImage: string) {
-    return URL.revokeObjectURL(urlImage);
-  }
 
   async function onSubmit(data: avatarSchemaType) {
     try {
@@ -64,7 +58,7 @@ const FormUploadAvatar = ({
       });
 
       reset();
-    } catch (err) {
+    } catch {
       setError("root", {
         type: "server",
         message: "Ocorreu um erro ao enviar imagem",
@@ -92,7 +86,7 @@ const FormUploadAvatar = ({
                   <div
                     className={styles.container_deleteIcon}
                     onClick={() => {
-                      revokeImage(preview);
+                      URL.revokeObjectURL(preview!);
                       setPreview(null);
                     }}
                   >
@@ -123,7 +117,8 @@ const FormUploadAvatar = ({
             className={styles.cancel_btn}
             type="button"
             onClick={() => {
-              (reset(), setStateDialog(false));
+              reset();
+              setStateDialog(false);
             }}
           >
             Cancelar

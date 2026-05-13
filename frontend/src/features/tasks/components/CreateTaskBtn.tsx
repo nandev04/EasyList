@@ -38,7 +38,8 @@ const CreateTaskBtn = () => {
   async function onSubmit(data: taskSchemaType): Promise<void> {
     mutate(data, {
       onSuccess: () => {
-        (setIsOpen(false), reset());
+        setIsOpen(false);
+        reset();
       },
     });
   }
@@ -56,7 +57,8 @@ const CreateTaskBtn = () => {
       <Dialog
         open={isOpen}
         onClose={() => {
-          (reset(), setIsOpen(false));
+          reset();
+          setIsOpen(false);
         }}
         className={styles.root}
       >

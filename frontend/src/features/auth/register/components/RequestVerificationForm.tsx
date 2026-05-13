@@ -29,7 +29,7 @@ const RequestVerificationForm = ({
     try {
       await resendLinkVerifyAccount({ email });
       setEmail(email);
-    } catch (err) {
+    } catch {
       return setError("root", {
         message: "Ocorreu um erro com a solicitação",
       });
