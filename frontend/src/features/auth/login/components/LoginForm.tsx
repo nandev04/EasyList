@@ -100,7 +100,10 @@ const LoginForm = () => {
         <span className={styles.error_message}>{errors.root.message}</span>
       )}
 
-      <a className={styles.forgot_link}>
+      <a
+        className={styles.forgot_link}
+        onClick={() => navigate("/forgot-password")}
+      >
         Esqueceu a <span className={styles.contrast}>senha?</span>
       </a>
 

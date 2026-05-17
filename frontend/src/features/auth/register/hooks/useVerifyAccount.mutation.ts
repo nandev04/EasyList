@@ -1,17 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { verifyAccount } from "../../services/auth.service";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
 const useVerifyAccountMutation = () => {
-  const navigate = useNavigate();
-
   return useMutation({
     mutationFn: (token: string) => verifyAccount({ token }),
     onSuccess: () => {
       toast.success("Conta verificada com sucesso!");
-      navigate("/login");
     },
     onError: (err) => {
       if (err instanceof AxiosError) {
