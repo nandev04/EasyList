@@ -32,8 +32,8 @@ const VerifyAccount = () => {
               <LoadingCircleSpinner />
             </div>
           )}
-          {isError && <TokenError />}
           {isSuccess && <TokenSuccess />}
+          {isError && <TokenError />}
           {!token && !isPending && <TokenNotFound />}
         </div>
       </div>

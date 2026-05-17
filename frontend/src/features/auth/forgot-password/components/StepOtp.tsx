@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { MdPin } from "react-icons/md";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,10 +33,6 @@ const StepOtp = ({
     control: otpForm.control,
     name: "code",
   });
-
-  useEffect(() => {
-    if (!email) onBack();
-  }, [onBack, email]);
 
   async function onSubmit({ code }: otpSchemaType) {
     try {
