@@ -1,3 +1,8 @@
+import type {
+  createTaskSchemaType,
+  editTaskSchemaType,
+} from "../schema/task.schema";
+
 export enum StatusTask {
   COMPLETED = "COMPLETED",
   IN_PROGRESS = "IN_PROGRESS",
@@ -24,17 +29,9 @@ type GetTaskResponse = {
   };
 };
 
-type CreateTaskPayload = {
-  title: string;
-  description?: string;
-  status: StatusTask;
-};
+type CreateTaskPayload = createTaskSchemaType;
 
-type EditTaskPayload = {
-  title?: string;
-  description?: string;
-  status?: StatusTask;
-};
+type EditTaskPayload = editTaskSchemaType;
 
 export type {
   GetTaskResponse,

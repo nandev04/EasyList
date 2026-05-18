@@ -1,5 +1,5 @@
 import {
-  taskSchemaType,
+  createTaskSchemaType,
   GetTaskQueryParams,
   getTaskQuerySchema,
 } from "../schema/task.schema";
@@ -19,7 +19,7 @@ export async function getTasks(
   return response.data;
 }
 
-export async function createTask(data: taskSchemaType) {
+export async function createTask(data: createTaskSchemaType) {
   const response = await privateApi.post("/tasks", data);
   return response;
 }
@@ -32,6 +32,7 @@ export async function editTask({
   data: EditTaskPayload;
 }) {
   const response = await privateApi.patch(`/tasks/${taskId}`, data);
+  console.log(response.data);
   return response;
 }
 
