@@ -165,3 +165,10 @@
   cursor: pointer;
   user-select: none;
 }
+
+@media (max-width: 650px) {
+  .group {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
