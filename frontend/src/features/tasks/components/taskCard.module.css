@@ -31,3 +31,19 @@
   display: flex;
   gap: 20px;
 }
+
+@media (max-width: 768px) {
+  .task_container {
+    align-items: unset;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .container_btn {
+    justify-items: flex-start;
+  }
+
+  .wrapper_card {
+    width: 100%;
+  }
+}
