@@ -13,6 +13,8 @@ import {
 } from "@headlessui/react";
 import { EditTaskPayload, OptionsStatusTask } from "../types/task.types";
 import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { editTaskSchema } from "../schema/task.schema";
 import { useEditTaskMutation } from "../hooks/useTask.query";
 import CloseDialogBtn from "../../../shared/components/CloseDialogBtn";
 
@@ -38,6 +40,7 @@ const EditTaskBtn = ({
       description: data.description,
       status: data.status,
     },
+    resolver: zodResolver(editTaskSchema),
     mode: "onSubmit",
   });
   const { showLoading } = useDelayLoading(isPending, 150);

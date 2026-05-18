@@ -4,7 +4,7 @@ import styles from "./CreateTaskBtn.module.css";
 import { RiAddFill } from "react-icons/ri";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { taskSchema, taskSchemaType } from "../schema/task.schema";
+import { createTaskSchema, createTaskSchemaType } from "../schema/task.schema";
 import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
 import useDelayLoading from "../../../shared/hooks/useDelayLoading";
 import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
@@ -19,14 +19,14 @@ const CreateTaskBtn = () => {
     control,
     formState: { errors },
     reset,
-  } = useForm<taskSchemaType>({
+  } = useForm({
     defaultValues: {
       status: "PENDING",
     },
-    resolver: zodResolver(taskSchema),
+    resolver: zodResolver(createTaskSchema),
     mode: "onSubmit",
   });
-  const { mutate, isPending, isError } = useCreateTaskMutation();
+  const { mutate, isPending, isError, error } = useCreateTaskMutation();
   const { showLoading } = useDelayLoading(isPending, 150);
 
   const options: OptionsStatusTask[] = [
@@ -35,7 +35,8 @@ const CreateTaskBtn = () => {
     { name: "Concluído", value: "COMPLETED" },
   ];
 
-  async function onSubmit(data: taskSchemaType): Promise<void> {
+  async function onSubmit(data: createTaskSchemaType): Promise<void> {
+    console.log(data);
     mutate(data, {
       onSuccess: () => {
         setIsOpen(false);
@@ -90,7 +91,7 @@ const CreateTaskBtn = () => {
                   )}
                   {isError && (
                     <span className={styles.error_message}>
-                      Ocorreu um erro ao criar tarefa
+                      {error.message}
                     </span>
                   )}
 
