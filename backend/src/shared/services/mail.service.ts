@@ -7,7 +7,7 @@ import { env } from '../../config/env.js';
 
 const accountVerification = async (to: string, token: string) => {
   try {
-    const verificationLink = `${env.FRONTEND_URL}/confirm-email?token=${token}`;
+    const verificationLink = `${env.FRONTEND_URL}/verify-account?token=${token}`;
     const html = await renderTemplate('accountVerification', { verificationLink });
     if (env.NODE_ENV === 'development') {
       const transporter: Transporter = await getTransporter();
