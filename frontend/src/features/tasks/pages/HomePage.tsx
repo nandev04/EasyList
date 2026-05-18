@@ -52,7 +52,7 @@ const Home = () => {
           <span>Olá</span>, {user?.username}!
         </h1>
         <section className={styles.tasks_section}>
-          <div className={styles.container_section}>
+          <div className={styles.general_container}>
             <div className={styles.actions_container}>
               <CreateTaskBtn />
               <div className={styles.filter_container}>
@@ -100,20 +100,21 @@ const Home = () => {
                 </p>
               </div>
             )}
-
-            {!isLoading &&
-              tasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  taskId={task.id}
-                  title={task.title}
-                  status={task.status}
-                  description={task.description}
-                />
-              ))}
-            <span ref={sentinelRef}>
-              {showLoadingFetching && <LoadingInfiniteScroll />}
-            </span>
+            <div className={styles.section_container}>
+              {!isLoading &&
+                tasks.map((task) => (
+                  <TaskCard
+                    key={task.id}
+                    taskId={task.id}
+                    title={task.title}
+                    status={task.status}
+                    description={task.description}
+                  />
+                ))}
+              <span ref={sentinelRef}>
+                {showLoadingFetching && <LoadingInfiniteScroll />}
+              </span>
+            </div>
           </div>
         </section>
       </main>

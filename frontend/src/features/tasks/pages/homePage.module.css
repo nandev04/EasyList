@@ -49,7 +49,7 @@
   margin-top: 40px;
 }
 
-.container_section {
+.general_container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -121,6 +121,16 @@
   border-radius: 0.3em;
 }
 
+.section_container {
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.section_container > span {
+  width: 65%;
+}
+
 @media (max-width: 1100px) {
   .filter_buttons_container {
     display: none;
@@ -128,5 +138,15 @@
 
   .dropdown_filter_container {
     display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .section_container {
+    gap: 50px;
+  }
+
+  .section_container > span {
+    width: 100%;
   }
 }
