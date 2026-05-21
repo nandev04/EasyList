@@ -6,7 +6,13 @@ import useDelayLoading from "../../../shared/hooks/useDelayLoading";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { useDeleteTaskMutation } from "../hooks/useTask.query";
 
-const DeleteTaskBtn = ({ taskId }: { taskId: number }) => {
+const DeleteTaskBtn = ({
+  taskId,
+  variant,
+}: {
+  taskId: number;
+  variant: "desktop_button" | "mobile_button";
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate, isPending, isError } = useDeleteTaskMutation();
   const { showLoading } = useDelayLoading(isPending, 100);
@@ -20,7 +26,7 @@ const DeleteTaskBtn = ({ taskId }: { taskId: number }) => {
   return (
     <>
       <div className={styles.wrapper_button}>
-        <button className={styles.button} onClick={() => setIsOpen(true)}>
+        <button className={styles[variant]} onClick={() => setIsOpen(true)}>
           <BiSolidTrash />
         </button>
       </div>

@@ -25,25 +25,37 @@
 .task_description {
   font-family: var(--primary-font);
   font-size: clamp(0.975rem, 1.45vw, 1rem);
+  overflow-wrap: break-word;
+  margin-bottom: 30px;
 }
 
-.container_btn {
+.container_btn_desktop {
   display: flex;
   gap: 20px;
 }
 
+.container_btn_mobile {
+  display: none;
+}
+
 @media (max-width: 768px) {
-  .task_container {
-    align-items: unset;
-    flex-direction: column;
-    gap: 20px;
+  .container_btn_desktop {
+    display: none;
   }
 
-  .container_btn {
-    justify-items: flex-start;
+  .container_btn_mobile {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-top: auto;
+    gap: 20px;
   }
 
   .wrapper_card {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 150px;
+    align-content: unset;
   }
 }
