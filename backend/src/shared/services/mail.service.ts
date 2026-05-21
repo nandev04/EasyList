@@ -58,7 +58,7 @@ const otpForgotPassword = async (to: string, code: string) => {
 const otpChangeEmail = async (to: string, code: string) => {
   try {
     const email = emailMask(to);
-    const html = await renderTemplate('otpChangeEmail', { email, code });
+    const html = await renderTemplate('otpChangeEmail', { newEmail: email, code });
 
     if (env.NODE_ENV === 'development') {
       const transporter: Transporter = await getTransporter();
