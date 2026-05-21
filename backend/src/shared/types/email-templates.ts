@@ -6,7 +6,7 @@ export type namesTemplates =
 
 export type EmailTemplates = {
   otpChangeEmail: {
-    email: string;
+    newEmail: string;
     code: string;
   };
 
