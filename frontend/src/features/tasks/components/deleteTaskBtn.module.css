@@ -1,4 +1,4 @@
-.button {
+.desktop_button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,14 +13,35 @@
   border-radius: 25%;
 }
 
-.button:hover {
+.desktop_button:hover {
   background-color: var(--primary-color-hover);
 }
 
-.button > svg {
+.desktop_button > svg {
   width: 1rem;
   width: 80%;
   height: 80%;
+  color: var(--dark-grey);
+}
+
+.mobile_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: var(--primary-color);
+  height: 45px;
+  width: 45px;
+  padding: 10px;
+  gap: 5px;
+  border-radius: 50%;
+}
+
+.mobile_button > svg {
+  width: 100%;
+  height: 100%;
   color: var(--dark-grey);
 }
 

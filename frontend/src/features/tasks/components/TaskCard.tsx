@@ -22,10 +22,25 @@ const TaskCard = ({
       <div style={{ backgroundColor: bgCard }} className={styles.wrapper_card}>
         <h3 className={styles.task_title}>{title}</h3>
         <p className={styles.task_description}>{description}</p>
+        <div className={styles.container_btn_mobile}>
+          <EditTaskBtn
+            variant="mobile_button"
+            data={{ title, description, status }}
+            taskId={taskId}
+          />
+
+          <DeleteTaskBtn variant="mobile_button" taskId={taskId} />
+        </div>
       </div>
-      <div className={styles.container_btn}>
-        {<EditTaskBtn data={{ title, description, status }} taskId={taskId} />}
-        <DeleteTaskBtn taskId={taskId} />
+      <div className={styles.container_btn_desktop}>
+        {
+          <EditTaskBtn
+            variant="desktop_button"
+            data={{ title, description, status }}
+            taskId={taskId}
+          />
+        }
+        <DeleteTaskBtn variant="desktop_button" taskId={taskId} />
       </div>
     </div>
   );

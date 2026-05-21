@@ -21,9 +21,11 @@ import CloseDialogBtn from "../../../shared/components/CloseDialogBtn";
 const EditTaskBtn = ({
   data,
   taskId,
+  variant,
 }: {
   data: EditTaskPayload;
   taskId: number;
+  variant: "desktop_button" | "mobile_button";
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate, isPending, isError } = useEditTaskMutation();
@@ -73,7 +75,7 @@ const EditTaskBtn = ({
   return (
     <>
       <div className={styles.wrapper_button}>
-        <button className={styles.button} onClick={() => setIsOpen(true)}>
+        <button className={styles[variant]} onClick={() => setIsOpen(true)}>
           <MdEdit />
         </button>
       </div>
