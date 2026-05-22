@@ -15,12 +15,12 @@ export async function getTasks(
       .filter(([, v]) => v !== undefined)
       .map(([k, v]) => [k, String(v)]),
   );
-  const response = await privateApi.get(`/tasks?${urlSearchParams}`);
+  const response = await privateApi.get(`/v1/tasks?${urlSearchParams}`);
   return response.data;
 }
 
 export async function createTask(data: createTaskSchemaType) {
-  const response = await privateApi.post("/tasks", data);
+  const response = await privateApi.post("/v1/tasks", data);
   return response;
 }
 
@@ -31,12 +31,12 @@ export async function editTask({
   taskId: number;
   data: EditTaskPayload;
 }) {
-  const response = await privateApi.patch(`/tasks/${taskId}`, data);
+  const response = await privateApi.patch(`/v1/tasks/${taskId}`, data);
   console.log(response.data);
   return response;
 }
 
 export async function deleteTask(taskId: number) {
-  const response = await privateApi.delete(`/tasks/${taskId}`);
+  const response = await privateApi.delete(`/v1/tasks/${taskId}`);
   return response;
 }

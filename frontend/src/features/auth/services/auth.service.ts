@@ -7,7 +7,7 @@ import { emailValidateSchemaType } from "../../../shared/schema/email.schema.ts"
 import { otpSchemaType } from "../../../shared/schema/otpCode.schema.ts";
 import { registerSchemaType } from "../register/schema/register.schema.ts";
 
-const BASE_ENDPOINT = "/auth";
+const BASE_ENDPOINT = "/v1/auth";
 
 export async function createUser(formData: registerSchemaType) {
   const createUser = await privateApi.post<registerSchemaType>(
