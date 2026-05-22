@@ -20,7 +20,7 @@ userRoutes.post(
 );
 
 userRoutes.patch(
-  '/user/',
+  '/user',
   Rate_Limit.editUser,
   authenticate,
   requireAuth,

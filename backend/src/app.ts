@@ -32,9 +32,9 @@ updateEmailCodeCleanup();
 
 app.use(express.json());
 app.use(cookieParser(env.COOKIE_SECRET));
-app.use('/auth', Rate_Limit.auth, authRoutes);
-app.use(userRoutes);
-app.use(taskRoutes);
+app.use('/v1/auth', Rate_Limit.auth, authRoutes);
+app.use('/v1/', userRoutes);
+app.use('/v1/', taskRoutes);
 app.use(errorHandler);
 
 export default app;
