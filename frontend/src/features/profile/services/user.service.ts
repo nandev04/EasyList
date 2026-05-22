@@ -3,7 +3,7 @@ import { privateApi } from "../../../shared/services/axiosApi";
 import { UserDTO } from "../../../shared/types/user.dto";
 
 export async function getUser() {
-  const user = await privateApi.get<UserDTO>("/user");
+  const user = await privateApi.get<UserDTO>("/v1/user");
   return {
     ...user.data,
     firstName: user.data.username.split(" ")[0],

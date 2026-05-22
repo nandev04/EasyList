@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode } from "react";
+import { ReactNode } from "react";
 import styles from "./resendOtpCodeBtn.module.css";
 
 const ResendOtpCodeBtn = ({
@@ -6,12 +6,16 @@ const ResendOtpCodeBtn = ({
   callback,
 }: {
   children: ReactNode;
-  callback: MouseEventHandler<HTMLButtonElement>;
+  callback: () => void;
 }) => {
   return (
     <p className={styles.resend_description}>
       Não recebeu o código?{" "}
-      <button type="button" onClick={callback} className={styles.resend_btn}>
+      <button
+        type="button"
+        onClick={() => callback()}
+        className={styles.resend_btn}
+      >
         {children}
       </button>
     </p>

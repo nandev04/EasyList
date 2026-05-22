@@ -11,8 +11,9 @@ const useGetUser = () =>
     retry: false,
   });
 
-export { useGetUser };
-
+export type UpdateUserMutationType = ReturnType<
+  typeof useUpdateUserMutation
+>["mutateAsync"];
 const useUpdateUserMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -32,4 +33,4 @@ const useUpdateAvatarMutation = () => {
   });
 };
 
-export { useUpdateUserMutation, useUpdateAvatarMutation };
+export { useGetUser, useUpdateUserMutation, useUpdateAvatarMutation };

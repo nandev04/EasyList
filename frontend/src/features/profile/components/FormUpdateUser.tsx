@@ -22,7 +22,7 @@ import * as Service from "../services/user.service";
 
 const FormUpdateUser = () => {
   const user = useUserStore((s) => s.user);
-  const { mutateAsync: updateUser } = useUpdateUserMutation();
+  const { mutateAsync: updateUserMutation } = useUpdateUserMutation();
 
   const [isEditing, setIsEditing] = useState(false);
   const [openOtpDialog, setIsOpenOtpDialog] = useState(false);
@@ -78,13 +78,13 @@ const FormUpdateUser = () => {
         data[key as keyof updateUserSchemaType];
     }
 
-    await updateUser(changedData);
+    await updateUserMutation(changedData);
 
     const { email: emailData, ...restData } = changedData;
 
     if (emailData) setIsOpenOtpDialog(true);
 
-    updateUser(restData);
+    updateUserMutation(restData);
     updateUserForm.reset({
       ...updateUserForm.getValues(),
       ...restData,
@@ -95,7 +95,7 @@ const FormUpdateUser = () => {
   async function onSubmitOtp(data: otpSchemaType) {
     try {
       const { data: responseData } = await Service.verifyOtpEmailUpdate(data);
-      updateUser({ email: responseData.data.newEmail });
+      updateUserMutation({ email: responseData.data.newEmail });
 
       updateUserForm.reset({
         ...updateUserForm.getValues(),
@@ -208,7 +208,7 @@ const FormUpdateUser = () => {
               <FormConfirmEmailOtp
                 otpUseForm={otpForm}
                 callbackOtp={onSubmitOtp}
-                callbackResend={onSubmitUpdate}
+                callbackResend={updateUserMutation}
                 emailInput={emailInput}
               />
               <CloseDialogBtn
