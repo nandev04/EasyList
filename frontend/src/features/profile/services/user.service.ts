@@ -17,16 +17,16 @@ type UpdateUserBodyType = {
   email?: string;
 };
 export async function updateUser(data: UpdateUserBodyType) {
-  const response = await privateApi.patch("/user", data);
+  const response = await privateApi.patch("/v1/user", data);
   return response;
 }
 
 export async function updateAvatar(formData: FormData) {
-  const response = await privateApi.patch("/avatar/upload", formData);
+  const response = await privateApi.patch("/v1/avatar/upload", formData);
   return response;
 }
 
 export async function verifyOtpEmailUpdate(data: otpSchemaType) {
-  const response = await privateApi.post("/email-change/verify", data);
+  const response = await privateApi.post("/v1/email-change/verify", data);
   return response;
 }
