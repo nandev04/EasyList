@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import validate from '../../../../middlewares/validateData.js';
+import validate from '../../../../shared/middlewares/validateData.js';
 import { changePasswordBodySchema } from './changePwd.schema.js';
 import * as Controller_ChangePwd from './changePwd.controller.js';
 

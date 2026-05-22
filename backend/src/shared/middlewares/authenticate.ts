@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import applyAuthCookies from '../shared/utils/applyAuthCookies.js';
-import * as Service_ResolveSession from '../modules/auth/use-cases/resolveSession/resolveSession.service.js';
-import { AppError } from '../shared/utils/error.js';
+import applyAuthCookies from '../utils/applyAuthCookies.js';
+import * as Service_ResolveSession from '../../modules/auth/use-cases/resolveSession/resolveSession.service.js';
+import { AppError } from '../utils/error.js';
 
 const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import applyAuthCookies from '../shared/utils/applyAuthCookies.js';
-import * as Service_ResolveSession from '../modules/auth/use-cases/resolveSession/resolveSession.service.js';
+import applyAuthCookies from '../../../shared/utils/applyAuthCookies.js';
+import * as Service_ResolveSession from '../use-cases/resolveSession/resolveSession.service.js';
 
 const resolveSessionIfExists = async (req: Request, res: Response, next: NextFunction) => {
   try {

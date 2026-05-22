@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import validate from '../../../../../middlewares/validateData.js';
+import validate from '../../../../../shared/middlewares/validateData.js';
 import { resetPasswordBodySchema } from './resetPwd.schema.js';
 import * as Controller_ResetPwd from './resetPwd.controller.js';
 

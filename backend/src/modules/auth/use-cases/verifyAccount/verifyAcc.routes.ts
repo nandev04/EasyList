@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import validate from '../../../../middlewares/validateData.js';
+import validate from '../../../../shared/middlewares/validateData.js';
 import { resendToken, verifyAccountQuerySchema } from './verifyAcc.schema.js';
 import * as Controller_VerifyAcc from './verifyAcc.controller.js';
 

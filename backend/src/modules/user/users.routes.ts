@@ -1,12 +1,12 @@
 import express from 'express';
 import * as Controller from './user.controller.js';
-import validate from '../../middlewares/validateData.js';
+import validate from '../../shared/middlewares/validateData.js';
 import { createUserBodySchema, verifyOTPEmailChange } from './user.schema.js';
 import { updateUserSchemaBody } from './user.schema.js';
-import requireAuth from '../../middlewares/requireAuth.js';
-import * as Rate_Limit from '../../middlewares/rateLimit.js';
-import * as Validate_Avatar from '../../middlewares/validateFile.js';
-import { authenticate } from '../../middlewares/authenticate.js';
+import requireAuth from '../../shared/middlewares/requireAuth.js';
+import * as Rate_Limit from './middlewares/rateLimit.js';
+import * as Validate_Avatar from './middlewares/validateFile.js';
+import { authenticate } from '../../shared/middlewares/authenticate.js';
 
 const userRoutes = express.Router();
 

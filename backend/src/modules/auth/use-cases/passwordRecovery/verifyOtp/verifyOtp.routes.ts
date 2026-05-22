@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import validate from '../../../../../middlewares/validateData.js';
+import validate from '../../../../../shared/middlewares/validateData.js';
 import { verifyOtpPwdBodySchema } from './verifyOtp.schema.js';
 import * as Controller_VerifyOtp from './verifyOtp.controller.js';
 

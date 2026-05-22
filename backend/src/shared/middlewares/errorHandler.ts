@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppError } from '../shared/utils/error.js';
+import { AppError } from '../utils/error.js';
 import { ZodError } from 'zod';
 import multer from 'multer';
 
