@@ -9,6 +9,7 @@ import userRoutes from './modules/user/users.routes.js';
 import refreshTokenCleanup from './cron/refreshToken.cleanup.js';
 import resetPasswordCodeCleanup from './cron/passwordCode.cleanup.js';
 import oldDevicesCleanup from './cron/oldDevices.cleanup.js';
+import revokedDevicesCleanup from './cron/revokedDevices.cleanup.js';
 import updateEmailCodeCleanup from './cron/updateEmailCode.cleanup.js';
 import * as Rate_Limit from './middlewares/rateLimit.js';
 
@@ -28,6 +29,7 @@ app.set('trust proxy', true);
 resetPasswordCodeCleanup();
 refreshTokenCleanup();
 oldDevicesCleanup();
+revokedDevicesCleanup();
 updateEmailCodeCleanup();
 
 app.use(express.json());
