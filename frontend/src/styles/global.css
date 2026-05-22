@@ -136,3 +136,9 @@ button {
   font-family: var(--tertiary-font);
   font-size: 14px;
 }
+
+@media (max-width: 460px) {
+  .panel {
+    padding: 40px 25px;
+  }
+}

@@ -1,15 +1,10 @@
 import { SlotProps } from "input-otp";
 import Slot from "./Slot";
+import styles from "./OtpSlots.module.css";
 
 const OtpSlots = ({ slots }: { slots: SlotProps[] }) => {
   return (
-    <div
-      style={{
-        justifyContent: "center",
-        display: "flex",
-        gap: "8px",
-      }}
-    >
+    <div className={styles.slots_container}>
       {slots.map((slot, i) => (
         <Slot key={i} {...slot} />
       ))}
