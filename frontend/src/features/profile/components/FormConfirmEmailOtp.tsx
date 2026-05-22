@@ -1,17 +1,13 @@
 import { Controller, UseFormReturn } from "react-hook-form";
 import { OTPInput } from "input-otp";
 import OtpSlots from "../../../shared/components/ui/OtpComponents/OtpSlots";
-import ResendOtpCodeBtn from "./ResendOtpCodeBtn";
+import ResendOtpCodeBtn from "../../../shared/components/ui/ResendOtpCodeBtn";
 import styles from "./FormConfirmEmailOtp.module.css";
+import { UpdateUserMutationType } from "../hooks/useUser.query";
 
 type callbackTypes = {
   callbackOtp: (data: { code: string }) => Promise<void>;
-  callbackResend: (data: {
-    firstname?: string | undefined;
-    lastname?: string | undefined;
-    username?: string | undefined;
-    email?: string | undefined;
-  }) => Promise<void>;
+  callbackResend: UpdateUserMutationType;
 };
 
 const FormConfirmEmailOtp = ({
