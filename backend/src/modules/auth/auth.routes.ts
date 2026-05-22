@@ -13,7 +13,7 @@ import verifyOtpPwdRoutes from './use-cases/passwordRecovery/verifyOtp/verifyOtp
 const authRoutes = express.Router();
 
 authRoutes.use('/login', resolveSessionIfExists, loginRoutes);
-authRoutes.use('/logout', authenticate, logoutRoutes);
+authRoutes.use('/logout', logoutRoutes);
 authRoutes.use('/verify', verifyAccRoutes);
 authRoutes.use('/change-password', authenticate, requireAuth, changePasswordRoutes);
 authRoutes.use('/forgot-password', forgotPwdRoutes);

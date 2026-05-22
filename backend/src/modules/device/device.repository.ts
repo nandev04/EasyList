@@ -20,11 +20,18 @@ const createDevice = async ({ deviceUUID, userId, maxDevicePerUser }: createDevi
 };
 
 const verifyDeviceUUID = async (deviceUUID: string) => {
-  const deviceUUUIDrecovered = await prisma.device.findUnique({
-    where: { deviceUUID },
+  const deviceUUUIDrecovered = await prisma.device.findFirst({
+    where: { deviceUUID, revokedAt: null },
     select: { deviceUUID: true, userId: true, id: true }
   });
   return deviceUUUIDrecovered;
 };
 
-export { createDevice, verifyDeviceUUID };
+const revokeDeviceByUUID = async (deviceUUID: string) => {
+  await prisma.device.updateMany({
+    where: { deviceUUID, revokedAt: null },
+    data: { revokedAt: new Date() }
+  });
+};
+
+export { createDevice, verifyDeviceUUID, revokeDeviceByUUID };

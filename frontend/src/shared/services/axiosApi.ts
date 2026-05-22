@@ -19,9 +19,11 @@ export function setupInterceptors() {
   privateApi.interceptors.response.use(
     (res) => res,
     (err) => {
-      const isSessionCheck = err.config?.url === "/user";
+      const url: string = err.config?.url ?? "";
+      const skipLogout =
+        url.endsWith("/v1/user") || url.endsWith("/v1/auth/logout");
 
-      if (err.response?.status === 401 && !isSessionCheck) {
+      if (err.response?.status === 401 && !skipLogout) {
         logoutUser();
       }
 

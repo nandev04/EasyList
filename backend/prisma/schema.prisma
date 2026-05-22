@@ -45,10 +45,11 @@ model AccountVerificationToken {
 }
 
 model Device {
-  id         Int      @id @default(autoincrement())
-  deviceUUID String   @unique
+  id         Int       @id @default(autoincrement())
+  deviceUUID String    @unique
   userId     String
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
+  revokedAt  DateTime?
 
   refreshToken RefreshToken[]
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)

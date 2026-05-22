@@ -5,9 +5,23 @@ import * as Service_Logout from './logout.service.js';
 
 const logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { refreshToken } = <signedCookieSchemaType>req.validated!.signedCookies;
+    const { refreshToken, deviceId } = <signedCookieSchemaType>req.validated?.signedCookies;
 
-    await Service_Logout.logout(refreshToken);
+    if (refreshToken) {
+      try {
+        await Service_Logout.logout(refreshToken);
+      } catch {
+        // token inválido/expirado — segue limpando cookies
+      }
+    }
+
+    if (deviceId) {
+      try {
+        await Service_Logout.revokeDevice(deviceId);
+      } catch {
+        // device inexistente/já revogado — segue limpando cookies
+      }
+    }
 
     res.clearCookie('deviceId', cookieUser);
     res.clearCookie('accessToken', cookieUser);

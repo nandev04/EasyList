@@ -1,0 +1,15 @@
+.slots_container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+@media (max-width: 410px) {
+  .slots_container {
+    display: grid;
+    gap: 10px;
+    padding: 0 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+  }
+}
