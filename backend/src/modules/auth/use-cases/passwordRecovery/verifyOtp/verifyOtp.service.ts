@@ -7,17 +7,16 @@ import * as Token_Repository from '../../../repositories/token.repository.js';
 
 const verifyCodeService = async (code: string, email: string) => {
   const user = await User_Repository.findByEmail(email);
-  if (!user) throw new AppError('Usuário correspondente ao email não encontrado', 404);
 
   const dateNow = new Date();
 
   const codeHash = transformForHash(code);
 
-  const codeFetched = await Otp_Repository.findCodeOTP(codeHash, user.id);
+  const codeFetched = user ? await Otp_Repository.findCodeOTP(codeHash, user.id) : null;
 
-  if (!codeFetched) throw new AppError('Código não encontrado', 404);
-  if (codeFetched.expiresAt < dateNow) throw new AppError('Código expirado', 401);
-  if (codeFetched.used) throw new AppError('Código já utilizado', 401);
+  if (!codeFetched) throw new AppError('Código inválido', 400, 'INVALID_CODE');
+  if (codeFetched.expiresAt < dateNow) throw new AppError('Código expirado', 410, 'EXPIRED_CODE');
+  if (codeFetched.used) throw new AppError('Código já utilizado', 410, 'USED_CODE');
 
   await Otp_Repository.markCodeAsUsed(codeFetched.id);
 

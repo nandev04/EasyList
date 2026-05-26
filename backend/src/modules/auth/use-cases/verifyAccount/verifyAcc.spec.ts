@@ -32,15 +32,16 @@ describe('verifyAccountToken', async () => {
     expect(Respository_User.verifyUser).toHaveBeenCalledTimes(1);
   });
 
-  test('Should throw an AppError with status code 404 and message: "Token inválido" if the token is not found', async () => {
+  test('Should throw an AppError with status code 401 and message: "Token inválido" if the token is not found', async () => {
     const tokenHash = 'tokenHashTeste';
 
     vi.spyOn(cryptoUtils, 'transformForHash').mockReturnValue(tokenHash);
     vi.spyOn(Repository_Auth, 'getAccountVerifyToken').mockResolvedValue(null);
 
     await expect(verifyAccountToken).rejects.toMatchObject({
+      code: 'INVALID_TOKEN',
       message: 'Token inválido',
-      statusCode: 404
+      statusCode: 401
     });
   });
 
@@ -58,8 +59,9 @@ describe('verifyAccountToken', async () => {
     vi.spyOn(Repository_Auth, 'getAccountVerifyToken').mockResolvedValue(tokenSearched);
 
     await expect(verifyAccountToken).rejects.toMatchObject({
+      code: 'INVALID_TOKEN',
       message: 'Token inválido ou expirado',
-      statusCode: 400
+      statusCode: 410
     });
   });
 
@@ -77,8 +79,9 @@ describe('verifyAccountToken', async () => {
     vi.spyOn(Repository_Auth, 'getAccountVerifyToken').mockResolvedValue(tokenSearched);
 
     await expect(verifyAccountToken).rejects.toMatchObject({
+      code: 'INVALID_TOKEN',
       message: 'Token inválido ou expirado',
-      statusCode: 400
+      statusCode: 410
     });
   });
 
@@ -96,8 +99,9 @@ describe('verifyAccountToken', async () => {
     vi.spyOn(Repository_Auth, 'getAccountVerifyToken').mockResolvedValue(tokenSearched);
 
     await expect(verifyAccountToken).rejects.toMatchObject({
+      code: 'INVALID_TOKEN',
       message: 'Token inválido ou expirado',
-      statusCode: 400
+      statusCode: 410
     });
   });
 });

@@ -22,7 +22,7 @@ export async function loginUser(body: loginSchemaType) {
 }
 
 export async function logoutUser() {
-  const response = await privateApi.post(`${BASE_ENDPOINT}/logout`);
+  const response = await publicApi.post(`${BASE_ENDPOINT}/logout`);
   return response;
 }
 

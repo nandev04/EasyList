@@ -9,8 +9,8 @@ const renewAccessToken = async (refreshToken: string) => {
   const tokenData = await Token_Repository.verifyRefreshToken(hashRefreshToken);
   const dateNow = new Date();
 
-  if (!tokenData) throw new AppError('Token Inválido', 401);
-  if (dateNow > tokenData.expiresAt) throw new AppError('Token Expirado', 401);
+  if (!tokenData) throw new AppError('Token Inválido', 401, 'INVALID_TOKEN');
+  if (dateNow > tokenData.expiresAt) throw new AppError('Token Expirado', 410, 'EXPIRED_TOKEN');
 
   const tokenVersion = await getTokenVersion(tokenData.userId);
 

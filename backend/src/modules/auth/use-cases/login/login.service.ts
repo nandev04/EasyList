@@ -9,11 +9,11 @@ import { env } from '../../../../config/env.js';
 
 const loginUser = async (email: string, password: string) => {
   const user = await User_Repository.findByEmail(email);
-  if (!user) throw new AppError('Credenciais inválidas', 401);
+  if (!user) throw new AppError('Credenciais inválidas', 401, 'INVALID_CREDENTIALS');
 
   const verifyHash = await compareHashPassword(password, user.password);
 
-  if (!verifyHash) throw new AppError('Credenciais inválidas', 401);
+  if (!verifyHash) throw new AppError('Credenciais inválidas', 401, 'INVALID_CREDENTIALS');
 
   const { accessToken, refreshTokenRaw, expiresMs, deviceUUID, expirationDate, hashRefreshToken } =
     await Auth_Service.createTokens(user.id, user.tokenVersion);

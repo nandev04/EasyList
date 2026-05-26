@@ -7,13 +7,18 @@ import {
   deleteTaskSchemaParamsType,
   getTaskSchemaType
 } from './task.schema.js';
+import { successResponse } from '../../shared/utils/response/response.js';
 
 const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!;
     const { limit, cursor, status } = <getTaskSchemaType>req.validated!.query;
-    const tasks = await Service.getTasks({ userId, limit, cursor, status });
-    res.status(200).json(tasks);
+    const { pagination, ...data } = await Service.getTasks({ userId, limit, cursor, status });
+    res.status(200).json(
+      successResponse({
+        data: data
+      })
+    );
   } catch (err) {
     next(err);
   }
@@ -25,7 +30,11 @@ const createTask = async (req: Request, res: Response, next: NextFunction) => {
 
     const { title, description, status } = req.validated!.body as createTaskSchemaType;
     const createdTask = await Service.createTask({ title, description, status, userId });
-    res.status(200).json(createdTask);
+    res.status(200).json(
+      successResponse({
+        data: createdTask
+      })
+    );
   } catch (err) {
     next(err);
   }
@@ -39,7 +48,11 @@ const updateTask = async (req: Request, res: Response, next: NextFunction) => {
 
     const updatedTask = await Service.updateTask(id, userId, data);
 
-    return res.status(200).json(updatedTask);
+    return res.status(200).json(
+      successResponse({
+        data: updatedTask
+      })
+    );
   } catch (err) {
     next(err);
   }

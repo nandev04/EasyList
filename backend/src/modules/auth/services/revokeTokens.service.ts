@@ -13,7 +13,7 @@ async function invalidAllTokens(userId: string) {
 async function revokeRefreshToken(refreshToken: string) {
   const hashRefreshToken = transformForHash(refreshToken);
   const tokenData = await Token_Repository.verifyRefreshToken(hashRefreshToken);
-  if (!tokenData) throw new AppError('Token Inválido', 401);
+  if (!tokenData) return;
 
   await Token_Repository.revokeRefreshToken(tokenData.id);
 }

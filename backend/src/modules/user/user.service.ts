@@ -24,7 +24,7 @@ dotenv.config();
 const getUser = async (userId: string) => {
   let signedUrl: string | null = null;
   const user = await Repository_User.getUser(userId, userPublicSelect);
-  if (!user) throw new AppError('Usuário não encontrado', 404);
+  if (!user) throw new AppError('Sessão inválida', 401, 'INVALID_SESSION');
   const { avatarKey, ...safeUser } = user;
   if (user.avatarKey) {
     const getCommand = await getAvatarS3(user.avatarKey);
@@ -35,22 +35,16 @@ const getUser = async (userId: string) => {
 };
 
 const createUser = async (data: CreateUserBodySchemaType) => {
-  try {
-    const { password, ...safeData } = data;
-    const hashPassword = await createHashPassword(password);
+  const { password, ...safeData } = data;
+  const hashPassword = await createHashPassword(password);
 
-    const userId = generateUUIDv7();
-    const newData = { id: userId, hashPassword, ...safeData };
-    const createdUser = await Repository_User.createUser(newData, userCreateSelect);
+  const userId = generateUUIDv7();
+  const newData = { id: userId, hashPassword, ...safeData };
+  const createdUser = await Repository_User.createUser(newData, userCreateSelect);
 
-    await VerifyAcc_Service.generateAccountToken(createdUser.id, createdUser.email);
+  await VerifyAcc_Service.generateAccountToken(createdUser.id, createdUser.email);
 
-    return createdUser;
-  } catch (err) {
-    if (err instanceof AppError) throw err;
-
-    throw new AppError(err instanceof Error ? err.message : 'Erro Desconhecido', 500);
-  }
+  return createdUser;
 };
 
 const updateUser = async (userId: string, data: updateUserSchemaBodyType) => {
@@ -79,9 +73,9 @@ const verifyOTPAndUpdateEmail = async (userId: string, code: string) => {
   const codeFound = await Repository_User.verifyOTPCodeUpdateEmail(userId, hashCode);
 
   const dateNow = new Date();
-  if (!codeFound) throw new AppError('Código não encontrado', 404);
-  if (codeFound.expiresAt < dateNow) throw new AppError('Código expirado', 400);
-  if (codeFound.used) throw new AppError('Código utilizado', 400);
+  if (!codeFound) throw new AppError('Código inválido', 401, 'INVALID_CODE');
+  if (codeFound.expiresAt < dateNow) throw new AppError('Código expirado', 410, 'INVALID_CODE');
+  if (codeFound.used) throw new AppError('Código utilizado', 410, 'INVALID_CODE');
 
   const oldEmail = codeFound.user.email;
 

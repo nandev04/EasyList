@@ -23,22 +23,19 @@ describe('resetPassword', () => {
     vi.restoreAllMocks();
   });
 
-  test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 404', async () => {
-    const err = new AppError('Token não encontrado', 404);
-
+  test('Should throw an AppError when the TokenResetPassword is not found with the message: Token não encontrado; and statusCode: 400', async () => {
     vi.spyOn(Token_Repository, 'validateTokenResetPassword').mockResolvedValue(null);
 
     await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({
-      message: err.message,
-      statusCode: err.statusCode
+      message: 'Token inválido',
+      statusCode: 400,
+      code: 'TOKEN_NOT_FOUND'
     });
   });
 
-  test('Should throw an AppError when the TokenResetPassword has been expired with the message: Token expirado; and statusCode: 401', async () => {
-    const err = new AppError('Token expirado', 401);
-
+  test('Should throw an AppError when the TokenResetPassword has been expired with the message: Token expirado; and statusCode: 410', async () => {
     vi.spyOn(Token_Repository, 'validateTokenResetPassword').mockResolvedValue({
       ...resultValidateTokenResetPassword,
       expiresAt: new Date(fixedNow - 100000)
@@ -47,14 +44,13 @@ describe('resetPassword', () => {
     await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
     ).rejects.toMatchObject({
-      message: err.message,
-      statusCode: err.statusCode
+      message: 'Token expirado',
+      statusCode: 410,
+      code: 'EXPIRED_TOKEN'
     });
   });
 
   test('Should throw an AppError when the TokenResetPassword has been marked as used with the message: Token expirado; and statusCode: 401', async () => {
-    const err = new AppError('Token expirado', 401);
-
     vi.spyOn(Token_Repository, 'validateTokenResetPassword').mockResolvedValue({
       ...resultValidateTokenResetPassword,
       expiresAt: new Date(fixedNow + 100000),
@@ -63,7 +59,7 @@ describe('resetPassword', () => {
 
     await expect(
       resetPassword(resetPasswordInput.email, resetPasswordInput.password)
-    ).rejects.toMatchObject({ statusCode: err.statusCode, message: err.message });
+    ).rejects.toMatchObject({ statusCode: 410, message: 'Token expirado', code: 'EXPIRED_TOKEN' });
   });
 
   test('Should call the functions correctly, create new password for the user, and return it.', async () => {

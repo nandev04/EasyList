@@ -26,20 +26,17 @@ describe('verifyOtpService', () => {
     vi.restoreAllMocks();
   });
 
-  test('Should throw an AppError if the user email is not found with status code 404 and message error: "Usuário correspondente ao email não encontrado"', async () => {
-    const err = new AppError('Usuário correspondente ao email não encontrado', 404);
-
+  test('Should throw an AppError if the user email is not found with status code 400 and message error: "Código inválido"', async () => {
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(null);
 
     await expect(verifyCodeService(code, email)).rejects.toMatchObject({
-      message: err.message,
-      statusCode: err.statusCode
+      message: 'Código inválido',
+      statusCode: 400,
+      code: 'INVALID_CODE'
     });
   });
 
-  test('Should throw an AppError if the OTP Code has been expired with the message: Código expirado; and statusCode: 401', async () => {
-    const err = new AppError('Código expirado', 401);
-
+  test('Should throw an AppError if the OTP Code has been expired with the message: Código expirado; and statusCode: 410', async () => {
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(userFindByEmail);
     vi.spyOn(OtpCode_Repository, 'findCodeOTP').mockResolvedValue({
       ...codeFetched,
@@ -47,14 +44,13 @@ describe('verifyOtpService', () => {
     });
 
     await expect(verifyCodeService(code, email)).rejects.toMatchObject({
-      message: err.message,
-      statusCode: err.statusCode
+      message: 'Código expirado',
+      statusCode: 410,
+      code: 'EXPIRED_CODE'
     });
   });
 
-  test('Should throw an AppError if the code has already been used with the message: Código já utilizado; and statusCode: 401', async () => {
-    const err = new AppError('Código já utilizado', 401);
-
+  test('Should throw an AppError if the code has already been used with the message: Código já utilizado; and statusCode: 410', async () => {
     vi.spyOn(User_Repository, 'findByEmail').mockResolvedValue(userFindByEmail);
     vi.spyOn(OtpCode_Repository, 'findCodeOTP').mockResolvedValue({
       ...codeFetched,
@@ -63,8 +59,9 @@ describe('verifyOtpService', () => {
     });
 
     await expect(verifyCodeService(code, email)).rejects.toMatchObject({
-      message: err.message,
-      statusCode: err.statusCode
+      message: 'Código já utilizado',
+      statusCode: 410,
+      code: 'USED_CODE'
     });
   });
 

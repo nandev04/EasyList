@@ -13,7 +13,7 @@ vi.mock('../../../../infra/cache/cache.service.js', () => ({
 describe('resolveSessionToken', () => {
   test('Should throw an AppError if an invalid access token with status code 401 is encountered.', async () => {
     vi.spyOn(accessTokenUtils, 'utilJwtVerifyAccess').mockRejectedValueOnce(
-      new AppError('Token de acesso inválido', 401)
+      new AppError('Token de acesso inválido', 401, '')
     );
 
     await expect(resolveSessionToken({ accessToken: 'accessTokenTest' })).rejects.toMatchObject({
@@ -40,7 +40,7 @@ describe('resolveSessionToken', () => {
   });
 
   test('Should throw an AppError if the refresh token is missing.', async () => {
-    const error = new AppError('Token de atualização ausente', 401);
+    const error = new AppError('Token de atualização ausente', 401, '');
 
     await expect(resolveSessionToken({})).rejects.toMatchObject({
       message: error.message,

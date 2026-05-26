@@ -17,6 +17,8 @@
   --cancel-color: #e5e5e5;
   --cancel-color-hover: #d4d4d4;
 
+  --warning-color: #fdba00;
+
   --task-completed: #27ff6f;
   --task-inProgress: #ff9f40;
   --task-pending: #5be6ff;

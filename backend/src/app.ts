@@ -34,8 +34,8 @@ updateEmailCodeCleanup();
 app.use(express.json());
 app.use(cookieParser(env.COOKIE_SECRET));
 app.use('/v1/auth', authRoutes);
-app.use('/v1/', userRoutes);
-app.use('/v1/', taskRoutes);
+app.use('/v1', userRoutes);
+app.use('/v1', taskRoutes);
 app.use(errorHandler);
 
 export default app;

@@ -10,12 +10,12 @@ const getTasks = async ({
 }: { userId: string } & getTaskSchemaType) => {
   const returnedTasks = await Repository_Task.getTasks({ userId, limit, cursor, status });
   const hasNextPage = returnedTasks.length > limit;
-  const data = hasNextPage ? returnedTasks.slice(0, limit) : returnedTasks;
+  const tasks = hasNextPage ? returnedTasks.slice(0, limit) : returnedTasks;
 
   return {
-    data: data,
+    tasks,
     pagination: {
-      nextCursor: hasNextPage ? data[data.length - 1].id : null,
+      nextCursor: hasNextPage ? tasks[tasks.length - 1].id : null,
       hasNextPage: hasNextPage
     }
   };

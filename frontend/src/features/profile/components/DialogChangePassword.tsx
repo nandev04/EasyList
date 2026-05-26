@@ -11,6 +11,8 @@ import {
 import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
 import * as Service from "../../auth/services/auth.service";
 import useDelayLoading from "../../../shared/hooks/useDelayLoading";
+import { GoAlert } from "react-icons/go";
+import { useLogoutMutation } from "../../auth/hooks/useLogout.query";
 
 const DialogChangePassword = ({
   openDialog,
@@ -30,12 +32,15 @@ const DialogChangePassword = ({
     resolver: zodResolver(changePasswordSchema),
   });
 
+  const { mutateAsync: logoutMutationAsync } = useLogoutMutation();
+
   const { showLoading } = useDelayLoading(isSubmitting, 150);
 
   async function sendRequest(data: changePasswordSchemaType) {
     try {
       await Service.changePassword(data);
       setOpenDialog(false);
+      await logoutMutationAsync();
     } catch (err) {
       if (err instanceof Error)
         setError("root", {
@@ -91,6 +96,11 @@ const DialogChangePassword = ({
                   </span>
                 )}
               </div>
+              <span className={styles.warning}>
+                <GoAlert />
+                Ao concluir a troca de senha, você será deslogado e
+                redirecionado para a tela de login novamente.
+              </span>
               {errors.root && (
                 <span
                   style={{ marginTop: "-10px" }}

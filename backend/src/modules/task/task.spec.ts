@@ -24,7 +24,12 @@ describe('getTasks flow', () => {
 
     await Service_Task.getTasks({ userId: userIdMock, limit, cursor });
 
-    expect(Repository_Task.getTasks).toHaveBeenCalledWith({ userId: userIdMock, limit, cursor, status: undefined });
+    expect(Repository_Task.getTasks).toHaveBeenCalledWith({
+      userId: userIdMock,
+      limit,
+      cursor,
+      status: undefined
+    });
     expect(Repository_Task.getTasks).toHaveBeenCalledTimes(1);
   });
 
@@ -34,7 +39,12 @@ describe('getTasks flow', () => {
 
     await Service_Task.getTasks({ userId: userIdMock, limit });
 
-    expect(Repository_Task.getTasks).toHaveBeenCalledWith({ userId: userIdMock, limit, cursor: undefined, status: undefined });
+    expect(Repository_Task.getTasks).toHaveBeenCalledWith({
+      userId: userIdMock,
+      limit,
+      cursor: undefined,
+      status: undefined
+    });
   });
 
   test('Should return hasNextPage true and data sliced to limit when repository returns limit + 1 items', async () => {
@@ -45,8 +55,8 @@ describe('getTasks flow', () => {
     const result = await Service_Task.getTasks({ userId: userIdMock, limit });
 
     expect(result.pagination.hasNextPage).toBe(true);
-    expect(result.data).toHaveLength(limit);
-    expect(result.data).toEqual(tasks.slice(0, limit));
+    expect(result.tasks).toHaveLength(limit);
+    expect(result.tasks).toEqual(tasks.slice(0, limit));
   });
 
   test('Should set nextCursor to the last item of sliced data when hasNextPage is true', async () => {
@@ -67,8 +77,8 @@ describe('getTasks flow', () => {
     const result = await Service_Task.getTasks({ userId: userIdMock, limit });
 
     expect(result.pagination.hasNextPage).toBe(false);
-    expect(result.data).toHaveLength(limit);
-    expect(result.data).toEqual(tasks);
+    expect(result.tasks).toHaveLength(limit);
+    expect(result.tasks).toEqual(tasks);
   });
 
   test('Should return hasNextPage false and nextCursor null when repository returns fewer than limit items', async () => {
@@ -80,7 +90,7 @@ describe('getTasks flow', () => {
 
     expect(result.pagination.hasNextPage).toBe(false);
     expect(result.pagination.nextCursor).toBeNull();
-    expect(result.data).toEqual(tasks);
+    expect(result.tasks).toEqual(tasks);
   });
 
   test('Should return empty data, hasNextPage false and nextCursor null when repository returns no tasks', async () => {
@@ -89,7 +99,7 @@ describe('getTasks flow', () => {
 
     const result = await Service_Task.getTasks({ userId: userIdMock, limit });
 
-    expect(result.data).toHaveLength(0);
+    expect(result.tasks).toHaveLength(0);
     expect(result.pagination.hasNextPage).toBe(false);
     expect(result.pagination.nextCursor).toBeNull();
   });
@@ -101,7 +111,12 @@ describe('getTasks flow', () => {
 
       await Service_Task.getTasks({ userId: userIdMock, limit, status: 'COMPLETED' });
 
-      expect(Repository_Task.getTasks).toHaveBeenCalledWith({ userId: userIdMock, limit, cursor: undefined, status: 'COMPLETED' });
+      expect(Repository_Task.getTasks).toHaveBeenCalledWith({
+        userId: userIdMock,
+        limit,
+        cursor: undefined,
+        status: 'COMPLETED'
+      });
     });
 
     test('Should call repository without status when not provided', async () => {
@@ -110,7 +125,9 @@ describe('getTasks flow', () => {
 
       await Service_Task.getTasks({ userId: userIdMock, limit });
 
-      expect(Repository_Task.getTasks).toHaveBeenCalledWith(expect.objectContaining({ status: undefined }));
+      expect(Repository_Task.getTasks).toHaveBeenCalledWith(
+        expect.objectContaining({ status: undefined })
+      );
     });
 
     test('Should paginate only over filtered tasks when status is provided', async () => {
@@ -118,10 +135,14 @@ describe('getTasks flow', () => {
       const tasks = [makeTask(5, 'COMPLETED'), makeTask(3, 'COMPLETED'), makeTask(1, 'COMPLETED')];
       vi.spyOn(Repository_Task, 'getTasks').mockResolvedValue(tasks);
 
-      const result = await Service_Task.getTasks({ userId: userIdMock, limit, status: 'COMPLETED' });
+      const result = await Service_Task.getTasks({
+        userId: userIdMock,
+        limit,
+        status: 'COMPLETED'
+      });
 
       expect(result.pagination.hasNextPage).toBe(true);
-      expect(result.data).toHaveLength(limit);
+      expect(result.tasks).toHaveLength(limit);
       expect(result.pagination.nextCursor).toBe(tasks[limit - 1].id);
     });
 
@@ -132,7 +153,12 @@ describe('getTasks flow', () => {
 
       await Service_Task.getTasks({ userId: userIdMock, limit, cursor, status: 'IN_PROGRESS' });
 
-      expect(Repository_Task.getTasks).toHaveBeenCalledWith({ userId: userIdMock, limit, cursor, status: 'IN_PROGRESS' });
+      expect(Repository_Task.getTasks).toHaveBeenCalledWith({
+        userId: userIdMock,
+        limit,
+        cursor,
+        status: 'IN_PROGRESS'
+      });
     });
   });
 });

@@ -48,7 +48,7 @@
 
 .email_warning {
   display: flex;
-  color: #f3b407;
+  color: var(--warning-color);
   align-items: center;
   gap: 5px;
   font-style: italic;
