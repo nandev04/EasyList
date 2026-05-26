@@ -14,12 +14,12 @@ describe('Get User flow', () => {
     vi.clearAllMocks();
   });
 
-  test('Should throw an AppError with status code 404 and message: "Usuário não encontrado" if user not found', async () => {
+  test('Should throw an AppError with status code 401 and message: "Sessão Inválida" if user not found', async () => {
     vi.spyOn(Repository_User, 'getUser').mockResolvedValue(null);
 
     await expect(Service_User.getUser(userIdMock)).rejects.toMatchObject({
-      message: 'Usuário não encontrado',
-      statusCode: 404
+      message: 'Sessão inválida',
+      statusCode: 401
     });
   });
 
@@ -104,7 +104,7 @@ describe('Create user flow', () => {
   });
 
   test('Should throw AppError if hash fails', async () => {
-    const error = new AppError('Senha inválida', 400);
+    const error = new AppError('Senha inválida', 400, '');
     vi.spyOn(argon2Utils, 'createHashPassword').mockRejectedValue(error);
 
     await expect(Service_User.createUser(testInput)).rejects.toBe(error);

@@ -18,9 +18,9 @@ const verifyAccountToken = async (token: string) => {
   const tokenSearched = await Repository_Auth.getAccountVerifyToken(tokenHash);
   const dateNow = new Date();
 
-  if (!tokenSearched) throw new AppError('Token inválido', 404);
+  if (!tokenSearched) throw new AppError('Token inválido', 401, 'INVALID_TOKEN');
   if (tokenSearched.revokedAt || dateNow > tokenSearched.expiresAt || tokenSearched.used) {
-    throw new AppError('Token inválido ou expirado', 400);
+    throw new AppError('Token inválido ou expirado', 410, 'INVALID_TOKEN');
   }
 
   await Repository_Auth.markAccountVerifyTokenAsUsed(tokenSearched.id);

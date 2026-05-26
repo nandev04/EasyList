@@ -11,7 +11,7 @@ async function getTokenVersion(userId: string) {
 
   if (searchedVersion === null) {
     const user = await User_Repository.getUser(userId, userAuthSelect);
-    if (!user) throw new AppError('Usuário não encontrado', 404);
+    if (!user) throw new AppError('Sessão inválida', 401, 'INVALID_SESSION');
     tokenVersion = user.tokenVersion;
   } else {
     tokenVersion = +searchedVersion;

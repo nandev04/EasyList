@@ -13,7 +13,7 @@ const tryResolveByAccessToken = async (
   const payloadAccess = await utilJwtVerifyAccess(accessToken);
   const serverTokenVersion = await getTokenVersion(payloadAccess.userId);
   if (payloadAccess.tokenVersion !== serverTokenVersion) {
-    throw new AppError('Sessão inválida, faça login novamente', 401);
+    throw new AppError('Sessão inválida, faça login novamente', 401, 'INVALID_SESSION');
   }
   if (refreshToken && !deviceId) {
     const hashRefreshToken = transformForHash(refreshToken);

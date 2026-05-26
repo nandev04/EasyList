@@ -31,7 +31,7 @@ const resolveSessionToken = async ({
         throw err;
       }
       if (!(err instanceof jwt.TokenExpiredError)) {
-        throw new AppError('Token de acesso inválido', 401);
+        throw new AppError('Token de acesso inválido', 401, 'INVALID_ACCESS_TOKEN');
       }
     }
   }
@@ -41,7 +41,8 @@ const resolveSessionToken = async ({
     if (returnById) return returnById;
   }
 
-  if (!refreshToken) throw new AppError('Token de atualização ausente', 401);
+  if (!refreshToken)
+    throw new AppError('Token de atualização ausente', 401, 'REFRESH_TOKEN_NOT_FOUND');
 
   const resultRenewAccessToken = await renewAccessToken(refreshToken);
   return { ...resultRenewAccessToken };

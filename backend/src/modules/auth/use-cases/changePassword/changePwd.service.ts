@@ -9,9 +9,9 @@ import * as Auth_Service from '../../services/revokeTokens.service.js';
 
 const changePassword = async (userId: string, currentPassword: string, newPassword: string) => {
   const user = await Repository_User.getUser(userId, { ...userAuthSelect });
-  if (!user) throw new AppError('Usuário não encontrado', 404);
+  if (!user) throw new AppError('Sessão inválida', 401, 'INVALID_SESSION');
   const isValid = await compareHashPassword(currentPassword, user.password);
-  if (!isValid) throw new AppError('Credenciais inválidas', 400);
+  if (!isValid) throw new AppError('Senha atual incorreta', 400, 'WRONG_CURRENT_PASSWORD');
 
   const hashNewPassword = await createHashPassword(newPassword);
   await Repository_User.changePassword(user.id, hashNewPassword);
