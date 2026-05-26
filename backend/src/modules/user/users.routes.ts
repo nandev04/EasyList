@@ -40,7 +40,7 @@ userRoutes.post(
 userRoutes.delete('/user', Rate_Limit.deleteUser, requireAuth, Controller.deleteUser);
 
 userRoutes.patch(
-  '/avatar/upload',
+  '/user/avatar',
   authenticate,
   requireAuth,
   (req, res, next) => {
