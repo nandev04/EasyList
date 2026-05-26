@@ -37,7 +37,8 @@ userRoutes.post(
   Controller.verifyOTPAndUpdateEmail
 );
 
-userRoutes.delete('/user', Rate_Limit.deleteUser, requireAuth, Controller.deleteUser);
+// Futura rota de delete user
+// userRoutes.delete('/user', Rate_Limit.deleteUser, requireAuth, Controller.deleteUser);
 
 userRoutes.patch(
   '/avatar/upload',

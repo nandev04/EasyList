@@ -1,6 +1,5 @@
 import { createDevicesType } from './device.type.js';
 import prisma from '../../infra/database/prismaClient.js';
-import { AppError } from '../../shared/utils/error.js';
 
 const createDevice = async ({ deviceUUID, userId, maxDevicePerUser }: createDevicesType) => {
   const allDevices = await prisma.device.findMany({
