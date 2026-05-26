@@ -1,13 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { resendTokenBodyType, verifyAccountQuerySchemaType } from './verifyAcc.schema.js';
 import * as Service_Verify from './verifyAcc.service.js';
+import { successResponse } from '../../../../shared/utils/response/response.js';
 
 const verifyAccount = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { token } = <verifyAccountQuerySchemaType>req.validated!.body;
     await Service_Verify.verifyAccountToken(token);
 
-    return res.status(200).json({ message: 'Usuário verificado com sucesso' });
+    return res.status(200).json(
+      successResponse({
+        message: 'Usuário verificado com sucesso'
+      })
+    );
   } catch (err) {
     next(err);
   }

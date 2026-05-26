@@ -8,6 +8,7 @@ import {
   verifyOTPEmailChangeType
 } from './user.schema.js';
 import cookieUser from '../../shared/constants/cookieUser.js';
+import { successResponse } from '../../shared/utils/response/response.js';
 
 dotenv.config();
 
@@ -19,7 +20,11 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
       ...data.safeUser,
       ...(data.signedUrl && { signedUrlAvatar: data.signedUrl })
     };
-    return res.status(200).json(response);
+    return res.status(200).json(
+      successResponse({
+        data: response
+      })
+    );
   } catch (err) {
     next(err);
   }
@@ -33,9 +38,12 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
     await Service.createUser({ firstname, lastname, username, password, email });
 
-    return res.status(201).json({
-      message: 'Usuário criado com sucesso, verifique sua caixa de entrada para verificar sua conta'
-    });
+    return res.status(201).json(
+      successResponse({
+        message:
+          'Usuário criado com sucesso, verifique sua caixa de entrada para verificar sua conta'
+      })
+    );
   } catch (err) {
     next(err);
   }
@@ -46,13 +54,12 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.userId!;
     const data = <updateUserSchemaBodyType>req.validated!.body;
     const updatedData = await Service.updateUser(userId, data);
-    return res.status(200).json({
-      success: true,
-      message: 'Dados atualizados com sucesso',
-      data: {
-        ...updatedData
-      }
-    });
+    return res.status(200).json(
+      successResponse({
+        message: 'Dados atualizados com sucesso',
+        data: updatedData
+      })
+    );
   } catch (err) {
     next(err);
   }
@@ -63,13 +70,12 @@ const verifyOTPAndUpdateEmail = async (req: Request, res: Response, next: NextFu
     const userId = req.userId!;
     const { code } = <verifyOTPEmailChangeType>req.validated!.body;
     const newEmail = await Service.verifyOTPAndUpdateEmail(userId, code);
-    return res.status(200).json({
-      success: true,
-      message: 'Email atualizado com sucesso',
-      data: {
-        newEmail
-      }
-    });
+    return res.status(200).json(
+      successResponse({
+        message: 'Email atualizado com sucesso',
+        data: newEmail
+      })
+    );
   } catch (err) {
     next(err);
   }
@@ -99,7 +105,7 @@ const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => 
 
     const signedUrl = await Service.uploadAvatar(userId, req.file);
 
-    res.status(200).json({ signedUrl: signedUrl });
+    res.status(200).json(successResponse({ data: signedUrl }));
   } catch (err) {
     next(err);
   }

@@ -1,4 +1,4 @@
-type SuccessResponse<T> = { success: true; data: T };
+type SuccessResponse<T> = { success: true; data?: T; message?: string };
 type ErrorResponse<TDetails> = {
   success: false;
   error: {
@@ -9,8 +9,15 @@ type ErrorResponse<TDetails> = {
   };
 };
 
-export const successResponse = <T>(data: T): SuccessResponse<T> => ({
+export const successResponse = <T>({
+  message,
+  data
+}: {
+  message?: string;
+  data?: T;
+}): SuccessResponse<T> => ({
   success: true,
+  message,
   data
 });
 
