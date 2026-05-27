@@ -20,6 +20,7 @@
   font-weight: 800;
   font-size: clamp(1.5rem, 2vw, 2rem);
   margin-bottom: 8px;
+  overflow-wrap: break-word;
 }
 
 .task_description {

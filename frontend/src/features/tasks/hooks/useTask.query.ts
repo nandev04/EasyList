@@ -18,7 +18,8 @@ const useGetTasks = (user: boolean, params: GetTaskQueryParams) =>
       getTasks({ ...params, cursor: pageParam || undefined }),
     enabled: !!user,
     initialPageParam: null,
-    getNextPageParam: (lastPage) => lastPage.pagination.nextCursor ?? undefined,
+    getNextPageParam: (lastPage) =>
+      lastPage.data.pagination.nextCursor ?? undefined,
   });
 
 const useCreateTaskMutation = () => {

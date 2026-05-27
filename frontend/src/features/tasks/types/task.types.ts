@@ -1,3 +1,4 @@
+import type { ApiResponse } from "../../../shared/types/apiResponse.dto";
 import type {
   createTaskSchemaType,
   editTaskSchemaType,
@@ -14,20 +15,22 @@ type OptionsStatusTask = {
   value: keyof typeof StatusTask;
 };
 
-type GetTaskResponse = {
-  data: {
-    id: number;
-    title: string;
-    description: string | undefined;
-    status: StatusTask;
-    createdAt: Date;
-    updatedAt: Date;
-  }[];
+type Task = {
+  id: number;
+  title: string;
+  description: string | undefined;
+  status: StatusTask;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type GetTaskResponse = ApiResponse<{
+  tasks: Task[];
   pagination: {
     nextCursor: null;
     hasNextPage: number | null;
   };
-};
+}>;
 
 type CreateTaskPayload = createTaskSchemaType;
 

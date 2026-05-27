@@ -15,7 +15,9 @@ export async function getTasks(
       .filter(([, v]) => v !== undefined)
       .map(([k, v]) => [k, String(v)]),
   );
-  const response = await privateApi.get(`/v1/tasks?${urlSearchParams}`);
+  const response = await privateApi.get<GetTaskResponse>(
+    `/v1/tasks?${urlSearchParams}`,
+  );
   return response.data;
 }
 
@@ -32,7 +34,6 @@ export async function editTask({
   data: EditTaskPayload;
 }) {
   const response = await privateApi.patch(`/v1/tasks/${taskId}`, data);
-  console.log(response.data);
   return response;
 }
 

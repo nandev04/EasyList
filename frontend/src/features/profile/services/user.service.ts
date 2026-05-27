@@ -1,13 +1,11 @@
 import { otpSchemaType } from "../../../shared/schema/otpCode.schema";
 import { privateApi } from "../../../shared/services/axiosApi";
+import { ApiResponse } from "../../../shared/types/apiResponse.dto";
 import { UserDTO } from "../../../shared/types/user.dto";
 
-export async function getUser() {
-  const user = await privateApi.get<UserDTO>("/v1/user");
-  return {
-    ...user.data,
-    firstName: user.data.username.split(" ")[0],
-  };
+export async function getUser(): Promise<UserDTO> {
+  const response = await privateApi.get<ApiResponse<UserDTO>>("/v1/user");
+  return response.data.data;
 }
 
 type UpdateUserBodyType = {
