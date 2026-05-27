@@ -1,3 +1,4 @@
+import { ApiResponse } from "../../../shared/types/apiResponse.dto.ts";
 import { UserDTO } from "../../../shared/types/user.dto.ts";
 import { loginSchemaType } from "../login/schema/login.schema.ts";
 import { privateApi, publicApi } from "../../../shared/services/axiosApi.ts";
@@ -18,7 +19,7 @@ export async function createUser(formData: registerSchemaType) {
 }
 
 export async function loginUser(body: loginSchemaType) {
-  await publicApi.post<UserDTO>(`${BASE_ENDPOINT}/login`, body);
+  await publicApi.post<ApiResponse<UserDTO>>(`${BASE_ENDPOINT}/login`, body);
 }
 
 export async function logoutUser() {

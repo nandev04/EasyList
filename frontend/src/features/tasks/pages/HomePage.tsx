@@ -23,8 +23,8 @@ const Home = () => {
     hasNextPage,
   });
 
-  const tasks = useMemo(
-    () => data?.pages.flatMap((pages) => pages.data) ?? [],
+  const dataMemo = useMemo(
+    () => data?.pages.flatMap((pages) => pages.data.tasks) ?? [],
     [data],
   );
 
@@ -39,8 +39,8 @@ const Home = () => {
 
   const filters = Object.values(StatusTask);
 
-  const hasNoTasksAtAll = !filterStatus && tasks.length === 0;
-  const hasNoTasksForFilter = !!filterStatus && tasks.length === 0;
+  const hasNoTasksAtAll = !filterStatus && dataMemo.length === 0;
+  const hasNoTasksForFilter = !!filterStatus && dataMemo.length === 0;
 
   return (
     <>
@@ -102,7 +102,7 @@ const Home = () => {
             )}
             <div className={styles.section_container}>
               {!isLoading &&
-                tasks.map((task) => (
+                dataMemo.map((task) => (
                   <TaskCard
                     key={task.id}
                     taskId={task.id}

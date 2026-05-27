@@ -2,7 +2,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -53,8 +52,6 @@ model Device {
 
   refreshToken RefreshToken[]
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([createdAt])
 }
 
 model Task {
@@ -82,7 +79,8 @@ model RefreshToken {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   device    Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 
-  @@index([expiresAt])
+  @@index([userId])
+  @@index([deviceId])
 }
 
 model PasswordResetOTP {
@@ -94,7 +92,7 @@ model PasswordResetOTP {
   used      Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId, used, expiresAt, id])
+  @@index([userId, tokenHash])
 }
 
 model PasswordResetToken {
@@ -118,5 +116,5 @@ model UpdateEmailOTP {
   used      Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId, tokenHash, expiresAt, used])
+  @@index([userId, tokenHash])
 }
