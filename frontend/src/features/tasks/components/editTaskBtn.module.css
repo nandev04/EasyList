@@ -45,8 +45,7 @@
 .label {
   font-family: var(--primary-font);
   font-size: 0.875rem;
-  font-weight: 800;
-  color: var(--dark-grey);
+  font-weight: 400;
 }
 
 .overlay {
@@ -214,4 +213,11 @@
 .label {
   cursor: pointer;
   user-select: none;
+}
+
+@media (max-width: 650px) {
+  .group {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

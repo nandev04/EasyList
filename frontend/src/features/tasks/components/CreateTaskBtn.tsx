@@ -36,7 +36,6 @@ const CreateTaskBtn = () => {
   ];
 
   async function onSubmit(data: createTaskSchemaType): Promise<void> {
-    console.log(data);
     mutate(data, {
       onSuccess: () => {
         setIsOpen(false);
