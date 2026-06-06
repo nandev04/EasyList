@@ -32,10 +32,10 @@ const envSchema = z.object({
   AWS_ACCESS_KEY_ID: z.string().min(1),
   AWS_SECRET_ACCESS_KEY: z.string().min(1),
   AWS_S3_REGION: z.string().min(1),
-  AWS_SES_REGION: z.string().min(1),
   AWS_S3_BUCKET: z.string().min(1),
   AWS_S3_BUCKET_URL: z.url(),
-  AWS_SES_EMAIL_FROM: z.email(),
+  RESEND_API_KEY: z.string().min(1),
+  SEND_EMAIL_FROM: z.email(),
 
   MAX_DEVICES_PER_USER: z.coerce.number().default(5)
 });

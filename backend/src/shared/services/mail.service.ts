@@ -2,8 +2,8 @@ import nodemailer, { Transporter } from 'nodemailer';
 import emailMask from '../utils/emailMask.js';
 import { renderTemplate } from '../../emails/template.service.js';
 import { getTransporter } from '../../infra/email/transporter.js';
-import { sendEmailSES } from '../utils/aws/awsUtils.js';
 import { env } from '../../config/env.js';
+import { sendEmail } from '../utils/Resend/resendUtils.js';
 
 const accountVerification = async (to: string, token: string) => {
   try {
@@ -21,10 +21,10 @@ const accountVerification = async (to: string, token: string) => {
 
       console.log('Mensagem enviada: %s', info.messageId);
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-      // return;
+      return;
     }
 
-    await sendEmailSES('renanlvsdv@gmail.com', 'Verificação de conta - EasyList', html);
+    await sendEmail(to, 'Confirme seu email - EasyList', html);
   } catch (err) {
     console.error(err);
   }
@@ -43,13 +43,12 @@ const otpForgotPassword = async (to: string, code: string) => {
         html: html
       });
 
-      if (env.NODE_ENV === 'development') {
-        console.log('Mensagem enviada: %s', info.messageId);
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-      }
+      console.log('Mensagem enviada: %s', info.messageId);
+      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
       return;
     }
-    await sendEmailSES('renanlvsdv@gmail.com', 'ForgotPassword - EasyList', html);
+    await sendEmail(to, 'Redefinição de senha - EasyList', html);
   } catch (err) {
     console.error(err);
   }
@@ -75,7 +74,7 @@ const otpChangeEmail = async (to: string, code: string) => {
       return;
     }
 
-    await sendEmailSES('renanlvsdv@gmail.com', 'Change email OTP Confirmation - EasyList', html);
+    await sendEmail(to, 'Confirmação de alteração de email - EasyList', html);
   } catch (err) {
     console.error(err);
   }
@@ -105,7 +104,7 @@ const emailChangeNotification = async (oldEmail: string, newEmail: string, chang
       return;
     }
 
-    await sendEmailSES('renanlvsdv@gmail.com', 'Change email notice - EasyList', html);
+    await sendEmail(oldEmail, 'Seu email foi alterado - EasyList', html);
   } catch (err) {
     console.error(err);
   }
