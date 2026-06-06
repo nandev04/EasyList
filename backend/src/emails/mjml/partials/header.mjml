@@ -16,7 +16,7 @@
     "
   >
     <img
-      src="https://easylist-avatars.s3.us-east-1.amazonaws.com/email-templates/logo.png"
+      src="https://easylist-bucket.s3.us-east-1.amazonaws.com/email-templates/logo.png"
       width="44"
       height="44"
       style="vertical-align: middle"

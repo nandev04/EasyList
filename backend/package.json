@@ -22,7 +22,6 @@
   "description": "",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.962.0",
-    "@aws-sdk/client-ses": "^3.1041.0",
     "@aws-sdk/s3-request-presigner": "^3.962.0",
     "@prisma/client": "^6",
     "api-task": "link:",
@@ -38,6 +37,7 @@
     "nodemailer": "^7.0.12",
     "nodemailer-sendgrid": "^1.0.3",
     "redis": "^5.10.0",
+    "resend": "^6.12.4",
     "sharp": "^0.34.5",
     "uuid": "^13.0.0",
     "uuidv7": "^1.2.1",

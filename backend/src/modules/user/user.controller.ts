@@ -57,7 +57,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).json(
       successResponse({
         message: 'Dados atualizados com sucesso',
-        data: updatedData
+        data: updatedData ?? null
       })
     );
   } catch (err) {
