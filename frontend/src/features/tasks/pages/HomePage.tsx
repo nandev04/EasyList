@@ -11,6 +11,7 @@ import { useUserStore } from "../../../shared/store/useUserStore";
 import { useGetTasks } from "../hooks/useTask.query";
 import LoadingInfiniteScroll from "../../../shared/components/ui/LoadingInfiniteScroll";
 import useObserverInfiniteScroll from "../../../shared/hooks/useObserverInfiniteScroll";
+import Footer from "../../../shared/components/ui/Footer/Footer";
 
 const Home = () => {
   const user = useUserStore((s) => s.user);
@@ -118,6 +119,7 @@ const Home = () => {
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 };
