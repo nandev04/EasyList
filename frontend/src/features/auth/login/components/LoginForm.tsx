@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import styles from "./loginform.module.css";
+import styles from "./loginForm.module.css";
 import { loginSchema, loginSchemaType } from "../schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "../../services/auth.service";
