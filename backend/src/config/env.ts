@@ -10,6 +10,7 @@ const envSchema = z.object({
   FRONTEND_URL: z.url(),
 
   DATABASE_URL: z.url(),
+  DIRECT_URL: z.url(),
 
   REDIS_URL: z.url(),
   REDIS_PORT: z.coerce.number().optional(),
