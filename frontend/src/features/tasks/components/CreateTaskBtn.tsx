@@ -1,6 +1,6 @@
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { useState } from "react";
-import styles from "./CreateTaskBtn.module.css";
+import styles from "./createTaskBtn.module.css";
 import { RiAddFill } from "react-icons/ri";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
