@@ -13,7 +13,7 @@ export default function App() {
         toastOptions={{ duration: 5000, className: "global-toast" }}
       />
       <MainRoutes />
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </>
   );
 }

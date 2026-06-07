@@ -3,6 +3,7 @@ import ProfileOverview from "../components/ProfileOverview";
 import { IoArrowBackOutline } from "react-icons/io5";
 import styles from "./profilePage.module.css";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../../shared/components/ui/Footer/Footer";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const Profile = () => {
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 };
