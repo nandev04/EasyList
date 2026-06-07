@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "./DeleteTaskBtn.module.css";
+import styles from "./deleteTaskBtn.module.css";
 import { BiSolidTrash } from "react-icons/bi";
 import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
 import useDelayLoading from "../../../shared/hooks/useDelayLoading";
