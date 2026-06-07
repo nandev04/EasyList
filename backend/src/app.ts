@@ -11,6 +11,7 @@ import resetPasswordCodeCleanup from './cron/passwordCode.cleanup.js';
 import oldDevicesCleanup from './cron/oldDevices.cleanup.js';
 import revokedDevicesCleanup from './cron/revokedDevices.cleanup.js';
 import updateEmailCodeCleanup from './cron/updateEmailCode.cleanup.js';
+import healthRoutes from './shared/health/health.route.js';
 
 const app = express();
 
@@ -33,6 +34,7 @@ updateEmailCodeCleanup();
 
 app.use(express.json());
 app.use(cookieParser(env.COOKIE_SECRET));
+app.use('/v1', healthRoutes);
 app.use('/v1/auth', authRoutes);
 app.use('/v1', userRoutes);
 app.use('/v1', taskRoutes);
