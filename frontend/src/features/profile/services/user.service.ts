@@ -29,7 +29,7 @@ export async function updateUser(data: UpdateUserBodyType) {
 }
 
 export async function updateAvatar(formData: FormData) {
-  const response = await privateApi.patch("/v1/avatar/upload", formData);
+  const response = await privateApi.patch("/v1/user/avatar", formData);
   return response;
 }
 
