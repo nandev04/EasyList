@@ -44,7 +44,7 @@
         </mj-text>
 
         <mj-button
-          href="{{verificationLink}}"
+          href="{{ verificationLink }}"
           background-color="#9684ed"
           color="#ffffff"
           font-size="15px"

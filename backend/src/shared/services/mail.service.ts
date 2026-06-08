@@ -82,10 +82,10 @@ const otpChangeEmail = async (to: string, code: string) => {
 
 const emailChangeNotification = async (oldEmail: string, newEmail: string, changeDate: string) => {
   try {
-    const newEmailMasked = emailMask(newEmail);
+    const maskedNewEmail = emailMask(newEmail);
     const html = await renderTemplate('emailChangeNotification', {
       oldEmail,
-      newEmail: newEmailMasked,
+      maskedNewEmail,
       changeDate
     });
 

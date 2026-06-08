@@ -12,7 +12,7 @@ export type EmailTemplates = {
 
   emailChangeNotification: {
     oldEmail: string;
-    newEmail: string;
+    maskedNewEmail: string;
     changeDate: string;
   };
 
