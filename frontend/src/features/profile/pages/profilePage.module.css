@@ -15,9 +15,15 @@
   height: auto;
 }
 
-.main {
+.page_wrapper {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
   margin: 0 20px;
+  margin-bottom: 80px;
   padding-left: 3vw;
 }
 
