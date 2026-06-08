@@ -6,17 +6,8 @@ import { changePasswordSchemaType } from "../../profile/schema/changePassword.sc
 import { newPasswordForgotSchemaType } from "../forgot-password/schema/newPassword.schema.ts";
 import { emailValidateSchemaType } from "../../../shared/schema/email.schema.ts";
 import { otpSchemaType } from "../../../shared/schema/otpCode.schema.ts";
-import { registerSchemaType } from "../register/schema/register.schema.ts";
 
 const BASE_ENDPOINT = "/v1/auth";
-
-export async function createUser(formData: registerSchemaType) {
-  const createUser = await privateApi.post<registerSchemaType>(
-    "/user",
-    formData,
-  );
-  return createUser;
-}
 
 export async function loginUser(body: loginSchemaType) {
   await publicApi.post<ApiResponse<UserDTO>>(`${BASE_ENDPOINT}/login`, body);

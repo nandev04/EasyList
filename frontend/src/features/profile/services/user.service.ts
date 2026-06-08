@@ -2,10 +2,19 @@ import { otpSchemaType } from "../../../shared/schema/otpCode.schema";
 import { privateApi } from "../../../shared/services/axiosApi";
 import { ApiResponse } from "../../../shared/types/apiResponse.dto";
 import { UserDTO } from "../../../shared/types/user.dto";
+import { registerSchemaType } from "../../auth/register/schema/register.schema";
 
 export async function getUser(): Promise<UserDTO> {
   const response = await privateApi.get<ApiResponse<UserDTO>>("/v1/user");
   return response.data.data;
+}
+
+export async function createUser(formData: registerSchemaType) {
+  const createUser = await privateApi.post<registerSchemaType>(
+    "/v1/user",
+    formData,
+  );
+  return createUser;
 }
 
 type UpdateUserBodyType = {
