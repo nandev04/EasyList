@@ -21,7 +21,7 @@ const RegisterForm = () => {
   async function registerSubmit(data: registerSchemaType) {
     mutate(data, {
       onSuccess: () => {
-        navigate("/verify-email", { state: { email: "teste" } });
+        navigate("/verify-email", { state: { email: data.email } });
         registerForm.reset();
       },
       onError: (err) => {
