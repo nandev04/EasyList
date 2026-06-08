@@ -48,78 +48,80 @@ const Home = () => {
       <header className={styles.header}>
         <DropdownHeader />
       </header>
-      <main className={styles.main}>
-        <h1 className={styles.welcome_title}>
-          <span>Olá</span>, {user?.username}!
-        </h1>
-        <section className={styles.tasks_section}>
-          <div className={styles.general_container}>
-            <div className={styles.actions_container}>
-              <CreateTaskBtn />
-              <div className={styles.filter_container}>
-                <div className={styles.filter_buttons_container}>
-                  {(filterStatus ? [filterStatus] : filters).map((status) => (
-                    <button
-                      key={status}
-                      className={`${styles.filter_button} ${filterStatus === status ? styles.active : ""}`}
-                      onClick={() => {
-                        setfilterStatus((prev) =>
-                          prev === status ? null : status,
-                        );
-                      }}
-                    >
-                      {statusLabel[status]}
-                    </button>
-                  ))}
-                </div>
-                <div className={styles.dropdown_filter_container}>
-                  <DropdownFilter
-                    filterStatus={filterStatus}
-                    setfilterStatus={setfilterStatus}
-                    statusLabel={statusLabel}
-                    filter={filters}
-                  />
+      <div className={styles.page_wrapper}>
+        <main className={styles.main}>
+          <h1 className={styles.welcome_title}>
+            <span>Olá</span>, {user?.username}!
+          </h1>
+          <section className={styles.tasks_section}>
+            <div className={styles.general_container}>
+              <div className={styles.actions_container}>
+                <CreateTaskBtn />
+                <div className={styles.filter_container}>
+                  <div className={styles.filter_buttons_container}>
+                    {(filterStatus ? [filterStatus] : filters).map((status) => (
+                      <button
+                        key={status}
+                        className={`${styles.filter_button} ${filterStatus === status ? styles.active : ""}`}
+                        onClick={() => {
+                          setfilterStatus((prev) =>
+                            prev === status ? null : status,
+                          );
+                        }}
+                      >
+                        {statusLabel[status]}
+                      </button>
+                    ))}
+                  </div>
+                  <div className={styles.dropdown_filter_container}>
+                    <DropdownFilter
+                      filterStatus={filterStatus}
+                      setfilterStatus={setfilterStatus}
+                      statusLabel={statusLabel}
+                      filter={filters}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            {isLoading && showLoadingTask && <LoadingTask />}
-            {!isLoading && hasNoTasksAtAll && (
-              <div className={styles.container_guidance}>
-                <p className={styles.newTask_guidance}>
-                  Clique no <span className={styles.more_guidance}>+</span> e
-                  crie sua próxima tarefa!
-                </p>
-              </div>
-            )}
+              {isLoading && showLoadingTask && <LoadingTask />}
+              {!isLoading && hasNoTasksAtAll && (
+                <div className={styles.container_guidance}>
+                  <p className={styles.newTask_guidance}>
+                    Clique no <span className={styles.more_guidance}>+</span> e
+                    crie sua próxima tarefa!
+                  </p>
+                </div>
+              )}
 
-            {!isLoading && hasNoTasksForFilter && (
-              <div className={styles.container_guidance}>
-                <p className={styles.newTask_guidance}>
-                  Sem tarefas, clique no{" "}
-                  <span className={styles.more_guidance}>+</span> e crie sua
-                  próxima tarefa!
-                </p>
+              {!isLoading && hasNoTasksForFilter && (
+                <div className={styles.container_guidance}>
+                  <p className={styles.newTask_guidance}>
+                    Sem tarefas, clique no{" "}
+                    <span className={styles.more_guidance}>+</span> e crie sua
+                    próxima tarefa!
+                  </p>
+                </div>
+              )}
+              <div className={styles.section_container}>
+                {!isLoading &&
+                  dataMemo.map((task) => (
+                    <TaskCard
+                      key={task.id}
+                      taskId={task.id}
+                      title={task.title}
+                      status={task.status}
+                      description={task.description}
+                    />
+                  ))}
+                <span ref={sentinelRef}>
+                  {showLoadingFetching && <LoadingInfiniteScroll />}
+                </span>
               </div>
-            )}
-            <div className={styles.section_container}>
-              {!isLoading &&
-                dataMemo.map((task) => (
-                  <TaskCard
-                    key={task.id}
-                    taskId={task.id}
-                    title={task.title}
-                    status={task.status}
-                    description={task.description}
-                  />
-                ))}
-              <span ref={sentinelRef}>
-                {showLoadingFetching && <LoadingInfiniteScroll />}
-              </span>
             </div>
-          </div>
-        </section>
-      </main>
-      <Footer />
+          </section>
+        </main>
+        <Footer />
+      </div>
     </>
   );
 };

@@ -5,7 +5,9 @@
   background-color: var(--dark-grey);
   background-image: url("./shape.svg");
   align-items: center;
-  margin: 70px 20px 20px 20px;
+  margin: auto 60px 20px 60px;
+  margin-top: auto;
+
   border-radius: 16px;
   padding: 20px;
   justify-content: center;
