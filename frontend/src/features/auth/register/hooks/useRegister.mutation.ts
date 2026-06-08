@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 import { registerSchemaType } from "../schema/register.schema";
-import { createUser } from "../../services/auth.service";
+import { createUser } from "../../../profile/services/user.service";
 
 const useCreateUserMutation = () =>
   useMutation({
