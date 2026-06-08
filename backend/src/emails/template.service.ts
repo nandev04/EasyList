@@ -5,7 +5,7 @@ const templates: Partial<Record<namesTemplates, Promise<string>>> = {};
 
 function loadTemplate(name: namesTemplates): Promise<string> {
   if (!templates[name]) {
-    templates[name] = fs.promises.readFile(`dist/emails/${name}.html`, 'utf-8');
+    templates[name] = fs.promises.readFile(`dist/emails/html/${name}.html`, 'utf-8');
   }
 
   return templates[name];
