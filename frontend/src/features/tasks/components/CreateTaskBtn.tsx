@@ -1,5 +1,5 @@
 import { Dialog, DialogPanel } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./createTaskBtn.module.css";
 import { RiAddFill } from "react-icons/ri";
 import { Controller, useForm } from "react-hook-form";
@@ -33,12 +33,13 @@ const CreateTaskBtn = () => {
     { name: "Concluído", value: "COMPLETED" },
   ];
 
+  useEffect(() => {
+    if (isOpen) reset();
+  }, [isOpen, reset]);
+
   async function onSubmit(data: createTaskSchemaType): Promise<void> {
     mutate(data, {
-      onSuccess: () => {
-        setIsOpen(false);
-        reset();
-      },
+      onSuccess: () => setIsOpen(false),
     });
   }
 
@@ -54,10 +55,7 @@ const CreateTaskBtn = () => {
       </div>
       <Dialog
         open={isOpen}
-        onClose={() => {
-          reset();
-          setIsOpen(false);
-        }}
+        onClose={() => setIsOpen(false)}
         className={styles.root}
       >
         <div className="overlay">
@@ -130,7 +128,7 @@ const CreateTaskBtn = () => {
                     </button>
                   </div>
                 </form>
-                <CloseDialogBtn resetForm={reset} setIsOpenDialog={setIsOpen} />
+                <CloseDialogBtn setIsOpenDialog={setIsOpen} />
               </div>
             </DialogPanel>
           </div>

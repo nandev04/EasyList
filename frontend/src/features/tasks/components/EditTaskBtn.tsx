@@ -61,10 +61,7 @@ const EditTaskBtn = ({
     mutate(
       { taskId, data },
       {
-        onSuccess: () => {
-          setIsOpen(false);
-          reset();
-        },
+        onSuccess: () => setIsOpen(false),
         onError: (err) => console.log(err),
       },
     );
@@ -79,10 +76,7 @@ const EditTaskBtn = ({
       </div>
       <Dialog
         open={isOpen}
-        onClose={() => {
-          reset();
-          setIsOpen(false);
-        }}
+        onClose={() => setIsOpen(false)}
         className={styles.root}
       >
         <div className="overlay">
@@ -155,7 +149,7 @@ const EditTaskBtn = ({
                     </button>
                   </div>
                 </form>
-                <CloseDialogBtn resetForm={reset} setIsOpenDialog={setIsOpen} />
+                <CloseDialogBtn setIsOpenDialog={setIsOpen} />
               </div>
             </DialogPanel>
           </div>
