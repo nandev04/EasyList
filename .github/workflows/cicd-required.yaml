@@ -180,7 +180,7 @@ jobs:
     steps:
       - name: Verificar resultado
         run: |
-          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+          if [[ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
             exit 1
           fi
           echo "CI passed"
@@ -189,7 +189,11 @@ jobs:
   deploy-backend:
     needs: [changes, ci-required]
     runs-on: ubuntu-latest
-    if: success() && github.event_name == 'push' && needs.changes.outputs.backend == 'true'
+    if: >
+      !failure() && !cancelled() &&
+      github.event_name == 'push' &&
+      needs.ci-required.result == 'success' &&
+      needs.changes.outputs.backend == 'true'
     steps:
       - name: Disparar deploy no Render
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+        run: curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
