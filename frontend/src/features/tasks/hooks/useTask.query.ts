@@ -1,8 +1,4 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import {
   createTask,
   deleteTask,
@@ -22,29 +18,20 @@ const useGetTasks = (user: boolean, params: GetTaskQueryParams) =>
       lastPage.data.pagination.nextCursor ?? undefined,
   });
 
-const useCreateTaskMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
+const useCreateTaskMutation = () =>
+  useMutation({
     mutationFn: createTask,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
-};
 
-const useEditTaskMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
+const useEditTaskMutation = () =>
+  useMutation({
     mutationFn: editTask,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
-};
 
-const useDeleteTaskMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
+const useDeleteTaskMutation = () =>
+  useMutation({
     mutationFn: deleteTask,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
-};
 
 export {
   useGetTasks,

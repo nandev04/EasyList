@@ -10,8 +10,10 @@ import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 import { OptionsStatusTask } from "../types/task.types";
 import { useCreateTaskMutation } from "../hooks/useTask.query";
 import CloseDialogBtn from "../../../shared/components/CloseDialogBtn";
+import { useQueryClient } from "@tanstack/react-query";
 const CreateTaskBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -39,7 +41,10 @@ const CreateTaskBtn = () => {
 
   async function onSubmit(data: createTaskSchemaType): Promise<void> {
     mutate(data, {
-      onSuccess: () => setIsOpen(false),
+      onSuccess: () => {
+        setIsOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      },
     });
   }
 
