@@ -3,7 +3,6 @@ import styles from "./registerForm.module.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, registerSchemaType } from "../schema/register.schema";
 import { AxiosError } from "axios";
-import useDelayLoading from "../../../../shared/hooks/useDelayLoading";
 import LoadingCircleSpinner from "../../../../shared/components/ui/LoadingCircleSpinner";
 import { useNavigate } from "react-router-dom";
 import { useCreateUserMutation } from "../hooks/useRegister.mutation";
@@ -15,7 +14,6 @@ const RegisterForm = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const { showLoading } = useDelayLoading(isPending, 0);
   const navigate = useNavigate();
 
   async function registerSubmit(data: registerSchemaType) {
@@ -147,7 +145,7 @@ const RegisterForm = () => {
           className={styles.submit_btn}
           type="submit"
         >
-          {showLoading ? <LoadingCircleSpinner /> : "Registre-se"}
+          {isPending ? <LoadingCircleSpinner /> : "Registre-se"}
         </button>
       </div>
     </form>

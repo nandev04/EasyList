@@ -6,7 +6,6 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createTaskSchema, createTaskSchemaType } from "../schema/task.schema";
 import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
-import useDelayLoading from "../../../shared/hooks/useDelayLoading";
 import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 import { OptionsStatusTask } from "../types/task.types";
 import { useCreateTaskMutation } from "../hooks/useTask.query";
@@ -27,7 +26,6 @@ const CreateTaskBtn = () => {
     mode: "onSubmit",
   });
   const { mutate, isPending, isError, error } = useCreateTaskMutation();
-  const { showLoading } = useDelayLoading(isPending, 150);
 
   const options: OptionsStatusTask[] = [
     { name: "Pendente", value: "PENDING" },
@@ -128,7 +126,7 @@ const CreateTaskBtn = () => {
                       type="submit"
                       className={styles.createTask}
                     >
-                      {showLoading ? <LoadingCircleSpinner /> : "Criar tarefa"}
+                      {isPending ? <LoadingCircleSpinner /> : "Criar tarefa"}
                     </button>
                   </div>
                 </form>

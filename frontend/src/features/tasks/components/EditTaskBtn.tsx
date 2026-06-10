@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./editTaskBtn.module.css";
 import { MdEdit } from "react-icons/md";
-import useDelayLoading from "../../../shared/hooks/useDelayLoading";
 import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
 import {
   Dialog,
@@ -45,7 +44,6 @@ const EditTaskBtn = ({
     resolver: zodResolver(editTaskSchema),
     mode: "onSubmit",
   });
-  const { showLoading } = useDelayLoading(isPending, 150);
 
   const options: OptionsStatusTask[] = [
     { name: "Pendente", value: "PENDING" },
@@ -153,7 +151,7 @@ const EditTaskBtn = ({
                       type="submit"
                       className={styles.editTask}
                     >
-                      {showLoading ? <LoadingCircleSpinner /> : "Editar tarefa"}
+                      {isPending ? <LoadingCircleSpinner /> : "Editar tarefa"}
                     </button>
                   </div>
                 </form>

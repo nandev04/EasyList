@@ -110,6 +110,11 @@
   background-color: var(--primary-color-hover);
 }
 
+.createTask:disabled {
+  background-color: var(--cancel-color);
+  cursor: unset;
+}
+
 .error_message {
   font-family: var(--primary-font);
   font-style: italic;

@@ -10,7 +10,6 @@ import {
 } from "../schema/changePassword.schema";
 import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
 import * as Service from "../../auth/services/auth.service";
-import useDelayLoading from "../../../shared/hooks/useDelayLoading";
 import { GoAlert } from "react-icons/go";
 import { useLogoutMutation } from "../../auth/hooks/useLogout.query";
 
@@ -33,8 +32,6 @@ const DialogChangePassword = ({
   });
 
   const { mutateAsync: logoutMutationAsync } = useLogoutMutation();
-
-  const { showLoading } = useDelayLoading(isSubmitting, 150);
 
   async function sendRequest(data: changePasswordSchemaType) {
     try {
@@ -121,7 +118,7 @@ const DialogChangePassword = ({
                   Cancelar alteração
                 </button>
                 <button type="submit" className={styles.change_btn}>
-                  {showLoading ? <LoadingCircleSpinner /> : "Alterar senha"}
+                  {isSubmitting ? <LoadingCircleSpinner /> : "Alterar senha"}
                 </button>
               </div>
             </form>
