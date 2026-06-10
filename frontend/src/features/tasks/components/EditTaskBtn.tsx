@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { editTaskSchema } from "../schema/task.schema";
 import { useEditTaskMutation } from "../hooks/useTask.query";
 import CloseDialogBtn from "../../../shared/components/CloseDialogBtn";
+import { useQueryClient } from "@tanstack/react-query";
 
 const EditTaskBtn = ({
   data,
@@ -28,6 +29,7 @@ const EditTaskBtn = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate, isPending, isError } = useEditTaskMutation();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -61,7 +63,10 @@ const EditTaskBtn = ({
     mutate(
       { taskId, data },
       {
-        onSuccess: () => setIsOpen(false),
+        onSuccess: () => {
+          setIsOpen(false);
+          queryClient.invalidateQueries({ queryKey: ["tasks"] });
+        },
         onError: (err) => console.log(err),
       },
     );

@@ -4,6 +4,7 @@ import { BiSolidTrash } from "react-icons/bi";
 import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { useDeleteTaskMutation } from "../hooks/useTask.query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const DeleteTaskBtn = ({
   taskId,
@@ -14,10 +15,14 @@ const DeleteTaskBtn = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate, isPending, isError } = useDeleteTaskMutation();
+  const queryClient = useQueryClient();
 
   async function onDeleteTask() {
     mutate(taskId, {
-      onSuccess: () => setIsOpen(false),
+      onSuccess: () => {
+        setIsOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      },
     });
   }
 
