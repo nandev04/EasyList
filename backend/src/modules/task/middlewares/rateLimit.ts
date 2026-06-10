@@ -12,10 +12,10 @@ const getTasks = async (req: Request, res: Response, next: NextFunction) => {
     const value = await redis.incr(key);
 
     if (value === 1) {
-      await redis.expire(key, 180);
+      await redis.expire(key, 60);
     }
 
-    if (value > 30) {
+    if (value > 300) {
       return res.status(429).json({ message: default_message });
     }
 
@@ -33,10 +33,10 @@ const createtask = async (req: Request, res: Response, next: NextFunction) => {
     const value = await redis.incr(key);
 
     if (value === 1) {
-      await redis.expire(key, 300);
+      await redis.expire(key, 60);
     }
 
-    if (value > 35) {
+    if (value > 15) {
       return res.status(429).json({ message: default_message });
     }
 
@@ -54,10 +54,10 @@ const editTask = async (req: Request, res: Response, next: NextFunction) => {
     const value = await redis.incr(key);
 
     if (value === 1) {
-      await redis.expire(key, 300);
+      await redis.expire(key, 60);
     }
 
-    if (value > 75) {
+    if (value > 15) {
       return res.status(429).json({ message: default_message });
     }
 
@@ -75,10 +75,10 @@ const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
     const value = await redis.incr(key);
 
     if (value === 1) {
-      await redis.expire(key, 300);
+      await redis.expire(key, 60);
     }
 
-    if (value > 30) {
+    if (value > 15) {
       return res.status(429).json({ message: default_message });
     }
 
