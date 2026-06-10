@@ -32,7 +32,7 @@
 .panel {
   position: absolute;
   margin-top: 8px;
-  width: 150px;
+  min-width: 150px;
   background-color: #ffffff;
   border: 1px solid #e5e5e5;
   border-radius: 8px;
@@ -73,14 +73,31 @@
   border: none;
   align-items: center;
   padding: 2px;
-}
-
-.container_items > button {
   font-size: 14px;
   cursor: pointer;
   font-family: var(--primary-font);
+  margin-left: 48px;
 }
 
 .container_items > button:hover {
   background-color: #f2f2f2;
+}
+
+@media (max-width: 780px) {
+  .panel {
+    padding: 14px 20px;
+  }
+
+  .username {
+    font-size: 1.175rem;
+  }
+
+  .container_items {
+    gap: 8px;
+  }
+
+  .container_items > button {
+    font-size: 1.1rem;
+    gap: 10px;
+  }
 }
