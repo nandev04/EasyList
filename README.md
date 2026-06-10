@@ -3,8 +3,6 @@
 Um projeto completo de **to-do-list**, desenvolvido com **React + TypeScript** no front-end e **Node.js + Express** no back-end.  
 A aplicação conta com autenticação, gerenciamento de tarefas e integração com email para confirmação de login.
 
-⚠️ **Status do projeto:** Este projeto ainda está em **desenvolvimento ativo**. Algumas funcionalidades podem estar incompletas e novas tecnologias ainda serão implementadas.
-
 ---
 
 ## 🚀 Tecnologias Utilizadas
