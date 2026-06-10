@@ -78,6 +78,10 @@ button {
   box-sizing: border-box;
 }
 
+html {
+  touch-action: manipulation;
+}
+
 #root {
   margin: 0 auto;
   min-height: 100vh;
