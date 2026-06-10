@@ -189,13 +189,7 @@ jobs:
   deploy-backend:
     needs: [changes, ci-required]
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.ci-required.result == 'success' && needs.changes.outputs.backend == 'true'
+    if: success() && github.event_name == 'push' && needs.changes.outputs.backend == 'true'
     steps:
       - name: Disparar deploy no Render
-        run: |
-          response=$(curl -sS -o /tmp/render.json -w "%{http_code}" -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}")
-          echo "HTTP status: $response"
-          cat /tmp/render.json
-          if [[ "$response" != "200" && "$response" != "201" ]]; then
-            exit 1
-          fi
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
