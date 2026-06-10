@@ -12,10 +12,10 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
     const value = await redis.incr(key);
 
     if (value === 1) {
-      await redis.expire(key, 180);
+      await redis.expire(key, 60);
     }
 
-    if (value > 20) {
+    if (value > 15) {
       return res.status(429).json({ message: default_message });
     }
 
@@ -88,25 +88,4 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getAvatar = async (req: Request, res: Response, next: NextFunction) => {
-  const ip = formatIp(req.ip);
-  const key = `rate:getAvatar:${ip}`;
-
-  try {
-    const value = await redis.incr(key);
-
-    if (value === 1) {
-      await redis.expire(key, 180);
-    }
-
-    if (value > 1000) {
-      return res.status(429).json({ message: default_message });
-    }
-
-    next();
-  } catch (err) {
-    next(err);
-  }
-};
-
-export { getUser, createUser, editUser, deleteUser, getAvatar };
+export { getUser, createUser, editUser, deleteUser };
