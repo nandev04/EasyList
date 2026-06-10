@@ -41,10 +41,12 @@ const Home = () => {
 
   return (
     <>
-      <header className={styles.header}>
-        <DropdownHeader />
-      </header>
       <div className={styles.page_wrapper}>
+        <div className={styles.header_wrapper}>
+          <header className={styles.header}>
+            <DropdownHeader />
+          </header>
+        </div>
         <main className={styles.main}>
           <h1 className={styles.welcome_title}>
             <span>Olá</span>, {user?.username}!
@@ -109,10 +111,10 @@ const Home = () => {
                       description={task.description}
                     />
                   ))}
-                <span ref={sentinelRef}>
-                  {isFetching && <LoadingInfiniteScroll />}
-                </span>
               </div>
+              <span ref={sentinelRef}>
+                {isFetching && <LoadingInfiniteScroll />}
+              </span>
             </div>
           </section>
         </main>
