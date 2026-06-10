@@ -5,11 +5,11 @@
   background-color: var(--dark-grey);
   background-image: url("./shape.svg");
   align-items: center;
-  margin: auto 60px 20px 60px;
+  margin: auto 16px 16px 16px;
   margin-top: auto;
 
   border-radius: 16px;
-  padding: 20px;
+  padding: 14px 20px;
   justify-content: center;
 }
 

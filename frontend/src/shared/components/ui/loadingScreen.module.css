@@ -1,3 +1,9 @@
+.page_wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .container_loading {
   display: flex;
   align-items: center;
@@ -19,7 +25,23 @@
   padding: 40px;
   box-sizing: border-box;
 
-  background-color: var(--primary-color);
+  background: linear-gradient(
+    270deg,
+    var(--primary-color),
+    #bbb4e5,
+    var(--primary-color)
+  );
+  background-size: 200% 200%;
+  animation: gradient_shift 4s linear infinite;
+}
+
+@keyframes gradient_shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
 }
 
 .wrapper_loading > svg {
@@ -30,11 +52,16 @@
   max-height: 100%;
 }
 
-.title_app {
+.container_title {
+  display: flex;
+  justify-content: center;
+  width: 100%;
   position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 0;
+  margin-bottom: 20px;
+}
+
+.title_app {
   font-family: var(--primary-font);
   font-weight: 600;
   font-size: clamp(1rem, 2vw, 1.5rem);
@@ -43,10 +70,6 @@
 
 .title_app > span {
   color: var(--primary-color);
-}
-
-.container_title {
-  align-items: flex-end;
 }
 
 @media (max-height: 500px) {

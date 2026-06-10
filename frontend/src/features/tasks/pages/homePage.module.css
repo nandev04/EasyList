@@ -1,7 +1,15 @@
-.header {
+.header_wrapper {
+  display: flex;
   margin: 0 auto;
-  box-sizing: border-box;
+  justify-content: end;
+  width: 100%;
   max-width: 1600px;
+}
+
+.header {
+  display: flex;
+  justify-items: center;
+  box-sizing: border-box;
   height: 7rem;
   padding: 32px 2rem;
   padding-bottom: 1rem;
