@@ -1,5 +1,5 @@
 .container_avatar {
-  max-width: clamp(1rem, 16vw, 80px);
+  max-width: clamp(1.8rem, 24vw, 80px);
 }
 
 .updateAvatar_wrapper * {
@@ -35,7 +35,7 @@
 
 .username {
   font-family: var(--primary-font);
-  font-size: clamp(1rem, 7vw, 2rem);
+  font-size: clamp(0.7rem, 8vw, 2rem);
   color: var(--dark-grey);
   white-space: nowrap;
   font-weight: 800;

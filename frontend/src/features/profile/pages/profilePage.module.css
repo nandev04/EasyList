@@ -41,7 +41,7 @@
   display: inline-block;
   font-family: var(--primary-font);
   font-weight: 800;
-  font-size: clamp(1.4rem, 8.5vw, 4rem);
+  font-size: clamp(1.5rem, 9vw, 4rem);
   color: var(--dark-grey);
   white-space: nowrap;
 }
@@ -86,6 +86,15 @@
 @media (max-width: 800px) {
   .section_overview {
     padding-left: 20px;
+    justify-items: center;
+  }
+}
+
+@media (max-width: 470px) {
+  .overview_section {
+    padding: 0;
+    justify-content: center;
+    margin: 40px 0;
   }
 }
 
