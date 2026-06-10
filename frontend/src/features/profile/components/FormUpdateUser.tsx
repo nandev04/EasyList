@@ -211,10 +211,7 @@ const FormUpdateUser = () => {
                 callbackResend={updateUserMutation}
                 emailInput={emailInput}
               />
-              <CloseDialogBtn
-                resetForm={updateUserForm.reset}
-                setIsOpenDialog={setIsOpenOtpDialog}
-              />
+              <CloseDialogBtn setIsOpenDialog={setIsOpenOtpDialog} />
             </DialogPanel>
           </div>
         </div>

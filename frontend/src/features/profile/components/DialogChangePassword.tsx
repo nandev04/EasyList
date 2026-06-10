@@ -1,17 +1,6 @@
-import styles from "./dialogChangePassword.module.css";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { SetStateAction } from "react";
-import CloseDialogBtn from "../../../shared/components/CloseDialogBtn";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  changePasswordSchema,
-  changePasswordSchemaType,
-} from "../schema/changePassword.schema";
-import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
-import * as Service from "../../auth/services/auth.service";
-import { GoAlert } from "react-icons/go";
-import { useLogoutMutation } from "../../auth/hooks/useLogout.query";
+import FormChangePassword from "./FormChangePassword";
 
 const DialogChangePassword = ({
   openDialog,
@@ -20,109 +9,12 @@ const DialogChangePassword = ({
   openDialog: boolean;
   setOpenDialog: React.Dispatch<SetStateAction<boolean>>;
 }) => {
-  const {
-    handleSubmit,
-    register,
-    setError,
-    clearErrors,
-    formState: { isSubmitting, errors },
-    reset,
-  } = useForm({
-    resolver: zodResolver(changePasswordSchema),
-  });
-
-  const { mutateAsync: logoutMutationAsync } = useLogoutMutation();
-
-  async function sendRequest(data: changePasswordSchemaType) {
-    try {
-      await Service.changePassword(data);
-      setOpenDialog(false);
-      await logoutMutationAsync();
-    } catch (err) {
-      if (err instanceof Error)
-        setError("root", {
-          type: "server",
-          message: err.message,
-        });
-    }
-  }
-
   return (
-    <Dialog
-      open={openDialog}
-      onClose={() => {
-        reset();
-        setOpenDialog(false);
-      }}
-    >
+    <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
       <div className="overlay">
         <div className="container">
           <DialogPanel className="panel">
-            <form className={styles.form} onSubmit={handleSubmit(sendRequest)}>
-              <div className={styles.input_container}>
-                <label className={styles.label} htmlFor="currentPassword">
-                  Insira sua senha atual
-                </label>
-                <input
-                  className={styles.input}
-                  type="password"
-                  id="currentPassword"
-                  {...register("currentPassword", {
-                    onChange: () => clearErrors("root"),
-                  })}
-                />
-                {errors.currentPassword && (
-                  <span className={styles.error_message}>
-                    {errors.currentPassword.message}
-                  </span>
-                )}
-              </div>
-              <div className={styles.input_container}>
-                <label className={styles.label} htmlFor="newPassword">
-                  Insira sua nova senha
-                </label>
-                <input
-                  className={styles.input}
-                  type="password"
-                  id="newPassword"
-                  {...register("newPassword")}
-                />
-                {errors.newPassword && (
-                  <span className={styles.error_message}>
-                    {errors.newPassword.message}
-                  </span>
-                )}
-              </div>
-              <span className={styles.warning}>
-                <GoAlert />
-                Ao concluir a troca de senha, você será deslogado e
-                redirecionado para a tela de login novamente.
-              </span>
-              {errors.root && (
-                <span
-                  style={{ marginTop: "-10px" }}
-                  className={styles.error_message}
-                >
-                  {errors.root.message}
-                </span>
-              )}
-              <div className={styles.actions_container}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    reset();
-                    setOpenDialog(false);
-                  }}
-                  className={styles.cancel_btn}
-                >
-                  Cancelar alteração
-                </button>
-                <button type="submit" className={styles.change_btn}>
-                  {isSubmitting ? <LoadingCircleSpinner /> : "Alterar senha"}
-                </button>
-              </div>
-            </form>
-            <CloseDialogBtn resetForm={reset} setIsOpenDialog={setOpenDialog} />
+            <FormChangePassword setOpenDialog={setOpenDialog} />
           </DialogPanel>
         </div>
       </div>

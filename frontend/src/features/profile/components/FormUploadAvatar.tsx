@@ -15,7 +15,6 @@ const FormUploadAvatar = ({
 }) => {
   const {
     register,
-    reset,
     handleSubmit,
     setError,
     control,
@@ -56,8 +55,6 @@ const FormUploadAvatar = ({
       await mutateAsync(formData, {
         onSuccess: () => setStateDialog(false),
       });
-
-      reset();
     } catch {
       setError("root", {
         type: "server",
@@ -116,10 +113,7 @@ const FormUploadAvatar = ({
           <button
             className={styles.cancel_btn}
             type="button"
-            onClick={() => {
-              reset();
-              setStateDialog(false);
-            }}
+            onClick={() => setStateDialog(false)}
           >
             Cancelar
           </button>
