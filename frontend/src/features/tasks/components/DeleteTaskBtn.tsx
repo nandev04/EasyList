@@ -2,7 +2,6 @@ import { useState } from "react";
 import styles from "./deleteTaskBtn.module.css";
 import { BiSolidTrash } from "react-icons/bi";
 import LoadingCircleSpinner from "../../../shared/components/ui/LoadingCircleSpinner";
-import useDelayLoading from "../../../shared/hooks/useDelayLoading";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { useDeleteTaskMutation } from "../hooks/useTask.query";
 
@@ -15,7 +14,6 @@ const DeleteTaskBtn = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate, isPending, isError } = useDeleteTaskMutation();
-  const { showLoading } = useDelayLoading(isPending, 100);
 
   async function onDeleteTask() {
     mutate(taskId, {
@@ -43,7 +41,7 @@ const DeleteTaskBtn = ({
                   disabled={isPending}
                   onClick={onDeleteTask}
                 >
-                  {showLoading ? <LoadingCircleSpinner /> : "Deletar"}
+                  {isPending ? <LoadingCircleSpinner /> : "Deletar"}
                 </button>
                 <button
                   className={`${styles.button_cancel} ${styles.cancel}`}

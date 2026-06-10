@@ -4,7 +4,6 @@ import styles from "./homePage.module.css";
 import DropdownHeader from "../../../shared/components/DropdownHeader";
 import { useMemo, useState } from "react";
 import { StatusTask } from "../types/task.types";
-import useDelayLoading from "../../../shared/hooks/useDelayLoading";
 import LoadingTask from "../components/LoadingTask";
 import DropdownFilter from "../components/DropdownFilter";
 import { useUserStore } from "../../../shared/store/useUserStore";
@@ -28,9 +27,6 @@ const Home = () => {
     () => data?.pages.flatMap((pages) => pages.data.tasks) ?? [],
     [data],
   );
-
-  const { showLoading: showLoadingTask } = useDelayLoading(isLoading, 300);
-  const { showLoading: showLoadingFetching } = useDelayLoading(isFetching, 200);
 
   const statusLabel: Record<StatusTask, string> = {
     [StatusTask.PENDING]: "Pendente",
@@ -83,7 +79,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              {isLoading && showLoadingTask && <LoadingTask />}
+              {isLoading && <LoadingTask />}
               {!isLoading && hasNoTasksAtAll && (
                 <div className={styles.container_guidance}>
                   <p className={styles.newTask_guidance}>
@@ -114,7 +110,7 @@ const Home = () => {
                     />
                   ))}
                 <span ref={sentinelRef}>
-                  {showLoadingFetching && <LoadingInfiniteScroll />}
+                  {isFetching && <LoadingInfiniteScroll />}
                 </span>
               </div>
             </div>
