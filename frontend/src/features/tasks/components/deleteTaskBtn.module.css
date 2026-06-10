@@ -119,6 +119,11 @@
   background-color: #ba2b2b;
 }
 
+.button_delete:disabled {
+  background-color: var(--cancel-color);
+  cursor: unset;
+}
+
 .error_message {
   margin-right: 16px;
   margin-top: 1rem;

@@ -44,7 +44,7 @@ const DeleteTaskBtn = ({
                   {isPending ? <LoadingCircleSpinner /> : "Deletar"}
                 </button>
                 <button
-                  className={`${styles.button_cancel} ${styles.cancel}`}
+                  className={`${styles.button_cancel}`}
                   onClick={() => setIsOpen(false)}
                 >
                   Cancelar
