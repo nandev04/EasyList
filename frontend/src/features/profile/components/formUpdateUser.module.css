@@ -79,14 +79,23 @@
 }
 
 .edit_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  width: min(40px, 60vw);
+  width: min(50px, 70vw);
   height: min(40px, 60vh);
   grid-row: 1;
   grid-column: 3;
   background-color: var(--primary-color);
   color: white;
   border-radius: 12px;
+  padding: 16px;
+}
+
+.edit_btn svg {
+  width: 100%;
+  height: auto;
 }
 
 .edit_btn:hover {
