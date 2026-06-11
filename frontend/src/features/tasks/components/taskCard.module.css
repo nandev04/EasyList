@@ -27,6 +27,7 @@
   font-family: var(--primary-font);
   font-size: clamp(0.975rem, 1.45vw, 1rem);
   overflow-wrap: break-word;
+  white-space: pre-wrap;
   margin-bottom: 30px;
 }
 
