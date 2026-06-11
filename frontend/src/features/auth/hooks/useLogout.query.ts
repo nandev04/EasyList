@@ -11,7 +11,7 @@ const useLogoutMutation = () => {
     onSuccess: async () => {
       await queryClient.resetQueries({ queryKey: ["user"] });
       queryClient.clear();
-      navigate("/login");
+      navigate("/login", { replace: true });
     },
   });
 };

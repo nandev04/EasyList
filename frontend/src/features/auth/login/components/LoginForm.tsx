@@ -29,7 +29,7 @@ const LoginForm = () => {
       await queryClient.invalidateQueries({
         queryKey: ["user"],
       });
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (err) {
       if (err instanceof AxiosError) {
         const message = "Ocorreu um erro ao tentar o login";
