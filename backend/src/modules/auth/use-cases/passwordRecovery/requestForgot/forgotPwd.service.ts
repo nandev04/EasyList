@@ -1,11 +1,11 @@
+import { User_Repository } from '../../../index.js';
 import { transformForHash } from '../../../../../shared/utils/crypto/cryptoUtils.js';
 import { generateCode } from '../../../../../shared/utils/crypto/cryptoUtils.js';
-import * as Repository_User from '../../../../user/user.repository.js';
 import * as Repository_OTP from '../../../repositories/codeOTP.repository.js';
 import * as MailService from '../../../../../shared/services/mail.service.js';
 
 const forgotPasswordService = async (email: string) => {
-  const user = await Repository_User.findByEmail(email);
+  const user = await User_Repository.findByEmail(email);
 
   if (user) {
     const code = generateCode();

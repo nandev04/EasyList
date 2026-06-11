@@ -1,6 +1,7 @@
 import { createHashPassword } from '../../../../../shared/utils/argon2/argon2Utils.js';
 import { AppError } from '../../../../../shared/utils/error.js';
-import * as Repository_User from '../../../../user/user.repository.js';
+import { User_Repository } from '../../../index.js';
+
 import * as Repository_Token from '../../../repositories/token.repository.js';
 
 const resetPassword = async (newPassword: string, tokenReset: string) => {
@@ -14,7 +15,7 @@ const resetPassword = async (newPassword: string, tokenReset: string) => {
 
   const hashNewPassword = await createHashPassword(newPassword);
 
-  await Repository_User.changePassword(TokenResetPassword.userId, hashNewPassword);
+  await User_Repository.changePassword(TokenResetPassword.userId, hashNewPassword);
 
   await Repository_Token.markTokenAsUsed(TokenResetPassword.id);
 };
