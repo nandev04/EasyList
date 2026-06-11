@@ -61,9 +61,3 @@ As telas do projeto estão disponíveis na pasta [`designs/`](./designs).
 | Login                      | Register                         | Tasks Page                           |
 | -------------------------- | -------------------------------- | ------------------------------------ |
 | ![Login](design/login.png) | ![Register](design/register.png) | ![Tasks Page](design/tasks-page.png) |
-
----
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT.
