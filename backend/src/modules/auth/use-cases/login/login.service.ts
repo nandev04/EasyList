@@ -1,6 +1,6 @@
 import { AppError } from '../../../../shared/utils/error.js';
+import { User_Repository } from '../../index.js';
 import * as Token_Repository from '../../repositories/token.repository.js';
-import * as User_Repository from '../../../user/user.repository.js';
 import * as Device_Repository from '../../../device/device.repository.js';
 import { compareHashPassword } from '../../../../shared/utils/argon2/argon2Utils.js';
 import * as Auth_Service from '../../services/createTokens.service.js';

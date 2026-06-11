@@ -17,7 +17,7 @@ import { generateCode } from '../../shared/utils/crypto/cryptoUtils.js';
 import { userCreateSelect, userPublicSelect } from './user.select.js';
 import s3Client from '../../infra/aws/s3Client.js';
 import { generateUUIDv7 } from '../../shared/utils/uuid/uuidUtils.js';
-import * as VerifyAcc_Service from '../auth/use-cases/verifyAccount/verifyAcc.service.js';
+import { VerifyAcc_Service } from './index.js';
 
 dotenv.config();
 

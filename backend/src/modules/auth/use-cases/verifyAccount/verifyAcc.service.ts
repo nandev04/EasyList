@@ -1,5 +1,5 @@
+import { User_Repository } from '../../index.js';
 import { AppError } from '../../../../shared/utils/error.js';
-import * as Repository_User from '../../../user/user.repository.js';
 import * as Repository_Auth from '../../repositories/token.repository.js';
 import * as mailService from '../../../../shared/services/mail.service.js';
 import { generateToken, transformForHash } from '../../../../shared/utils/crypto/cryptoUtils.js';
@@ -24,11 +24,11 @@ const verifyAccountToken = async (token: string) => {
   }
 
   await Repository_Auth.markAccountVerifyTokenAsUsed(tokenSearched.id);
-  await Repository_User.verifyUser(tokenSearched.userId);
+  await User_Repository.verifyUser(tokenSearched.userId);
 };
 
 const resendAccountToken = async (email: string) => {
-  const user = await Repository_User.findByEmailNotVerified(email);
+  const user = await User_Repository.findByEmailNotVerified(email);
   if (!user) return null;
   await generateAccountToken(user.id, email);
 };

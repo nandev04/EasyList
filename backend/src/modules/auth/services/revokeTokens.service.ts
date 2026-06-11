@@ -1,6 +1,5 @@
 import { transformForHash } from '../../../shared/utils/crypto/cryptoUtils.js';
-import { AppError } from '../../../shared/utils/error.js';
-import * as User_Repository from '../../user/user.repository.js';
+import { User_Repository } from '../index.js';
 import * as Token_Repository from '../repositories/token.repository.js';
 import { deleteTokenVersion } from './tokenVersion.service.js';
 

@@ -1,7 +1,6 @@
 import { getCache, deleteCache, setCache } from '../../../infra/cache/cache.service.js';
 import { AppError } from '../../../shared/utils/error.js';
-import * as User_Repository from '../../user/user.repository.js';
-import { userAuthSelect } from '../../user/user.select.js';
+import { User_Repository, userAuthSelect } from '../index.js';
 
 const key = 'auth:tokenVersion:';
 
