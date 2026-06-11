@@ -24,7 +24,7 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 - 🗄️ [Prisma](https://www.prisma.io/) (ORM para MySQL)
 - 🔑 [Argon2](https://www.npmjs.com/package/argon2) (hash de senhas)
 - 🛢️ [PostgreSQL](https://www.postgresql.org/) (banco de dados principal)
-- ⚡ [Redis](https://redis.io/) (rate limiting)
+- ⚡ [Redis](https://redis.io/) (rate limiting e gerenciamento de sessão)
 - 🧪 [Vitest](https://vitest.dev/) (testes unitários)
 - ✨ ESLint + Prettier
 
