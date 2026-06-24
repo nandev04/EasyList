@@ -11,7 +11,7 @@ A aplicação conta com autenticação, gerenciamento de tarefas e integração 
 - ⚛️ [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
 - 🔗 [React Router](https://reactrouter.com/) (navegação)
 - 🔄 [React Query](https://tanstack.com/query/latest) (gerenciamento de estado servidor e cache de requisições)
-- 🔄 [React Hook Form](https://react-hook-form.com/) (gerenciamento de formulários)
+- 📋 [React Hook Form](https://react-hook-form.com/) (gerenciamento de formulários)
 - ✅ [Zod](https://zod.dev/) (validação de dados)
 - 🐻 [Zustand](https://zustand-demo.pmnd.rs/) (gerenciamento de estado global)
 - ⚡ [Vite](https://vitejs.dev/) (build e desenvolvimento)
